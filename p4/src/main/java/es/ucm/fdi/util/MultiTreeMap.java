@@ -24,7 +24,7 @@ public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
      * @param value to add
      */
     public void putValue(K key, V value) {
-        if ( ! containsKey(key)) {
+        if (!containsKey(key)) {
             put(key, new ArrayList<>());
         }
         get(key).add(value);
