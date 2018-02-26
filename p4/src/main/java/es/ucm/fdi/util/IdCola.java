@@ -30,6 +30,10 @@ public class IdCola {
 	}
 	*/
 	
+	public String getId() {
+		return this.id;
+	}
+	
 	/**
 	 * Nos indica si hay algún coche esperando en el cruce
 	 * @return True si el cruce está vacío, false si no

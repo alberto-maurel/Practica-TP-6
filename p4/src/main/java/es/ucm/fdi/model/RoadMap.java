@@ -12,7 +12,7 @@ public class RoadMap {
 	
 	
 	//Permite buscar los elementos
-	private MultiTreeMap<String, SimulatedObjects> simObjects; //Map que contiene como claves los id del objeto y como valor el objeto
+	private MultiTreeMap<String, SimulatedObject> simObjects; //Map que contiene como claves los id del objeto y como valor el objeto
 	
 	//Listados de cada una de las clases de elementos ordenados por orden de llegada
 	private List<Junction> junctions = new ArrayList<>();

@@ -1,13 +1,17 @@
 package es.ucm.fdi.model;
 
 public class NewRoad extends Event{
-			//src = <JUNC-ID>
-			//dest = <JUNC-ID>
+	private String src;
+	private String dest;
 	int max_speed;
 	int length;
-	public NewRoad(int time, String id, int max_Speed, int Length) {
+	
+	
+	public NewRoad(int time, String id, int max_speed, int length, String src, String dest) {
 		super(time, id);
-		max_speed = max_Speed;
-		length = Length;
+		this.max_speed = max_speed;
+		this.length = length;
+		this.src = src;
+		this.dest = dest;
 	}
 }

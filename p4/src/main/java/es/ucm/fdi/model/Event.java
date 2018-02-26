@@ -1,18 +1,19 @@
 package es.ucm.fdi.model;
 
 public class Event {
-	int time;
-	String id;
+	protected int time;
+	protected String id;
 	
 	
+	public Event(){}
 	/**
 	 * Constructor
-	 * @param t
-	 * @param i
+	 * @param time
+	 * @param id
 	 */
-	public Event(int t, String i){
-		time = t;
-		id = i;
+	public Event(int time, String id){
+		this.time = time;
+		this.id = id;
 	}
 	
 	public void execute() {

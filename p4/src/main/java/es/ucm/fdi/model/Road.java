@@ -2,22 +2,37 @@ package es.ucm.fdi.model;
 
 import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.model.*;
+
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Map;
 
-public class Road extends SimulatedObjects{
-	int longitud;
-	int maxVel;
-	MultiTreeMap<Integer, Vehicle> situacionCarretera;
+public class Road extends SimulatedObject{
+	protected int longitud;
+	private int maxVel;
+	private MultiTreeMap<Integer, Vehicle> situacionCarretera;
+	protected Junction cruceAlFinal;
+	
+	
+	
+	
+	public Road(){}
+	
+	public Road(int longitud, int maxVel){
+		this.longitud = longitud;
+		this.maxVel = maxVel;
+		situacionCarretera = new MultiTreeMap<>();
+		//Inicializar Junction
+	}
 	
 	/**
 	 * Introduce al vehículo en la carretera
 	 * @param Vehículo
 	 */
-	void entraVehiculo(Vehicle v) {
+	public void entraVehiculo(Vehicle v) {
 		situacionCarretera.putValue(0, v);
 	}
 	
@@ -57,7 +72,8 @@ public class Road extends SimulatedObjects{
 		//Y ahora vamos contabilizando cuantos vehículos están averiados y les vamos cambiando la velocidad
 		int factorReduccion = 1;
 		for(Vehicle v: vehiculosColocadosPorPosicion) {
-			if(v.cocheAveriado()) {
+			if(v.isCocheAveriado()) {
+				//Si está averiado no es necesario actualizar la información porque en este tick no se va a mover
 				factorReduccion = 2;
 			}
 			else {
@@ -66,5 +82,18 @@ public class Road extends SimulatedObjects{
 			//Y hacemos que el coche avance
 			v.avanza();
 		}	
+	}
+	
+	protected String getReportHeader() {
+		return "[road_report]";
+	}
+	
+	protected void fillReportDetails(Map<String, String> out) {
+		String aux = "";
+		for (Vehicle v: situacionCarretera.innerValues()) {
+			aux += "(" + v.identificador + ", " + v.localizacionCarretera + "),";
+		}
+		aux = aux.substring(0, aux.length() - 1); // Cutre jeje
+		out.put("state", aux);
 	}
 }
