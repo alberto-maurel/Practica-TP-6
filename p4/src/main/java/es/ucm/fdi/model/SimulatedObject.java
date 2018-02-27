@@ -5,6 +5,14 @@ import java.util.Map;
 public abstract class SimulatedObject {
 	protected String identificador;
 	
+	public SimulatedObject() {
+		identificador = "UnknownId";
+	}
+	
+	public SimulatedObject(String id){
+		identificador = id;
+	}
+	
 	void avanza() {}
 	void generarInforme(int time, Map<String, String> out) {
 		out.put("", getReportHeader());
@@ -13,6 +21,6 @@ public abstract class SimulatedObject {
 		fillReportDetails(out);
 	}
 	
-	protected abstract void fillReportDetails(Map<String, String> out);
 	protected abstract String getReportHeader();
+	protected abstract void fillReportDetails(Map<String, String> out);
 }

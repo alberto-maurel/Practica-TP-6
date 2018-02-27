@@ -1,6 +1,6 @@
 package es.ucm.fdi.model;
 
-public class Event {
+public abstract class Event {
 	protected int time;
 	protected String id;
 	
@@ -16,8 +16,5 @@ public class Event {
 		this.id = id;
 	}
 	
-	public void execute() {
-		
-		
-	}
+	public abstract void execute(RoadMap roadMap);
 }

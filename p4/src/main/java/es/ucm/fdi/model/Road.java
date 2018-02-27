@@ -14,19 +14,30 @@ public class Road extends SimulatedObject{
 	protected int longitud;
 	private int maxVel;
 	private MultiTreeMap<Integer, Vehicle> situacionCarretera;
-	protected Junction cruceAlFinal;
+	protected Junction cruceIni;
+	protected Junction cruceFin;
 	
-	
-	
-	
+	//Constructores
 	public Road(){}
 	
-	public Road(int longitud, int maxVel){
+	public Road(String id, int longitud, int maxVel){
+		super(id);
 		this.longitud = longitud;
 		this.maxVel = maxVel;
 		situacionCarretera = new MultiTreeMap<>();
-		//Inicializar Junction
+		cruceIni = null;
+		cruceFin = null;
 	}
+	
+	public Road(String id, int longitud, int maxVel, Junction src, Junction dest){
+		super(id);
+		this.longitud = longitud;
+		this.maxVel = maxVel;
+		situacionCarretera = new MultiTreeMap<>();
+		cruceIni = src;
+		cruceFin = dest;
+	}
+	
 	
 	/**
 	 * Introduce al vehículo en la carretera

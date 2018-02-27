@@ -15,7 +15,10 @@ public class IdCola {
 	private Queue<Vehicle> colaCoches;
 	
 	//Constructores
-	public IdCola(){}
+	public IdCola(String id){
+		this.id = id;
+		colaCoches = new ArrayDeque<Vehicle>();
+	}
 	
 	public IdCola(String id, Vehicle v) {
 		this.id = id;

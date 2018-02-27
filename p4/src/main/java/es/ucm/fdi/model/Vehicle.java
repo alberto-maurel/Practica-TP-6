@@ -8,7 +8,7 @@ public class Vehicle extends SimulatedObject {
 	private int velActual;
 	protected Road carreteraActual;
 	protected int localizacionCarretera;
-	private ArrayList<Road> itinerario; //Itinerario - Representado como un vector con los identificadores de las carreteras que hay que recorrer 
+	private ArrayList<Junction> itinerario; 
 	private int indItinerario;   		  //y un contador que nos indica en cual nos encontramos
 	private int tiempoAveria;
 	private int kilometrage;
@@ -16,11 +16,12 @@ public class Vehicle extends SimulatedObject {
 	//Constructores
 	public Vehicle() {}
 	
-	public Vehicle(int velMaxima, int velActual, ArrayList<Road> itinerario) {
+	public Vehicle(String id, int velMaxima, ArrayList<Junction> itinerario) {
+		super(id);
 		this.velMaxima = velMaxima;
-		this.velActual = velActual;
+		this.velActual = 0;
 		this.itinerario = itinerario;
-		carreteraActual = itinerario.get(0);
+		//carreteraActual = itinerario.get(0);
 		localizacionCarretera = 0;
 		indItinerario = 0;
 		tiempoAveria = 0;
@@ -42,7 +43,7 @@ public class Vehicle extends SimulatedObject {
 			} else {
 				kilometrage += (carreteraActual.longitud - localizacionCarretera);
 				localizacionCarretera = carreteraActual.longitud;				
-				carreteraActual.cruceAlFinal.entraVehiculo(this);
+				carreteraActual.cruceFin.entraVehiculo(this);
 			}
 		}	
 	}
@@ -55,8 +56,12 @@ public class Vehicle extends SimulatedObject {
 		carreteraActual.saleVehiculo(this);
 		
 		//Cambiamos de carretera
+		Junction cruceActual = itinerario.get(indItinerario);
 		++indItinerario;
-		carreteraActual = itinerario.get(indItinerario);
+		//Para ello buscamos que carretera va de un cruce al otro
+		Junction siguienteCruce = itinerario.get(indItinerario);
+		carreteraActual = cruceActual.buscarCarretera(siguienteCruce);
+		
 		//Y lo colocamos al principio
 		localizacionCarretera = 0;
 	}
