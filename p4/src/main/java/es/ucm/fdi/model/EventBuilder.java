@@ -1,9 +1,11 @@
 package es.ucm.fdi.model;
 
-public class EventBuilder {
+import es.ucm.fdi.ini.IniSection;
 
+public interface EventBuilder {
+
+	public abstract Event parse(IniSection sec);
 	/*
-	parse()
 	– isValidId(String id)
 	– parseInt(IniSection sec, String key, int default)
 	– parseIdList(IniSection sec, String key)

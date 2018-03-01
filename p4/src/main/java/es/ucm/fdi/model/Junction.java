@@ -13,19 +13,22 @@ public class Junction extends SimulatedObject{
 	public Junction() {
 		super();
 		semaforoVerde = 0;
-		this.colasCoches = null;
+		this.colasCoches = new ArrayList<>();
+		this.carreterasSalientes = new ArrayList<>(); 
 	}
 	
 	public Junction(String id) {
 		super(id);
 		semaforoVerde = 0;
-		this.colasCoches = null;
+		this.colasCoches = new ArrayList<>();
+		this.carreterasSalientes = new ArrayList<>(); 
 	}
 	
 	public Junction(String id, ArrayList<IdCola> colasCoches) {
 		super(id);
 		semaforoVerde = 0;
 		this.colasCoches = colasCoches;
+		this.carreterasSalientes = new ArrayList<>(); 
 	}
 	
 	void entraVehiculo(Vehicle vehiculo) {
@@ -41,14 +44,14 @@ public class Junction extends SimulatedObject{
 	
 	public void avanza() {
 		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
-		if(!colasCoches.get(semaforoVerde).cruceVacio()) {
+		if(colasCoches.size() > 0 && !colasCoches.get(semaforoVerde).cruceVacio()) {
 			//En dicho caso sacamos el coche
 			Vehicle v = colasCoches.get(semaforoVerde).sacarCoche();
 			//Y lo movemos a su siguiente carretera
 			v.moverASiguienteCarretera();
 		}
 		//Y encendemos el semaforo de la siguiente interseccion independientemente de si hemos movido algún coche o no
-		semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
+		if(colasCoches.size() > 0) semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
 	}
 	
 	public Road buscarCarretera(Junction sigCruce) {

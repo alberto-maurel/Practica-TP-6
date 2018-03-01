@@ -37,7 +37,7 @@ public class Road extends SimulatedObject{
 		cruceIni = src;
 		cruceFin = dest;
 	}
-	
+
 	
 	/**
 	 * Introduce al vehículo en la carretera

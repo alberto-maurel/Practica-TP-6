@@ -12,12 +12,19 @@ public class TrafficSimulator {
 	private int tick;
 	private RoadMap mapaTrafico;
 	
+	public TrafficSimulator(ArrayList<Event> listaEventos) {
+		indiceActualEventos = 0;
+		this.listaEventos = listaEventos;
+		tick = 0;
+		mapaTrafico = new RoadMap();
+	}
+	
 	
 	//Métodos
 	public void run(){	
 		//En primer lugar carga los eventos correspondientes a dicho tick
-		while(listaEventos.get(indiceActualEventos).time == tick){
-			listaEventos.get(indiceActualEventos).execute();
+		while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tick){
+			listaEventos.get(indiceActualEventos).execute(mapaTrafico);
 			++indiceActualEventos;
 		}
 		
@@ -32,7 +39,8 @@ public class TrafficSimulator {
 		}
 		
 		//Y por último escribimos los informes en el orden indicado
-		//OutputStream out = 
+		OutputStream out = System.out; //Testeo
+		
 		for(Junction j:mapaTrafico.junctions) {
 			Map<String, String> reporte = new HashMap<>();
 			j.generarInforme(tick, reporte);
