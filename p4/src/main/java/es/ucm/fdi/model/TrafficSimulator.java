@@ -5,6 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/*
+ * Dudas:
+ * - ¿Qué es lo que ocurre si en un tick te meten una carretera y hasta unos cuantos ticks más adelante no se introducen las junctions?
+ * Y los coches sobre todo
+ */
+
+
+
 public class TrafficSimulator {
 
 	private int indiceActualEventos;
@@ -41,7 +50,20 @@ public class TrafficSimulator {
 		//Y por último escribimos los informes en el orden indicado
 		OutputStream out = System.out; //Testeo
 		
+		//Hacer refactoring de estas 3 cosas
 		for(Junction j:mapaTrafico.junctions) {
+			Map<String, String> reporte = new HashMap<>();
+			j.generarInforme(tick, reporte);
+			writeReport(reporte, out); //Añadir el outputStream
+		}
+		
+		for(Road j:mapaTrafico.roads) {
+			Map<String, String> reporte = new HashMap<>();
+			j.generarInforme(tick, reporte);
+			writeReport(reporte, out); //Añadir el outputStream
+		}
+		
+		for(Vehicle j:mapaTrafico.vehicles) {
 			Map<String, String> reporte = new HashMap<>();
 			j.generarInforme(tick, reporte);
 			writeReport(reporte, out); //Añadir el outputStream

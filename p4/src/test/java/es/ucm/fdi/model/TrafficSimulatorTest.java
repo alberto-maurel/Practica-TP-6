@@ -12,19 +12,22 @@ public class TrafficSimulatorTest {
 	@Test
 	public void test1() {
 		ArrayList<Event> listaEventosAux = new ArrayList<Event>();  
-		Event cruce1 = new NewJunction(0,"Junct1");
-		listaEventosAux.add(cruce1);
+		Event cruce1 = new NewJunction(0,"j1");
+		Event cruce2 = new NewJunction(0,"j2");
+		Event carretera1 = new NewRoad(0,"r1", 30, 100, "j1", "j2");
 		
+		ArrayList<String> itin = new ArrayList<String>(); itin.add("j1"); itin.add("j2");
+		Event coche1 = new NewVehicle(0,"v1", 20, itin);
+		
+		
+		listaEventosAux.add(cruce1);
+		listaEventosAux.add(cruce2);
+		listaEventosAux.add(carretera1);
+		listaEventosAux.add(coche1);
+			
 		TrafficSimulator mock = new TrafficSimulator(listaEventosAux);
 		
 		mock.run();
-		boolean b1 = true;
-		boolean b2 = true;
-		
-		assertTrue("FOO",b2);
-	}
-	
-	
-	
-	
+		assertTrue("FOO",true);
+	}	
 }

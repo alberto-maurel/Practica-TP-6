@@ -18,7 +18,7 @@ public class NewRoad extends Event{
 	public void execute(RoadMap roadMap) {
 		//Comprobamos que no haya otra carretera con el mismo id
 		SimulatedObject J1, J2;
-		if(roadMap.simObjects.get(id) != null) {
+		if(roadMap.simObjects.get(id) == null) {
 			//Comprobamos que los cruces existen y si no existen los creamos
 			if(roadMap.simObjects.get(src) == null) {
 				J1 = new Junction(src);
@@ -31,11 +31,11 @@ public class NewRoad extends Event{
 			
 			if(roadMap.simObjects.get(dest) == null) {
 				J2 = new Junction(dest);
-			} else {
-				J2 = roadMap.simObjects.get(dest); 
 				//Y la incluimos en el roadMap
 				roadMap.simObjects.put(src, J2);
 				roadMap.junctions.add((Junction)J2);
+			} else {
+				J2 = roadMap.simObjects.get(dest); 
 			}
 			
 			Road nuevaCarretera = new Road(id, length, max_speed, (Junction) J1, (Junction) J2); //Cast feillo, revisar

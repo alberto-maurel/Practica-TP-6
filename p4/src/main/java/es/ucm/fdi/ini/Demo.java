@@ -1,5 +1,7 @@
 package es.ucm.fdi.ini;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,8 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-public class Demo {
+import org.junit.Test;
 
+public class Demo {
 	public static void write() throws Exception {
 		System.out.println("-> write test");
 
@@ -33,18 +36,18 @@ public class Demo {
 
 		ini.addsection(sec);
 
-		File file = new File("resources/output/output.ini");
+		File file = new File("C:/Users/Alberto/git/Practica-TP-4/p4/output.ini");
 		OutputStream s = new FileOutputStream(file);
 		ini.store(s);
 		s.close();
-		System.out.println("Check out resources/output/output.ini");
+		System.out.println("Check out Practica-TP-4/p4/output.ini");
 		System.out.println();
 	}
 
 	public static void read() throws Exception {
 		System.out.println("-> read test");
 
-		File file = new File("resources/examples/ini/input1.ini");
+		File file = new File("C:/Users/Alberto/git/Practica-TP-4/p4/input1.ini");
 		InputStream s = new FileInputStream(file);
 		Ini ini = new Ini(s);
 
@@ -74,11 +77,12 @@ public class Demo {
 
 	public static void compare() throws Exception {
 		System.out.println("-> compare test");
-
-		Ini[] ini = new Ini[5];
+		
+		//La longitud del array es el número de archivos que tenemos
+		Ini[] ini = new Ini[2];
 
 		for (int i = 0; i < ini.length; i++) {
-			ini[i] = new Ini(new FileInputStream(new File("resources/examples/ini/input" + i + ".ini")));
+			ini[i] = new Ini(new FileInputStream(new File("C:/Users/Alberto/git/Practica-TP-4/p4/input" + i + ".ini")));
 		}
 
 		for (int i = 0; i < ini.length; i++) {
@@ -87,10 +91,24 @@ public class Demo {
 		}
 		System.out.println();
 	}
-
+	
 	public static void main(String[] args) throws Exception {
 		read();
 		compare();
 		write();
+	}
+	
+	@Test
+	//Para testear que no hay errores de ejecución en entrada/salida, pero no comprueba que esta sea correcta 
+	public void TestInputOutput() {
+		try {
+			main(new String[1]);
+			assertTrue(true);
+		}
+		catch (Exception e){
+			System.out.println("Se ha producido una excepción");
+			e.printStackTrace();
+		}
+		
 	}
 }

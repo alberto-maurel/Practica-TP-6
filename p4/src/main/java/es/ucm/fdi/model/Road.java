@@ -104,7 +104,8 @@ public class Road extends SimulatedObject{
 		for (Vehicle v: situacionCarretera.innerValues()) {
 			aux += "(" + v.identificador + ", " + v.localizacionCarretera + "),";
 		}
-		aux = aux.substring(0, aux.length() - 1); // Cutre jeje
+		//Los metemos todos en un string y quitamos la ultima coma
+		if(aux.length() > 0) aux = aux.substring(0, aux.length() - 1); // Cutre jeje
 		out.put("state", aux);
 	}
 }
