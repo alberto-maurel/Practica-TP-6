@@ -14,9 +14,11 @@ public class NewJunction extends Event{
 	public void execute(RoadMap roadMap) {
 		//Comprobamos que la intersección no exista previamente
 		if(roadMap.simObjects.get(id) == null) {
+			
+			Junction jActual = new Junction(id);
 			//Y en caso de no existir la añadimos
-			roadMap.simObjects.put(id, new Junction(id));
-			roadMap.junctions.add(new Junction(id));
+			roadMap.simObjects.put(id, jActual);
+			roadMap.junctions.add(jActual);
 		}
 	}
 }

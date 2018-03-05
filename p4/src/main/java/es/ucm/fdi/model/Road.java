@@ -1,9 +1,11 @@
 package es.ucm.fdi.model;
 
+import es.ucm.fdi.util.IdCola;
 import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.model.*;
 
 import java.lang.Math;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,6 +22,7 @@ public class Road extends SimulatedObject{
 	//Constructores
 	public Road(){}
 	
+	/*
 	public Road(String id, int longitud, int maxVel){
 		super(id);
 		this.longitud = longitud;
@@ -28,7 +31,7 @@ public class Road extends SimulatedObject{
 		cruceIni = null;
 		cruceFin = null;
 	}
-	
+	*/
 	public Road(String id, int longitud, int maxVel, Junction src, Junction dest){
 		super(id);
 		this.longitud = longitud;
@@ -36,6 +39,8 @@ public class Road extends SimulatedObject{
 		situacionCarretera = new MultiTreeMap<>();
 		cruceIni = src;
 		cruceFin = dest;
+		src.nuevaCarreteraSaliente(this);
+		dest.nuevaCarreteraEntrante(this);
 	}
 
 	
@@ -61,15 +66,16 @@ public class Road extends SimulatedObject{
 	 */
 	void avanza() {
 		//En primer lugar calculamos la velocidad base de la carretera
-		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues() - 1));
+		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues()));
 		int aux2 = maxVel/aux1;
-		int velocidadBase = Math.min(maxVel, aux2);
+		int velocidadBase = Math.min(maxVel, aux2 + 1);
 		
 		//Recorremos la carretera.
 		//En una primera pasada cogemos cada coche de la carretera y lo metemos en un array, que posteriormente se ordena por posición
 		//de los coches. En la segunda pasada se modifica cada coche
 		ArrayList<Vehicle> vehiculosColocadosPorPosicion = new ArrayList<>();
-
+		
+		/* Se supone que están ordenados
 		for(Vehicle v: situacionCarretera.innerValues()) {		
 			vehiculosColocadosPorPosicion.add(v);		
 		}
@@ -79,11 +85,16 @@ public class Road extends SimulatedObject{
 				return v1.localizacionCarretera - v2.localizacionCarretera;
 			}
 		});
-		
+		*/
 		//Y ahora vamos contabilizando cuantos vehículos están averiados y les vamos cambiando la velocidad
 		int factorReduccion = 1;
-		for(Vehicle v: vehiculosColocadosPorPosicion) {
-			if(v.isCocheAveriado()) {
+		for(Vehicle v: situacionCarretera.innerValues()) {
+			//Si está al final de la carretera lo metemos en el cruce
+			if(v.localizacionCarretera == v.carreteraActual.longitud){
+				v.carreteraActual.cruceFin.entraVehiculo(v);
+			}
+			
+			else if(v.isCocheAveriado()) {
 				//Si está averiado no es necesario actualizar la información porque en este tick no se va a mover
 				factorReduccion = 2;
 			}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Vehicle extends SimulatedObject {
+	private final int arrived = -1;
+	
 	private int velMaxima;
 	private int velActual;
 	protected Road carreteraActual;
@@ -21,7 +23,9 @@ public class Vehicle extends SimulatedObject {
 		this.velMaxima = velMaxima;
 		this.velActual = 0;
 		this.itinerario = itinerario;
-		//carreteraActual = itinerario.get(0);
+	
+		carreteraActual = itinerario.get(0).buscarCarretera(itinerario.get(1));
+		carreteraActual.entraVehiculo(this);
 		localizacionCarretera = 0;
 		indItinerario = 0;
 		tiempoAveria = 0;
@@ -43,7 +47,7 @@ public class Vehicle extends SimulatedObject {
 			} else {
 				kilometrage += (carreteraActual.longitud - localizacionCarretera);
 				localizacionCarretera = carreteraActual.longitud;				
-				carreteraActual.cruceFin.entraVehiculo(this);
+				//carreteraActual.cruceFin.entraVehiculo(this);
 			}
 		}	
 	}
@@ -58,12 +62,16 @@ public class Vehicle extends SimulatedObject {
 		//Cambiamos de carretera
 		Junction cruceActual = itinerario.get(indItinerario);
 		++indItinerario;
-		//Para ello buscamos que carretera va de un cruce al otro
-		Junction siguienteCruce = itinerario.get(indItinerario);
-		carreteraActual = cruceActual.buscarCarretera(siguienteCruce);
-		
-		//Y lo colocamos al principio
-		localizacionCarretera = 0;
+		if(indItinerario == itinerario.size()){
+			localizacionCarretera = arrived;
+		} else {
+			//Para ello buscamos que carretera va de un cruce al otro
+			Junction siguienteCruce = itinerario.get(indItinerario);
+			carreteraActual = cruceActual.buscarCarretera(siguienteCruce);
+			
+			//Y lo colocamos al principio
+			localizacionCarretera = 0;
+		}
 	}
 	
 	/**
@@ -103,6 +111,10 @@ public class Vehicle extends SimulatedObject {
 		out.put("speed", String.valueOf(velActual));
 		out.put("kilometrage", String.valueOf(kilometrage));
 		out.put("faulty", String.valueOf(tiempoAveria));
-		out.put("location", "(" + carreteraActual.identificador + ", " + localizacionCarretera + ")");
+		if(localizacionCarretera == arrived){
+			out.put("location", "(arrived)");
+		}else{
+			out.put("location", "(" + carreteraActual.identificador + ", " + localizacionCarretera + ")");
+		}
 	}
 }

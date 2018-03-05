@@ -1,52 +1,57 @@
 package es.ucm.fdi.model;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 import es.ucm.fdi.util.*;
 
 public class Junction extends SimulatedObject{
 	private int semaforoVerde; //Indica el número del semáforo que se encuentra en verde
-	private ArrayList<IdCola> colasCoches; //Array con pares de id de las carreteras y colas de vehículos que proceden de dicha carretera
-	private ArrayList<Road> carreterasSalientes;
+	protected HashMap<String, Queue<Vehicle>> colasCoches; //Array con pares de id de las carreteras y colas de vehículos que proceden de dicha carretera
+	protected HashMap<String, Road> carreterasSalientes;
 	
 	public Junction() {
 		super();
 		semaforoVerde = 0;
-		this.colasCoches = new ArrayList<>();
-		this.carreterasSalientes = new ArrayList<>(); 
+		this.colasCoches = new HashMap<>();
+		this.carreterasSalientes = new HashMap<>(); 
 	}
 	
 	public Junction(String id) {
 		super(id);
 		semaforoVerde = 0;
-		this.colasCoches = new ArrayList<>();
-		this.carreterasSalientes = new ArrayList<>(); 
+		this.colasCoches = new HashMap<>();
+		this.carreterasSalientes = new HashMap<>(); 
 	}
 	
-	public Junction(String id, ArrayList<IdCola> colasCoches) {
+	public Junction(String id, HashMap<String, Queue<Vehicle>> colasCoches) {
 		super(id);
 		semaforoVerde = 0;
 		this.colasCoches = colasCoches;
-		this.carreterasSalientes = new ArrayList<>(); 
+		this.carreterasSalientes = new HashMap<>(); 
 	}
 	
 	void entraVehiculo(Vehicle vehiculo) {
-		String idCarretera = vehiculo.carreteraActual.identificador;
-		int nCruce;
-		int pos = 0;
+		//int pos = 0;
+		colasCoches.get(vehiculo.carreteraActual.identificador).offer(vehiculo);
+		
+		/*
 		while(pos < colasCoches.size()){			
 			if (colasCoches.get(pos).getId().equals(idCarretera)) {
 				colasCoches.get(pos).meterCoche(vehiculo);
 			}
-		}
+			++pos;
+		}*/
 	}
 	
 	public void avanza() {
 		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
-		if(colasCoches.size() > 0 && !colasCoches.get(semaforoVerde).cruceVacio()) {
+		if(colasCoches.size() > 0 && colasCoches.get(semaforoVerde).size() > 0) {
 			//En dicho caso sacamos el coche
-			Vehicle v = colasCoches.get(semaforoVerde).sacarCoche();
+			Vehicle v = (Vehicle) colasCoches.get(semaforoVerde).poll();
 			//Y lo movemos a su siguiente carretera
 			v.moverASiguienteCarretera();
 		}
@@ -55,8 +60,8 @@ public class Junction extends SimulatedObject{
 	}
 	
 	public Road buscarCarretera(Junction sigCruce) {
-		for(Road r: carreterasSalientes) {
-			if(r.cruceFin == sigCruce) return r;
+		for(Map.Entry<String, Road> r: carreterasSalientes.entrySet()) {
+			if(r.getValue().cruceFin == sigCruce) return r.getValue();
 		}
 		return null;
 	}
@@ -65,12 +70,11 @@ public class Junction extends SimulatedObject{
 	 * Añade una nueva carretera saliente al cruce
 	 */
 	public void nuevaCarreteraSaliente(Road road) {
-		carreterasSalientes.add(road);
+		carreterasSalientes.put(road.identificador, road);
 	}
 
 	public void nuevaCarreteraEntrante(Road road) {
-		IdCola nuevaCarretera = new IdCola(road.identificador);
-		colasCoches.add(nuevaCarretera);
+		colasCoches.put(road.identificador, new ArrayDeque<Vehicle>());
 	}
 	
 	protected String getReportHeader() {

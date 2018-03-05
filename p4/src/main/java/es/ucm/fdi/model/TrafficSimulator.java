@@ -30,7 +30,9 @@ public class TrafficSimulator {
 	
 	
 	//Métodos
-	public void run(){	
+	public void run(int time){
+		while (tick < time) {
+		try {
 		//En primer lugar carga los eventos correspondientes a dicho tick
 		while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tick){
 			listaEventos.get(indiceActualEventos).execute(mapaTrafico);
@@ -68,6 +70,12 @@ public class TrafficSimulator {
 			j.generarInforme(tick, reporte);
 			writeReport(reporte, out); //Añadir el outputStream
 		}
+		} catch (Exception e) {
+			
+		}
+		++tick;
+	}
+		
 	}
 	
 	public void writeReport(Map<String, String> report, OutputStream out) {
