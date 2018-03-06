@@ -30,6 +30,8 @@ public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
         get(key).add(value);
     }
 
+    
+    //Se modifica el removeValue para que si una clave se queda sin valores se elimine del treeMap
     /**
      * Removes the first occurrence of a value from the list found at
      * a given key. Efficiency is O(size-of-that-list)
@@ -39,10 +41,16 @@ public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
      * @return true if removed, false if not found
      */
     public boolean removeValue(K key, V value) {
-        if ( ! containsKey(key)) {
+        if (!containsKey(key)) {
             return false;
+        } else { //Tenemos garantizado que dicha clave pertenece al treemap
+        	boolean aux = get(key).remove(value);
+        	//Si dicha clave está en el treemap y se queda sin elementos la eliminamos tambien
+        	if(aux && get(key).size() == 0) {
+        		this.remove(key);
+        	}
+        	return aux;
         }
-        return get(key).remove(value);
     }
 
     /**

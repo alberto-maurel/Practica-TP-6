@@ -27,7 +27,7 @@ public class Vehicle extends SimulatedObject {
 		carreteraActual = itinerario.get(0).buscarCarretera(itinerario.get(1));
 		carreteraActual.entraVehiculo(this);
 		localizacionCarretera = 0;
-		indItinerario = 0;
+		indItinerario = 1;
 		tiempoAveria = 0;
 		kilometrage = 0;
 	}
@@ -41,14 +41,17 @@ public class Vehicle extends SimulatedObject {
 		if(tiempoAveria > 0) {
 			--tiempoAveria;
 		} else {
+			//Eliminamos el coche de la carretera
+			carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this);
 			if(localizacionCarretera + velActual < carreteraActual.longitud) {
 				localizacionCarretera += velActual;
 				kilometrage += velActual;
 			} else {
 				kilometrage += (carreteraActual.longitud - localizacionCarretera);
-				localizacionCarretera = carreteraActual.longitud;				
-				//carreteraActual.cruceFin.entraVehiculo(this);
+				localizacionCarretera = carreteraActual.longitud;
 			}
+			//Y lo volvemos a meter donde debería ir
+			carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
 		}	
 	}
 	

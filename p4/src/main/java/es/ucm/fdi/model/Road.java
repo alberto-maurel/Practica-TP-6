@@ -15,7 +15,7 @@ import java.util.Map;
 public class Road extends SimulatedObject{
 	protected int longitud;
 	private int maxVel;
-	private MultiTreeMap<Integer, Vehicle> situacionCarretera;
+	protected MultiTreeMap<Integer, Vehicle> situacionCarretera;
 	protected Junction cruceIni;
 	protected Junction cruceFin;
 	
@@ -88,7 +88,11 @@ public class Road extends SimulatedObject{
 		*/
 		//Y ahora vamos contabilizando cuantos vehículos están averiados y les vamos cambiando la velocidad
 		int factorReduccion = 1;
-		for(Vehicle v: situacionCarretera.innerValues()) {
+		
+		//Hacemos una copia de la carretera para poder iterar por ella
+		MultiTreeMap<Integer, Vehicle> situacionCarreteraAuxiliar = (MultiTreeMap<Integer, Vehicle>) situacionCarretera.clone();
+		
+		for(Vehicle v: situacionCarreteraAuxiliar.innerValues()) {
 			//Si está al final de la carretera lo metemos en el cruce
 			if(v.localizacionCarretera == v.carreteraActual.longitud){
 				v.carreteraActual.cruceFin.entraVehiculo(v);
@@ -104,6 +108,8 @@ public class Road extends SimulatedObject{
 			//Y hacemos que el coche avance
 			v.avanza();
 		}	
+		//Y modificamos la carretera para dejarla en el estado actual
+		//situacionCarretera = situacionCarreteraAuxiliar;
 	}
 	
 	protected String getReportHeader() {
@@ -116,7 +122,12 @@ public class Road extends SimulatedObject{
 			aux += "(" + v.identificador + ", " + v.localizacionCarretera + "),";
 		}
 		//Los metemos todos en un string y quitamos la ultima coma
-		if(aux.length() > 0) aux = aux.substring(0, aux.length() - 1); // Cutre jeje
+		if(aux.length() > 0) {
+			aux = aux.substring(0, aux.length() - 1); // Cutre jeje
+		} else {
+			//Carretera vacía
+			//aux = "empty";
+		}
 		out.put("state", aux);
 	}
 }
