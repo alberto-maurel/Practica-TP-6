@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Road extends SimulatedObject{
 	protected int longitud;
-	private int maxVel;
+	protected int maxVel;
 	protected MultiTreeMap<Integer, Vehicle> situacionCarretera;
 	protected Junction cruceIni;
 	protected Junction cruceFin;
@@ -22,16 +22,6 @@ public class Road extends SimulatedObject{
 	//Constructores
 	public Road(){}
 	
-	/*
-	public Road(String id, int longitud, int maxVel){
-		super(id);
-		this.longitud = longitud;
-		this.maxVel = maxVel;
-		situacionCarretera = new MultiTreeMap<>();
-		cruceIni = null;
-		cruceFin = null;
-	}
-	*/
 	public Road(String id, int longitud, int maxVel, Junction src, Junction dest){
 		super(id);
 		this.longitud = longitud;
@@ -66,28 +56,16 @@ public class Road extends SimulatedObject{
 	 */
 	void avanza() {
 		//En primer lugar calculamos la velocidad base de la carretera
+		/*
 		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues()));
 		int aux2 = maxVel/aux1;
 		int velocidadBase = Math.min(maxVel, aux2 + 1);
-		
-		//Recorremos la carretera.
-		//En una primera pasada cogemos cada coche de la carretera y lo metemos en un array, que posteriormente se ordena por posición
-		//de los coches. En la segunda pasada se modifica cada coche
-		ArrayList<Vehicle> vehiculosColocadosPorPosicion = new ArrayList<>();
-		
-		/* Se supone que están ordenados
-		for(Vehicle v: situacionCarretera.innerValues()) {		
-			vehiculosColocadosPorPosicion.add(v);		
-		}
-		
-		Collections.sort(vehiculosColocadosPorPosicion, new Comparator<Vehicle>(){
-			public int compare(Vehicle v1, Vehicle v2) {
-				return v1.localizacionCarretera - v2.localizacionCarretera;
-			}
-		});
 		*/
+		int velocidadBase = calcularVelocidadBase(maxVel, Math.toIntExact(situacionCarretera.sizeOfValues()));
+			
 		//Y ahora vamos contabilizando cuantos vehículos están averiados y les vamos cambiando la velocidad
-		int factorReduccion = 1;
+		int factorReduccion;
+		int nVehiculosAveriadosHastaElMomento = 0;
 		
 		//Hacemos una copia de la carretera para poder iterar por ella
 		MultiTreeMap<Integer, Vehicle> situacionCarreteraAuxiliar = (MultiTreeMap<Integer, Vehicle>) situacionCarretera.clone();
@@ -100,16 +78,26 @@ public class Road extends SimulatedObject{
 			
 			else if(v.isCocheAveriado()) {
 				//Si está averiado no es necesario actualizar la información porque en este tick no se va a mover
-				factorReduccion = 2;
+				++nVehiculosAveriadosHastaElMomento;
 			}
 			else {
+				factorReduccion = calcularFactorReduccion(nVehiculosAveriadosHastaElMomento);
 				v.setVelocidadActual(velocidadBase/factorReduccion);
 			}
 			//Y hacemos que el coche avance
 			v.avanza();
 		}	
-		//Y modificamos la carretera para dejarla en el estado actual
-		//situacionCarretera = situacionCarreteraAuxiliar;
+	}
+	
+	protected int calcularVelocidadBase(int velocidadMaxima, int nVehiculosCarretera) {
+		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues()));
+		int aux2 = velocidadMaxima/aux1;
+		return Math.min(velocidadMaxima, aux2 + 1);
+	}
+
+	protected int calcularFactorReduccion(int nVehiculosAveriados) {
+		if(nVehiculosAveriados == 0) return 1;
+		else return 2;
 	}
 	
 	protected String getReportHeader() {

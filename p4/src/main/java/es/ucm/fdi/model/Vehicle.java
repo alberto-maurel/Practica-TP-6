@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Vehicle extends SimulatedObject {
-	private final int arrived = -1;
+	protected final int arrived = -1;
 	
-	private int velMaxima;
-	private int velActual;
+	protected int velMaxima;
+	protected int velActual;
 	protected Road carreteraActual;
 	protected int localizacionCarretera;
-	private ArrayList<Junction> itinerario; 
-	private int indItinerario;   		  //y un contador que nos indica en cual nos encontramos
-	private int tiempoAveria;
-	private int kilometrage;
+	protected ArrayList<Junction> itinerario; 
+	protected int indItinerario;   		  //y un contador que nos indica en cual nos encontramos
+	protected int tiempoAveria;
+	protected int kilometrage;
 	
 	//Constructores
 	public Vehicle() {}
