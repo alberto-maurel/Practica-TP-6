@@ -14,7 +14,7 @@ public class TrafficSimulatorTest {
 		ArrayList<Event> listaEventosAux = new ArrayList<Event>();  
 		Event cruce1 = new NewJunction(0,"j1");
 		Event cruce2 = new NewJunction(0,"j2");
-		Event carretera1 = new NewRoad(0,"r1", 30, 100, "j1", "j2");
+		Event carretera1 = new NewRoad(0,"r1", 30, 20, "j1", "j2");
 		
 		ArrayList<String> itin = new ArrayList<String>(); itin.add("j1"); itin.add("j2");
 		Event coche1 = new NewVehicle(0,"v1", 20, itin);
@@ -27,7 +27,7 @@ public class TrafficSimulatorTest {
 			
 		TrafficSimulator mock = new TrafficSimulator(listaEventosAux);
 		
-		mock.run();
-		assertTrue("FOO",true);
+		mock.run(2);
+		assertTrue(true);
 	}	
 }

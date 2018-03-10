@@ -17,5 +17,5 @@ public abstract class Event {
 		this.id = id;
 	}
 	
-	public abstract void execute(RoadMap roadMap);
+	public abstract void execute(RoadMap roadMap) throws Exception;
 }

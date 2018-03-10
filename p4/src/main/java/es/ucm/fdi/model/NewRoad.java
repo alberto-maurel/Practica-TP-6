@@ -15,25 +15,28 @@ public class NewRoad extends Event{
 		this.dest = dest;
 	}
 	
-	public void execute(RoadMap roadMap) {
+	public void execute(RoadMap roadMap) throws Exception {
 		//Comprobamos que no haya otra carretera con el mismo id
 		SimulatedObject J1, J2;
 		if(roadMap.simObjects.get(id) == null) {
 			//Comprobamos que los cruces existen y si no existen los creamos
 			if(roadMap.simObjects.get(src) == null) {
-				J1 = new Junction(src);
+				throw new Exception("El cruce no existe");
+				/*J1 = new Junction(src);
 				//Y la incluimos en el roadMap
 				roadMap.simObjects.put(src, J1);
-				roadMap.junctions.add((Junction)J1);
+				roadMap.junctions.add((Junction)J1);*/
 			} else {
 				J1 = roadMap.simObjects.get(src); 
 			}
 			
 			if(roadMap.simObjects.get(dest) == null) {
+				throw new Exception("El cruce no existe");
+				/*
 				J2 = new Junction(dest);
 				//Y la incluimos en el roadMap
 				roadMap.simObjects.put(src, J2);
-				roadMap.junctions.add((Junction)J2);
+				roadMap.junctions.add((Junction)J2);*/
 			} else {
 				J2 = roadMap.simObjects.get(dest); 
 			}
@@ -42,6 +45,8 @@ public class NewRoad extends Event{
 
 			roadMap.simObjects.put(id, nuevaCarretera);
 			roadMap.roads.add(nuevaCarretera);
+		} else {
+			throw new Exception("El identificador está duplicado");
 		}
 	}
 }

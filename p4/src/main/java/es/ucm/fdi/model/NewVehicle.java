@@ -16,7 +16,7 @@ public class NewVehicle extends Event{
 		this.itinerario = itinerario;
 	}
 	
-	public void execute(RoadMap roadMap) {
+	public void execute(RoadMap roadMap) throws Exception {
 		//Comprobamos que no existiera previamente el vehículo
 		if(roadMap.simObjects.get(id) == null) {
 			ArrayList<Junction> itinerarioVehiculoJunctions = new ArrayList<Junction> ();
@@ -24,11 +24,12 @@ public class NewVehicle extends Event{
 			for(String idJunction: itinerario) {
 				//Añadimos el cruce al arrayList de Junctions que representa el itinerario del vehículo
 				if(roadMap.simObjects.get(idJunction) == null) {
-					//Creamos las junction que aún no existiesen 
+					throw new Exception("El cruce no existe");
+					/*//Creamos las junction que aún no existiesen 
 					Junction cruceFaltante = new Junction(id);
 					roadMap.junctions.add(cruceFaltante);
 					roadMap.simObjects.put(idJunction, cruceFaltante);
-					itinerarioVehiculoJunctions.add(cruceFaltante);
+					itinerarioVehiculoJunctions.add(cruceFaltante);*/
 				}
 				else {
 					itinerarioVehiculoJunctions.add((Junction) roadMap.simObjects.get(idJunction));
@@ -41,6 +42,8 @@ public class NewVehicle extends Event{
 			//Y lo insertamos en el roadMap
 			roadMap.vehicles.add(nuevoVehiculo);
 			roadMap.simObjects.put(id, nuevoVehiculo);
-		}		
+		} else {
+			throw new Exception("Identificador de objeto duplicado");
+		}
 	}
 }
