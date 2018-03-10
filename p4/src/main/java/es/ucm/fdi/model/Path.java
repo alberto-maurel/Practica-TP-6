@@ -16,6 +16,6 @@ public class Path extends Road{
 	}
 	
 	protected int calcularFactorReduccion(int nVehiculosAveriados) {
-		return nVehiculosAveriados;
+		return 1 + nVehiculosAveriados;
 	}
 }

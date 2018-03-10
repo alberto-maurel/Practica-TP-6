@@ -41,7 +41,6 @@ public class ExampleMain {
 
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
-			//
 			String[] remaining = line.getArgs();
 			if (remaining.length > 0) {
 				String error = "Illegal arguments:";
