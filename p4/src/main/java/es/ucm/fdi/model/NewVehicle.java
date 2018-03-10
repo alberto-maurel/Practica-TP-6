@@ -1,4 +1,4 @@
-package es.ucm.fdi.model;
+ package es.ucm.fdi.model;
 
 import java.util.ArrayList;
 

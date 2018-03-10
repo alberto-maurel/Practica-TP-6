@@ -1,5 +1,4 @@
 package es.ucm.fdi.model;
-import java.util.HashMap;
 
 public class NewRoad extends Event{
 	private String src;
