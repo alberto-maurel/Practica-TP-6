@@ -45,6 +45,7 @@ public class Car extends Vehicle{
 				}
 			}
 			
+			//Esto no es lo mismo que el avanza de vehicle?
 			if(isCarOk) {			
 				//Eliminamos el coche de la carretera
 				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this);

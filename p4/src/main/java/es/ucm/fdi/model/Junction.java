@@ -9,7 +9,7 @@ import java.util.Queue;
 import es.ucm.fdi.util.*;
 
 public class Junction extends SimulatedObject{
-	private int semaforoVerde; //Indica el número del semáforo que se encuentra en verde
+	protected int semaforoVerde; //Indica el número del semáforo que se encuentra en verde
 	protected HashMap<String, Queue<Vehicle>> colasCoches; //Array con pares de id de las carreteras y colas de vehículos que proceden de dicha carretera
 	protected HashMap<String, Road> carreterasSalientes;
 	protected ArrayList<String> carreterasEntrantesOrdenadas;
@@ -54,6 +54,10 @@ public class Junction extends SimulatedObject{
 					v.moverASiguienteCarretera();		
 		}
 		//Y encendemos el semaforo de la siguiente interseccion independientemente de si hemos movido algún coche o no
+		actualizarSemaforo();
+	}
+	
+	public void actualizarSemaforo() {
 		if(colasCoches.size() > 0) semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
 	}
 	

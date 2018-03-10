@@ -50,7 +50,7 @@ public class TrafficSimulator {
 			}
 			
 			//Y por último escribimos los informes en el orden indicado
-			OutputStream out = System.out; //Testeo
+			OutputStream out = System.out; //Testeo (caso nulo?)
 			
 			//Hacer refactoring de estas 3 cosas
 			for(Junction j:mapaTrafico.junctions) {
