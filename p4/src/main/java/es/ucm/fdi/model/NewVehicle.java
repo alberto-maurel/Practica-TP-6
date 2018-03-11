@@ -19,7 +19,7 @@ public class NewVehicle extends Event{
 		this.itinerario = itinerario;
 	}
 	
-	public class Builder implements EventBuilder{
+	public static class Builder implements EventBuilder{
 		public Event parse(IniSection sec) {
 			if (!sec.getTag().equals("new_vehicle")) {
 				return null;
@@ -28,18 +28,20 @@ public class NewVehicle extends Event{
 				//Creo que viene todo en la misma sección, así que haremos el split a ver si funciona
 				String[] itinerarioString = sec.getValue("itinerary").split("[ ,]");
 				ArrayList<String> itinerario = new ArrayList<>(Arrays.asList(itinerarioString));
-			
+				
 				//Y ahora dependiendo del vehículo que tenemoos que crear llamamos a uno u otro
-				// No sé qué pasa si no encuentra el campo "type"
-				if (sec.getValue("type").equals("car")) {
+				if(sec.getValue("type") == null) {
+					return new NewVehicle(Integer.parseInt(sec.getValue("time")), sec.getValue("id"),
+							Integer.parseInt(sec.getValue("max_speed")), itinerario);
+				} else if (sec.getValue("type").equals("car")) {
 					return new NewCar(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), Integer.parseInt(sec.getValue("max_speed")), itinerario, 
 							Integer.parseInt(sec.getValue("resistance")), Double.parseDouble(sec.getValue("fault_probability")), 
 							Integer.parseInt(sec.getValue("max_fault_duration")), Long.parseLong(sec.getValue("seed")));
-				} else if (sec.getValue("type").equals("bike")) {
+				} 
+				else if (sec.getValue("type").equals("bike")) {
 					return new NewBike(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), Integer.parseInt(sec.getValue("max_speed")), itinerario);
 				} else {
-					return new NewVehicle(Integer.parseInt(sec.getValue("time")), sec.getValue("id"),
-							Integer.parseInt(sec.getValue("max_value")), itinerario);
+					return null;
 				}
 				
 			}

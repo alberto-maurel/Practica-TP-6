@@ -1,6 +1,5 @@
 package es.ucm.fdi.model;
 
-import es.ucm.fdi.util.IdCola;
 import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.model.*;
 

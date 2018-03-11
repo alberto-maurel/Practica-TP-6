@@ -20,7 +20,7 @@ public class NewFaultyVehicle extends Event {
 		this.idVehiclesInvolved = vehicles;
 	}
 	
-	public class Builder implements EventBuilder {
+	public static class Builder implements EventBuilder {
 		public Event parse(IniSection sec) {
 			if (!sec.getTag().equals("make_vehicle_faulty")) return null;
 			String[] faultyVehicles = sec.getValue("vehicles").split("[ ,]");

@@ -21,9 +21,9 @@ public class TrafficSimulator {
 	private int tick;
 	private RoadMap mapaTrafico;
 	
-	public TrafficSimulator(ArrayList<Event> listaEventos) {
+	public TrafficSimulator() {
 		indiceActualEventos = 0;
-		this.listaEventos = listaEventos;
+		this.listaEventos = new ArrayList<>();
 		tick = 0;
 		mapaTrafico = new RoadMap();
 	}
