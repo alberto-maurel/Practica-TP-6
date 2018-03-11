@@ -30,10 +30,8 @@ public class NewVehicle extends Event{
 				ArrayList<String> itinerario = new ArrayList<>(Arrays.asList(itinerarioString));
 			
 				//Y ahora dependiendo del vehículo que tenemoos que crear llamamos a uno u otro
-			 
-			
-			 		return new NewVehicle(Integer.parseInt(sec.getValue("time")), sec.getValue("id"),
-					Integer.parseInt(sec.getValue("max_value")), itinerario);
+			 	return new NewVehicle(Integer.parseInt(sec.getValue("time")), sec.getValue("id"),
+					Integer.parseInt(sec.getValue("max_speed")), itinerario);
 			}
 			
 			

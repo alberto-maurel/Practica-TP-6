@@ -12,9 +12,9 @@ public class TrafficSimulator {
 	private int tick;
 	private RoadMap mapaTrafico;
 	
-	public TrafficSimulator(ArrayList<Event> listaEventos) {
+	public TrafficSimulator() {
 		indiceActualEventos = 0;
-		this.listaEventos = listaEventos;
+		listaEventos = new ArrayList<Event>();
 		tick = 0;
 		mapaTrafico = new RoadMap();
 	}
@@ -96,6 +96,14 @@ public class TrafficSimulator {
 		else {
 			throw new SimulationException("Se ha añadido un evento en un momento posterior a su ejecución");
 		}
+	}
+	
+	/**
+	 * Para tests jUnit
+	 * @return nº de eventos en la simulación
+	 */
+	public int numberOfEvents() {
+		return listaEventos.size();
 	}
 
 	
