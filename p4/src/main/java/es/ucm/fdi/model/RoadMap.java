@@ -2,7 +2,10 @@ package es.ucm.fdi.model;
 
 import es.ucm.fdi.util.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,12 +14,12 @@ import es.ucm.fdi.model.*;
 
 public class RoadMap {
 	//Permite buscar los elementos
-	protected HashMap<String, SimulatedObject> simObjects; //Map que contiene como claves los id del objeto y como valor el objeto
+	private HashMap<String, SimulatedObject> simObjects; //Map que contiene como claves los id del objeto y como valor el objeto
 		
 	//Listados de cada una de las clases de elementos ordenados por orden de llegada
-	protected List<Junction> junctions = new ArrayList<>();
-	protected List<Road> roads = new ArrayList<>();
-	protected List<Vehicle> vehicles = new ArrayList<>();
+	private List<Junction> junctions = new ArrayList<>();
+	private List<Road> roads = new ArrayList<>();
+	private List<Vehicle> vehicles = new ArrayList<>();
 
 	public RoadMap() {
 		simObjects = new HashMap<>();
@@ -27,5 +30,37 @@ public class RoadMap {
 	}
 	
 	
+	public List<Junction> getConstantJunctions() {
+		return Collections.unmodifiableList(junctions);
+	}
+	
+	public List<Road> getConstantRoads() {
+		return Collections.unmodifiableList(roads);
+	}
+	
+	public List<Vehicle> getConstantVehicles() {
+		return Collections.unmodifiableList(vehicles);
+	}
+	
+	public Map<String, SimulatedObject> getConstantSimObjects() {
+		return Collections.unmodifiableMap(simObjects);
+	}
+	
+	
+	public List<Junction> getJunctions() {
+		return junctions;
+	}
+	
+	public List<Road> getRoads() {
+		return roads;
+	}
+	
+	public List<Vehicle> getVehicles() {
+		return vehicles;
+	}
+	
+	public Map<String, SimulatedObject> getSimObjects() {
+		return simObjects;
+	}
 	
 }

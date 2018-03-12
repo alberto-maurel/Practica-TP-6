@@ -21,13 +21,13 @@ public class Controller {
 		
 	public Controller(int nPasos, InputStream input, OutputStream output) {
 		this.nPasos = nPasos;
-		simulador = new TrafficSimulator();
+		simulador = new TrafficSimulator(output);
 		this.input = input;
 		this.output = output;
 	}
 	
 	public void run() {
-		Ini eventosPorProcesar = this.input();
+		Ini eventosPorProcesar = input();
 		for(IniSection is: eventosPorProcesar.getSections()) {
 			this.parseEvent(is);
 		}
@@ -36,12 +36,13 @@ public class Controller {
 	
 	public void parseEvent(IniSection ini) {
 		Event eventoActual = null;
-		for(int i = 0; i < eventosDisponibles.length; ++i) {
-			if(eventosDisponibles[i].parse(ini) != null) {
-				eventoActual = eventosDisponibles[i].parse(ini);
-			}
-		}
 		try {
+			for(int i = 0; i < eventosDisponibles.length; ++i) {
+				if(eventosDisponibles[i].parse(ini) != null) {
+					eventoActual = eventosDisponibles[i].parse(ini);
+					break;
+				}
+			}		
 			simulador.insertaEvento(eventoActual);
 		}
 		catch(Exception e){

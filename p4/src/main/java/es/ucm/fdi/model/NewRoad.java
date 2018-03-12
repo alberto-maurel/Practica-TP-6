@@ -16,43 +16,44 @@ public class NewRoad extends Event{
 		this.dest = dest;
 	}
 	
-	public static class Builder implements EventBuilder{
-		public Event parse(IniSection sec) {
+	public static class Builder implements EventBuilder  {
+		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_road")) {
 				return null;
-			} else {
-				if(sec.getValue("type") == null) {
+			} 
+			if(sec.getValue("type") == null) {
+				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
+						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0) && 
+					parseInt(sec, "length", 0) && parseIdList(sec, "src") &&
+					isValidId(sec.getValue("src")) && parseIdList(sec, "dest") &&
+					isValidId(sec.getValue("dest"))) {
+					
 					return new NewRoad(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), Integer.parseInt(sec.getValue("max_speed")), 
-							Integer.parseInt(sec.getValue("length")), sec.getValue("src"), sec.getValue("dest"));
-				} else if (sec.getValue("type").equals("lanes")) {
-					return new NewHighway(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), Integer.parseInt(sec.getValue("max_speed")), 
-					Integer.parseInt(sec.getValue("length")), sec.getValue("src"), sec.getValue("dest"), Integer.parseInt(sec.getValue("lanes")));
-				} else if (sec.getValue("type").equals("dirt")) {
-					return new NewPath(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), Integer.parseInt(sec.getValue("max_speed")), 
-							Integer.parseInt(sec.getValue("length")), sec.getValue("src"), sec.getValue("dest"));
+						Integer.parseInt(sec.getValue("length")), sec.getValue("src"), sec.getValue("dest"));
 				} else {
-					return null;
-				}
-			}		
+					throw new SimulationException("Algún parámetro no existe o es inválido");
+				} 	
+			}
+			return null;
 		}
 	}
 	
 	public void execute(RoadMap roadMap) throws Exception {
 		//Comprobamos que no haya otra carretera con el mismo id
 		SimulatedObject J1, J2;
-		if(roadMap.simObjects.get(id) == null) {
+		if(roadMap.getConstantSimObjects().get(id) == null) {
 			//Comprobamos que los cruces existen y si no existen los creamos
-			if(roadMap.simObjects.get(src) == null) {
+			if(roadMap.getConstantSimObjects().get(src) == null) {
 				throw new Exception("El cruce no existe");
 				/*J1 = new Junction(src);
 				//Y la incluimos en el roadMap
 				roadMap.simObjects.put(src, J1);
 				roadMap.junctions.add((Junction)J1);*/
 			} else {
-				J1 = roadMap.simObjects.get(src); 
+				J1 = roadMap.getSimObjects().get(src); 
 			}
 			
-			if(roadMap.simObjects.get(dest) == null) {
+			if(roadMap.getSimObjects().get(dest) == null) {
 				throw new Exception("El cruce no existe");
 				/*
 				J2 = new Junction(dest);
@@ -60,13 +61,13 @@ public class NewRoad extends Event{
 				roadMap.simObjects.put(src, J2);
 				roadMap.junctions.add((Junction)J2);*/
 			} else {
-				J2 = roadMap.simObjects.get(dest); 
+				J2 = roadMap.getSimObjects().get(dest); 
 			}
 			
 			Road nuevaCarretera = new Road(id, length, max_speed, (Junction) J1, (Junction) J2); //Cast feillo, revisar
 
-			roadMap.simObjects.put(id, nuevaCarretera);
-			roadMap.roads.add(nuevaCarretera);
+			roadMap.getSimObjects().put(id, nuevaCarretera);
+			roadMap.getRoads().add(nuevaCarretera);
 		} else {
 			throw new Exception("El identificador está duplicado");
 		}
