@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class TrafficSimulator {
 
 	private int indiceActualEventos;
@@ -14,6 +13,7 @@ public class TrafficSimulator {
 	private RoadMap mapaTrafico;
 	private OutputStream out;
 	
+
 	public TrafficSimulator(OutputStream out) {
 		indiceActualEventos = 0;
 		this.listaEventos = new ArrayList<>();
@@ -85,7 +85,7 @@ public class TrafficSimulator {
 	 * Inserta el evento de forma ordenada según el momento en el que se produce
 	 * @param evento
 	 */
-	public void insertaEvento(Event evento) {
+	public void insertaEvento(Event evento) throws SimulationException{
 		//Comprobamos si el evento se ejecuta en un ciclo que no haya ocurrido ya
 		if(evento.time >= tick) {
 			//Recorremos el array buscando donde insertarlo y hacemos lo propio
@@ -95,6 +95,17 @@ public class TrafficSimulator {
 			}
 			listaEventos.add(posInsertar, evento);
 		}
+		else {
+			throw new SimulationException("Se ha añadido un evento en un momento posterior a su ejecución");
+		}
+	}
+	
+	/**
+	 * Para tests jUnit
+	 * @return nº de eventos en la simulación
+	 */
+	public int numberOfEvents() {
+		return listaEventos.size();
 	}
 
 	

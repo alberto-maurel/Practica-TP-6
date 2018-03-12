@@ -2,6 +2,8 @@ package es.ucm.fdi.model;
 
 import es.ucm.fdi.ini.IniSection;
 
+import es.ucm.fdi.ini.IniSection;
+
 public class NewRoad extends Event{
 	private String src;
 	private String dest;
@@ -37,15 +39,16 @@ public class NewRoad extends Event{
 			}
 			return null;
 		}
-	}
+  }
 	
-	public void execute(RoadMap roadMap) throws Exception {
+	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que no haya otra carretera con el mismo id
 		SimulatedObject J1, J2;
 		if(roadMap.getConstantSimObjects().get(id) == null) {
 			//Comprobamos que los cruces existen y si no existen los creamos
 			if(roadMap.getConstantSimObjects().get(src) == null) {
 				throw new Exception("El cruce no existe");
+        
 				/*J1 = new Junction(src);
 				//Y la incluimos en el roadMap
 				roadMap.simObjects.put(src, J1);
@@ -53,7 +56,7 @@ public class NewRoad extends Event{
 			} else {
 				J1 = roadMap.getSimObjects().get(src); 
 			}
-			
+
 			if(roadMap.getSimObjects().get(dest) == null) {
 				throw new Exception("El cruce no existe");
 				/*
@@ -70,7 +73,7 @@ public class NewRoad extends Event{
 			roadMap.getSimObjects().put(id, nuevaCarretera);
 			roadMap.getRoads().add(nuevaCarretera);
 		} else {
-			throw new Exception("El identificador está duplicado");
+			throw new SimulationException("El identificador está duplicado");
 		}
 	}
 }

@@ -28,7 +28,7 @@ public class NewJunction extends Event{
 			return null;
 		}
 	}		
-	
+
 	public void execute(RoadMap roadMap) {
 		//Comprobamos que la intersección no exista previamente
 		if(roadMap.getConstantSimObjects().get(id) == null) {

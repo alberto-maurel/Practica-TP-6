@@ -42,7 +42,7 @@ public class Controller {
 					eventoActual = eventosDisponibles[i].parse(ini);
 					break;
 				}
-			}		
+			}
 			simulador.insertaEvento(eventoActual);
 		}
 		catch(Exception e){
@@ -51,7 +51,7 @@ public class Controller {
 	}
 	
 	public Ini input() {
-		try{		
+		try{
 			Ini ini = new Ini(input);
 			return ini;
 		}
@@ -60,8 +60,7 @@ public class Controller {
 			return null;
 		}
 	}
-	
-	
+
 	public void output(IniSection ini) {
 		try{		
 			File file = new File("C:/Users/Alberto/git/Practica-TP-4/p4/output1.ini");
@@ -72,5 +71,5 @@ public class Controller {
 			System.out.println("Ha ocurrido un error durante la operación de escritura");
 		}
 	}
-	
+  
 }
