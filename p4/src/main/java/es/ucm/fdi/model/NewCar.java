@@ -5,8 +5,6 @@ import java.util.Arrays;
 
 import es.ucm.fdi.ini.IniSection;
 
-//IMPORTANTE: parsear el double y el long =D
-
 
 public class NewCar extends NewVehicle {
 	
@@ -28,12 +26,13 @@ public class NewCar extends NewVehicle {
 			if (!sec.getTag().equals("new_vehicle")) {
 				return null;
 			}
-			//Y ahora dependiendo del vehículo que tenemoos que crear llamamos a uno u otro
+			
 			if ("car".equals(sec.getValue("type"))) {
 				
 				if(parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
 						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0) &&
-					parseInt(sec, "resistance", 0) && parseInt(sec, "max_fault_duration", 0)){
+					parseInt(sec, "resistance", 0) && parseDouble(sec, "fault_probability", 0) &&
+						parseInt(sec, "max_fault_duration", 0) && parseLong(sec, "seed", 0)) {
 					
 					//Creamos el itinerario
 					String[] itinerarioString = sec.getValue("itinerary").split("[ ,]");

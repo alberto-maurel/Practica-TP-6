@@ -28,7 +28,8 @@ public class NewRoad extends Event{
 					isValidId(sec.getValue("src")) && parseIdList(sec, "dest") &&
 					isValidId(sec.getValue("dest"))) {
 					
-					return new NewRoad(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), Integer.parseInt(sec.getValue("max_speed")), 
+					return new NewRoad(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), 
+							Integer.parseInt(sec.getValue("max_speed")), 
 						Integer.parseInt(sec.getValue("length")), sec.getValue("src"), sec.getValue("dest"));
 				} else {
 					throw new SimulationException("Algún parámetro no existe o es inválido");

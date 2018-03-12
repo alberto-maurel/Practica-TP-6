@@ -24,4 +24,18 @@ public interface EventBuilder {
 		return false;
 	}
 	
+	public default boolean parseLong(IniSection sec, String key, long def) {
+		if (parseIdList(sec, key)) {
+			if (Long.parseLong(sec.getValue(key)) >= def) return true;
+		}
+		return false;
+	}
+	
+	public default boolean parseDouble(IniSection sec, String key, double def) {
+		if (parseIdList(sec, key)) {
+			if (Double.parseDouble(sec.getValue(key)) >= def) return true;
+		}
+		return false;
+	}
+	
 }

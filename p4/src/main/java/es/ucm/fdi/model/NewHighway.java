@@ -11,7 +11,7 @@ public class NewHighway extends NewRoad {
 		lanes = l;
 	}
 	
-	public static class Builder implements EventBuilder{
+	public static class Builder implements EventBuilder {
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_road")) {
 				return null;
@@ -29,8 +29,7 @@ public class NewHighway extends NewRoad {
 				} else {
 					throw new SimulationException("Algún parámetro no existe o es inválido");
 				} 	
-			} 
-			
+			} 			
 			return null;	
 		}
 	}

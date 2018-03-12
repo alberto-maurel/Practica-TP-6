@@ -12,7 +12,7 @@ public class NewBike extends NewVehicle {
 	}
 	
 	public static class Builder implements EventBuilder{
-		public Event parse(IniSection sec) throws SimulationException{
+		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_vehicle")) {
 				return null;
 			}
