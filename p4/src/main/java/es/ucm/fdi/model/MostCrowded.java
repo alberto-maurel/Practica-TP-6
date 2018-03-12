@@ -8,12 +8,12 @@ import java.util.Queue;
  * 
  */
 
-public class MostCrowed extends Junction {
+public class MostCrowded extends Junction {
 	
 	private int intervaloDeTiempo;
 	private int unidadesDeTiempoUsadas;
 	
-	public MostCrowed() {
+	public MostCrowded() {
 		intervaloDeTiempo = 0;
 		unidadesDeTiempoUsadas = 0;
 	}

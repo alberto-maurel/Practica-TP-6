@@ -8,7 +8,7 @@ public class Car extends Vehicle{
 	protected double fault_probability;
 	protected int max_fault_duration;
 	protected long seed = System.currentTimeMillis();
-	protected int timeSinceLastFailure;
+	protected int kmSinceLastFailure; // Cuenta cuanto ha recorrido desde la última vez que se averió, no el tiempo, no?
 	private Random numAleatorio;
 
 	
@@ -17,7 +17,7 @@ public class Car extends Vehicle{
 		this.resistance = resistance;
 		this.fault_probability = fault_probability;
 		this.max_fault_duration = max_fault_duration;
-		timeSinceLastFailure = 0;
+		kmSinceLastFailure = 0;
 		numAleatorio = new Random(seed);
 	}
 	
@@ -27,7 +27,7 @@ public class Car extends Vehicle{
 		this.fault_probability = fault_probability;
 		this.max_fault_duration = max_fault_duration;
 		this.seed = seed;
-		timeSinceLastFailure = 0;
+		kmSinceLastFailure = 0;
 		numAleatorio = new Random(seed);
 	}
 	
@@ -37,23 +37,25 @@ public class Car extends Vehicle{
 		} else {
 			//Vemos si se va a averiar en este paso
 			boolean isCarOk = true;
-			if(resistance >= timeSinceLastFailure) {
+			if(resistance >= kmSinceLastFailure) {
 				if(numAleatorio.nextDouble() < fault_probability) {
 					//Hemos averiado el vehículo
 					this.setTiempoAveria(numAleatorio.nextInt(max_fault_duration) + 1);
 					isCarOk = false;
+					kmSinceLastFailure = 0;
 				}
 			}
 			
-			//Esto no es lo mismo que el avanza de vehicle?
-			if(isCarOk) {			
+			if(isCarOk) {		
 				//Eliminamos el coche de la carretera
 				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this);
 				if(localizacionCarretera + velActual < carreteraActual.longitud) {
 					localizacionCarretera += velActual;
 					kilometrage += velActual;
+					kmSinceLastFailure += velActual;
 				} else {
 					kilometrage += (carreteraActual.longitud - localizacionCarretera);
+					kmSinceLastFailure += (carreteraActual.longitud - localizacionCarretera);
 					localizacionCarretera = carreteraActual.longitud;
 				}
 				//Y lo volvemos a meter donde debería ir

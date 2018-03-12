@@ -13,21 +13,30 @@ public class NewJunction extends Event{
 		super(time, id);
 	}
 	
-	public static class Builder implements EventBuilder{
-		public Event parse(IniSection sec) {
-			if (!sec.getTag().equals("new_junction")) return null;
-			return new NewJunction(Integer.parseInt(sec.getValue("time")), sec.getValue("id"));
+	public static class Builder implements EventBuilder {
+		public Event parse(IniSection sec) throws SimulationException {
+			if (!sec.getTag().equals("new_junction")) {
+				return null;
+			}
+			if (sec.getValue("type") == null) {
+				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && isValidId(sec.getValue("id"))) {
+					return new NewJunction(Integer.parseInt(sec.getValue("time")), sec.getValue("id"));
+				} else {
+					throw new SimulationException("Algún parámetro no existe o es inválido");
+				}
+			}
+			return null;
 		}
-	}
-		
+	}		
+
 	public void execute(RoadMap roadMap) {
 		//Comprobamos que la intersección no exista previamente
-		if(roadMap.simObjects.get(id) == null) {
+		if(roadMap.getConstantSimObjects().get(id) == null) {
 			
 			Junction jActual = new Junction(id);
 			//Y en caso de no existir la añadimos
-			roadMap.simObjects.put(id, jActual);
-			roadMap.junctions.add(jActual);
+			roadMap.getSimObjects().put(id, jActual);
+			roadMap.getJunctions().add(jActual);
 		}
 	}
 }

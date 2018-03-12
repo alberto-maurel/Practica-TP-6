@@ -33,8 +33,8 @@ public class NewFaultyVehicle extends Event {
 	public void execute(RoadMap roadMap) {
 		for (String s: idVehiclesInvolved) {
 			//Para cada vehículo que exista, ponemos su tiempo de avería al tiempo indicado.
-			if (roadMap.simObjects.get(s) != null) {
-				roadMap.vehicles.get(roadMap.vehicles.indexOf(roadMap.simObjects.get(s))).setTiempoAveria(duration);
+			if (roadMap.getConstantSimObjects().get(s) != null) {
+				roadMap.getVehicles().get(roadMap.getVehicles().indexOf(roadMap.getSimObjects().get(s))).setTiempoAveria(duration);
 			}
 		}
 	}

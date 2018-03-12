@@ -1,9 +1,13 @@
 package es.ucm.fdi.launcher;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.cli.CommandLine;
@@ -13,11 +17,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.junit.Test;
 
+import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.ini.Ini;
 
 public class ExampleMain {
-	//Este es un primer commit para probar como va github
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static Integer _timeLimit = null;
 	private static String _inFile = null;
@@ -145,9 +150,10 @@ public class ExampleMain {
 	 * @throws IOException
 	 */
 	private static void startBatchMode() throws IOException {
-		// TODO
-		// Add your code here. Note that the input argument where parsed and stored into
-		// corresponding fields.
+		InputStream in = new FileInputStream(_inFile);
+		OutputStream out = new FileOutputStream(_outFile);
+		Controller controlador = new Controller(_timeLimit, in, out);
+		controlador.run();
 	}
 
 	private static void start(String[] args) throws IOException {
@@ -172,7 +178,6 @@ public class ExampleMain {
 
 		// Call start to start the simulator from command line, etc.
 		start(args);
-
 	}
 
 }

@@ -11,12 +11,15 @@ public class TrafficSimulator {
 	private ArrayList<Event> listaEventos;
 	private int tick;
 	private RoadMap mapaTrafico;
+	private OutputStream out;
 	
-	public TrafficSimulator() {
+
+	public TrafficSimulator(OutputStream out) {
 		indiceActualEventos = 0;
-		listaEventos = new ArrayList<Event>();
+		this.listaEventos = new ArrayList<>();
 		tick = 0;
 		mapaTrafico = new RoadMap();
+		this.out = out;
 	}
 	
 	
@@ -31,32 +34,31 @@ public class TrafficSimulator {
 			}
 			
 			//Ahora avanzo cada una de las carreteras (y ellas a su vez hacen avanzar a los coches)
-			for(Road r: mapaTrafico.roads) {
+			for(Road r: mapaTrafico.getRoads()) {
 				r.avanza();
 			}
 			
 			//Avanzamos los cruces
-			for(Junction j: mapaTrafico.junctions) {
+			for(Junction j: mapaTrafico.getJunctions()) {
 				j.avanza();
 			}
 			
 			//Y por último escribimos los informes en el orden indicado
-			OutputStream out = System.out; //Testeo (caso nulo?)
 			
 			//Hacer refactoring de estas 3 cosas
-			for(Junction j:mapaTrafico.junctions) {
+			for(Junction j: mapaTrafico.getConstantJunctions()) {
 				Map<String, String> reporte = new HashMap<>();
 				j.generarInforme(tick, reporte);
 				writeReport(reporte, out); //Añadir el outputStream
 			}
 			
-			for(Road j:mapaTrafico.roads) {
+			for(Road j:mapaTrafico.getConstantRoads()) {
 				Map<String, String> reporte = new HashMap<>();
 				j.generarInforme(tick, reporte);
 				writeReport(reporte, out); //Añadir el outputStream
 			}
 			
-			for(Vehicle j:mapaTrafico.vehicles) {
+			for(Vehicle j:mapaTrafico.getConstantVehicles()) {
 				Map<String, String> reporte = new HashMap<>();
 				j.generarInforme(tick, reporte);
 				writeReport(reporte, out); //Añadir el outputStream

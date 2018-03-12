@@ -20,5 +20,4 @@ public class SimulationException extends Exception{
 	public void printMessage() {
 		System.out.println(mensaje);
 	}
-
 }
