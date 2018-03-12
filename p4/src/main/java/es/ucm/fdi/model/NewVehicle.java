@@ -2,16 +2,11 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import es.ucm.fdi.ini.IniSection;
 
 public class NewVehicle extends Event{
 	int max_speed;
 	private ArrayList<String> itinerario; //Guardamos los cruces en forma de ID
-	
-	public NewVehicle(){
-		super();
-	}
 	
 	public NewVehicle(int time, String id, int max_speed, ArrayList<String> itinerario) {
 		super(time, id);
@@ -34,7 +29,9 @@ public class NewVehicle extends Event{
 					ArrayList<String> itinerario = new ArrayList<>(Arrays.asList(itinerarioString));
 					
 					for(String juntName: itinerario) {
-						if(!isValidId(juntName)) throw new SimulationException("El nombre de una junction del itinerario es incorrecto");
+						if(!isValidId(juntName)) {
+							throw new SimulationException("El nombre de una junction del itinerario es incorrecto");
+						}
 					}
 				
 					return new NewVehicle(Integer.parseInt(sec.getValue("time")), sec.getValue("id"),
@@ -47,23 +44,19 @@ public class NewVehicle extends Event{
 		}
 	}
 	
-	public void execute(RoadMap roadMap) throws Exception {
+	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que no existiera previamente el vehículo
 		if(roadMap.getConstantSimObjects().get(id) == null) {
+			
 			ArrayList<Junction> itinerarioVehiculoJunctions = new ArrayList<Junction> ();
 			//Para cada cruce que pertenezca al itinerario del vehículo
 			for(String idJunction: itinerario) {
 				//Añadimos el cruce al arrayList de Junctions que representa el itinerario del vehículo
 				if(roadMap.getConstantSimObjects().get(idJunction) == null) {
-					throw new Exception("El cruce no existe");
-					/*//Creamos las junction que aún no existiesen 
-					Junction cruceFaltante = new Junction(id);
-					roadMap.junctions.add(cruceFaltante);
-					roadMap.simObjects.put(idJunction, cruceFaltante);
-					itinerarioVehiculoJunctions.add(cruceFaltante);*/
-				} else {
-					itinerarioVehiculoJunctions.add((Junction) roadMap.getSimObjects().get(idJunction));
-				}	
+					throw new SimulationException("El cruce no existe");
+					
+				}
+				itinerarioVehiculoJunctions.add((Junction) roadMap.getSimObjects().get(idJunction));	
 			}
 			
 			//Llamamos al constructor del vehículo
@@ -73,7 +66,7 @@ public class NewVehicle extends Event{
 			roadMap.getVehicles().add(nuevoVehiculo);
 			roadMap.getSimObjects().put(id, nuevoVehiculo);
 		} else {
-			throw new Exception("Identificador de objeto duplicado");
+			throw new SimulationException("Identificador de objeto duplicado");
 		}
 	}
 }

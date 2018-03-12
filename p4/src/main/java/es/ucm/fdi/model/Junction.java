@@ -3,6 +3,7 @@ package es.ucm.fdi.model;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
 
@@ -85,6 +86,26 @@ public class Junction extends SimulatedObject{
 	}
 
 	protected void fillReportDetails(Map<String, String> out) {
-		
+		String aux = "";
+		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
+			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
+			
+			if(semaforoVerde == i) {
+				aux += "green,";
+			} else {
+				aux += "red,";
+			}
+			aux += '[';
+			//And now we add all the cars
+			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {
+				aux += v.identificador + ',';
+			}
+			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() != 0) {
+				carreterasEntrantesOrdenadas.get(i);
+			}
+			aux += ']';
+			aux += ')';
+		}
+		out.put("queues", aux);
 	}
 }

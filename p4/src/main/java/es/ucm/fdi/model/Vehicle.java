@@ -49,6 +49,7 @@ public class Vehicle extends SimulatedObject {
 			} else {
 				kilometrage += (carreteraActual.longitud - localizacionCarretera);
 				localizacionCarretera = carreteraActual.longitud;
+				velActual = 0;
 			}
 			//Y lo volvemos a meter donde debería ir
 			carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
@@ -114,10 +115,10 @@ public class Vehicle extends SimulatedObject {
 		out.put("speed", String.valueOf(velActual));
 		out.put("kilometrage", String.valueOf(kilometrage));
 		out.put("faulty", String.valueOf(tiempoAveria));
-		if(localizacionCarretera == arrived){
-			out.put("location", "(arrived)");
-		}else{
-			out.put("location", "(" + carreteraActual.identificador + ", " + localizacionCarretera + ")");
+		if(localizacionCarretera == arrived || localizacionCarretera == carreteraActual.longitud && carreteraActual.cruceFin == itinerario.get(itinerario.size() - 1)){
+			out.put("location", "arrived");
+		} else {
+			out.put("location", "(" + carreteraActual.identificador + "," + localizacionCarretera + ")");
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package es.ucm.fdi.model;
 
-public class Path extends Road {	
 import java.util.ArrayList;
 
 import es.ucm.fdi.util.MultiTreeMap;

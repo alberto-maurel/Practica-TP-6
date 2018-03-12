@@ -2,8 +2,6 @@ package es.ucm.fdi.model;
 
 import es.ucm.fdi.ini.IniSection;
 
-import es.ucm.fdi.ini.IniSection;
-
 public class NewRoad extends Event{
 	private String src;
 	private String dest;
@@ -39,34 +37,22 @@ public class NewRoad extends Event{
 			}
 			return null;
 		}
-  }
+    }
 	
 	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que no haya otra carretera con el mismo id
 		SimulatedObject J1, J2;
 		if(roadMap.getConstantSimObjects().get(id) == null) {
-			//Comprobamos que los cruces existen y si no existen los creamos
+			//Comprobamos que existan ambos cruces
 			if(roadMap.getConstantSimObjects().get(src) == null) {
-				throw new Exception("El cruce no existe");
-        
-				/*J1 = new Junction(src);
-				//Y la incluimos en el roadMap
-				roadMap.simObjects.put(src, J1);
-				roadMap.junctions.add((Junction)J1);*/
-			} else {
-				J1 = roadMap.getSimObjects().get(src); 
+				throw new SimulationException("El cruce no existe");
 			}
+			J1 = roadMap.getSimObjects().get(src); 
 
 			if(roadMap.getSimObjects().get(dest) == null) {
-				throw new Exception("El cruce no existe");
-				/*
-				J2 = new Junction(dest);
-				//Y la incluimos en el roadMap
-				roadMap.simObjects.put(src, J2);
-				roadMap.junctions.add((Junction)J2);*/
-			} else {
-				J2 = roadMap.getSimObjects().get(dest); 
-			}
+				throw new SimulationException("El cruce no existe");
+			} 
+			J2 = roadMap.getSimObjects().get(dest); 
 			
 			Road nuevaCarretera = new Road(id, length, max_speed, (Junction) J1, (Junction) J2); //Cast feillo, revisar
 

@@ -1,5 +1,6 @@
 package es.ucm.fdi.model;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class SimulatedObject {
@@ -14,7 +15,7 @@ public abstract class SimulatedObject {
 	}
 	
 	void avanza() {}
-	void generarInforme(int time, Map<String, String> out) {
+	void generarInforme(int time, LinkedHashMap<String, String> out) {
 		out.put("", getReportHeader());
 		out.put("id", identificador);
 		out.put("time", String.valueOf(time));

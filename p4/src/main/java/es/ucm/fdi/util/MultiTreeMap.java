@@ -41,16 +41,15 @@ public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
      * @return true if removed, false if not found
      */
     public boolean removeValue(K key, V value) {
-        if (!containsKey(key)) {
+        if ( ! containsKey(key)) {
             return false;
-        } else { //Tenemos garantizado que dicha clave pertenece al treemap
-        	boolean aux = get(key).remove(value);
-        	//Si dicha clave está en el treemap y se queda sin elementos la eliminamos tambien
-        	if(aux && get(key).size() == 0) {
-        		this.remove(key);
-        	}
-        	return aux;
         }
+        ArrayList<V> bucket = get(key);
+        boolean removed = bucket.remove(value);
+        if (bucket.isEmpty()) {
+            remove(key);
+        }
+        return removed;
     }
 
     /**

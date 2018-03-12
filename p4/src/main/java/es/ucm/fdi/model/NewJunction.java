@@ -21,15 +21,14 @@ public class NewJunction extends Event{
 			if (sec.getValue("type") == null) {
 				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && isValidId(sec.getValue("id"))) {
 					return new NewJunction(Integer.parseInt(sec.getValue("time")), sec.getValue("id"));
-				} else {
-					throw new SimulationException("Algún parámetro no existe o es inválido");
-				}
+				} 
+				throw new SimulationException("Algún parámetro no existe o es inválido");
 			}
 			return null;
 		}
 	}		
 
-	public void execute(RoadMap roadMap) {
+	public void execute(RoadMap roadMap) throws SimulationException{
 		//Comprobamos que la intersección no exista previamente
 		if(roadMap.getConstantSimObjects().get(id) == null) {
 			
@@ -37,6 +36,9 @@ public class NewJunction extends Event{
 			//Y en caso de no existir la añadimos
 			roadMap.getSimObjects().put(id, jActual);
 			roadMap.getJunctions().add(jActual);
+		} else {
+			throw new SimulationException("Ya existe un cruce con el mismo identificador");
 		}
 	}
+		
 }

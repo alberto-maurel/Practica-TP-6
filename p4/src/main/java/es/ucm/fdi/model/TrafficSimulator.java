@@ -1,8 +1,10 @@
 package es.ucm.fdi.model;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TrafficSimulator {
@@ -21,7 +23,6 @@ public class TrafficSimulator {
 		mapaTrafico = new RoadMap();
 		this.out = out;
 	}
-	
 	
 	//Métodos
 	public void run(int time){
@@ -45,40 +46,53 @@ public class TrafficSimulator {
 			
 			//Y por último escribimos los informes en el orden indicado
 			
+			++tick;
+			
 			//Hacer refactoring de estas 3 cosas
 			for(Junction j: mapaTrafico.getConstantJunctions()) {
-				Map<String, String> reporte = new HashMap<>();
+				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 				j.generarInforme(tick, reporte);
-				writeReport(reporte, out); //Añadir el outputStream
+				writeReport(reporte, out);
 			}
 			
 			for(Road j:mapaTrafico.getConstantRoads()) {
-				Map<String, String> reporte = new HashMap<>();
+				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 				j.generarInforme(tick, reporte);
-				writeReport(reporte, out); //Añadir el outputStream
+				writeReport(reporte, out);
 			}
 			
 			for(Vehicle j:mapaTrafico.getConstantVehicles()) {
-				Map<String, String> reporte = new HashMap<>();
+				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 				j.generarInforme(tick, reporte);
-				writeReport(reporte, out); //Añadir el outputStream
+				writeReport(reporte, out);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		++tick;
+		
 	}
 		
 	}
 	
-	public void writeReport(Map<String, String> report, OutputStream out) {
-		for(Map.Entry<String,String> campo: report.entrySet()) {
-			if(campo.getKey().equals("")) {
-				System.out.println(campo.getValue());
-			} else {
-				System.out.println(campo.getKey() + " = " + campo.getValue());
+	public void writeReport(Map<String, String> report, OutputStream out) throws IOException{
+		try {
+			for(Map.Entry<String,String> campo: report.entrySet()) {
+				if(campo.getKey().equals("")) {
+					String aux = campo.getValue()  + "\n";
+					out.write(aux.getBytes());
+					
+				} else {
+					String aux = campo.getKey() + " = " + campo.getValue() + "\n";
+					out.write(aux.getBytes());
+				}
+				
 			}
 		}
+		catch(IOException io) {
+			throw io;
+		}
+		out.write("\n".getBytes());
+		out.flush();
 	}
 	
 	/**

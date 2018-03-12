@@ -106,7 +106,7 @@ public class Road extends SimulatedObject{
 	protected void fillReportDetails(Map<String, String> out) {
 		String aux = "";
 		for (Vehicle v: situacionCarretera.innerValues()) {
-			aux += "(" + v.identificador + ", " + v.localizacionCarretera + "),";
+			if(v.localizacionCarretera != v.carreteraActual.longitud) aux += "(" + v.identificador + "," + v.localizacionCarretera + "),";
 		}
 		//Los metemos todos en un string y quitamos la ultima coma
 		if(aux.length() > 0) {

@@ -2,9 +2,7 @@ package es.ucm.fdi.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import es.ucm.fdi.ini.IniSection;
-
 
 public class NewCar extends NewVehicle {
 	
@@ -28,7 +26,6 @@ public class NewCar extends NewVehicle {
 			}
 			
 			if ("car".equals(sec.getValue("type"))) {
-				
 				if(parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
 						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0) &&
 					parseInt(sec, "resistance", 0) && parseDouble(sec, "fault_probability", 0) &&
