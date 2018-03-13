@@ -46,10 +46,13 @@ public class Vehicle extends SimulatedObject {
 			if(localizacionCarretera + velActual < carreteraActual.longitud) {
 				localizacionCarretera += velActual;
 				kilometrage += velActual;
-			} else {
+			} else { //El coche entra en la intersección
 				kilometrage += (carreteraActual.longitud - localizacionCarretera);
 				localizacionCarretera = carreteraActual.longitud;
 				velActual = 0;
+				if(localizacionCarretera == carreteraActual.longitud){
+					carreteraActual.cruceFin.entraVehiculo(this);
+				}
 			}
 			//Y lo volvemos a meter donde debería ir
 			carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
@@ -75,6 +78,7 @@ public class Vehicle extends SimulatedObject {
 			
 			//Y lo colocamos al principio
 			localizacionCarretera = 0;
+			carreteraActual.entraVehiculo(this);
 		}
 	}
 	

@@ -55,29 +55,22 @@ public class Road extends SimulatedObject{
 	 */
 	void avanza() {
 		//En primer lugar calculamos la velocidad base de la carretera
-		/*
-		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues()));
-		int aux2 = maxVel/aux1;
-		int velocidadBase = Math.min(maxVel, aux2 + 1);
-		*/
 		int velocidadBase = calcularVelocidadBase(maxVel, Math.toIntExact(situacionCarretera.sizeOfValues()));
-			
-		//Y ahora vamos contabilizando cuantos vehículos están averiados y les vamos cambiando la velocidad
-		int factorReduccion;
-		int nVehiculosAveriadosHastaElMomento = 0;
 		
 		//Hacemos una copia de la carretera para poder iterar por ella
-		MultiTreeMap<Integer, Vehicle> situacionCarreteraAuxiliar = (MultiTreeMap<Integer, Vehicle>) situacionCarretera.clone();
 		
+		MultiTreeMap<Integer, Vehicle> situacionCarreteraAuxiliar = new MultiTreeMap<>();
+		for(Vehicle v: situacionCarretera.innerValues()) {
+			situacionCarreteraAuxiliar.putValue(v.localizacionCarretera, v);
+		}
+		
+		int factorReduccion;
+		int nVehiculosAveriadosHastaElMomento = 0;
 		for(Vehicle v: situacionCarreteraAuxiliar.innerValues()) {
-			//Si está al final de la carretera lo metemos en el cruce
-			if(v.localizacionCarretera == v.carreteraActual.longitud){
-				v.carreteraActual.cruceFin.entraVehiculo(v);
-			}
-			
-			else if(v.isCocheAveriado()) {
-				//Si está averiado no es necesario actualizar la información porque en este tick no se va a mover
+						
+			if(v.isCocheAveriado()) {
 				++nVehiculosAveriadosHastaElMomento;
+				v.setVelocidadActual(0);
 			}
 			else {
 				factorReduccion = calcularFactorReduccion(nVehiculosAveriadosHastaElMomento);
@@ -105,8 +98,9 @@ public class Road extends SimulatedObject{
 	
 	protected void fillReportDetails(Map<String, String> out) {
 		String aux = "";
+		//Como se itera en orden inverso (de más pequeño a más grande), vamos insertando al revés
 		for (Vehicle v: situacionCarretera.innerValues()) {
-			if(v.localizacionCarretera != v.carreteraActual.longitud) aux += "(" + v.identificador + "," + v.localizacionCarretera + "),";
+			if(v.localizacionCarretera != v.carreteraActual.longitud) aux += "(" + v.identificador + "," + v.localizacionCarretera + "),";// + aux;
 		}
 		//Los metemos todos en un string y quitamos la ultima coma
 		if(aux.length() > 0) {

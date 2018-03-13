@@ -3,8 +3,12 @@ package es.ucm.fdi.model;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TrafficSimulator {
@@ -24,8 +28,18 @@ public class TrafficSimulator {
 		this.out = out;
 	}
 	
+	public class SortbyTime implements Comparator<Event>{
+	    public int compare(Event a, Event b) {
+	        return a.time - b.time;
+	    }
+	}
+	
 	//Métodos
 	public void run(int time){
+		//Before running the simulation we ensure that all the events are sorted by it's starting time
+		
+		Collections.sort(listaEventos, new SortbyTime());
+		
 		while (tick < time) {
 		try {
 			//En primer lugar carga los eventos correspondientes a dicho tick
