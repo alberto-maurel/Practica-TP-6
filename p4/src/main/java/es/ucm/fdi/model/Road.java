@@ -25,7 +25,7 @@ public class Road extends SimulatedObject{
 		super(id);
 		this.longitud = longitud;
 		this.maxVel = maxVel;
-		situacionCarretera = new MultiTreeMap<>();
+		situacionCarretera = new MultiTreeMap<>((a,b) -> b - a);
 		cruceIni = src;
 		cruceFin = dest;
 		src.nuevaCarreteraSaliente(this);
@@ -59,7 +59,7 @@ public class Road extends SimulatedObject{
 		
 		//Hacemos una copia de la carretera para poder iterar por ella
 		
-		MultiTreeMap<Integer, Vehicle> situacionCarreteraAuxiliar = new MultiTreeMap<>();
+		MultiTreeMap<Integer, Vehicle> situacionCarreteraAuxiliar = new MultiTreeMap<>((a,b) -> b - a);
 		for(Vehicle v: situacionCarretera.innerValues()) {
 			situacionCarreteraAuxiliar.putValue(v.localizacionCarretera, v);
 		}
