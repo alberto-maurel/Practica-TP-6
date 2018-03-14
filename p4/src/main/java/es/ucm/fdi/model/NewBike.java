@@ -37,4 +37,30 @@ public class NewBike extends NewVehicle {
 		}
 	}
 	
+	public void execute(RoadMap roadMap) throws SimulationException {
+		//Comprobamos que no existiera previamente el vehículo
+		if(roadMap.getConstantSimObjects().get(id) == null) {
+			
+			ArrayList<Junction> itinerarioVehiculoJunctions = new ArrayList<Junction> ();
+			//Para cada cruce que pertenezca al itinerario del vehículo
+			for(String idJunction: itinerario) {
+				//Añadimos el cruce al arrayList de Junctions que representa el itinerario del vehículo
+				if(roadMap.getConstantSimObjects().get(idJunction) == null) {
+					throw new SimulationException("El cruce no existe");
+					
+				}
+				itinerarioVehiculoJunctions.add((Junction) roadMap.getSimObjects().get(idJunction));	
+			}
+			
+			//Llamamos al constructor del vehículo
+			Bike nuevoVehiculo = new Bike(id, max_speed, itinerarioVehiculoJunctions);
+			
+			//Y lo insertamos en el roadMap
+			roadMap.getVehicles().add(nuevoVehiculo);
+			roadMap.getSimObjects().put(id, nuevoVehiculo);
+		} else {
+			throw new SimulationException("Identificador de objeto duplicado");
+		}
+	}
+	
 }

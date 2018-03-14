@@ -5,8 +5,8 @@ import java.util.Arrays;
 import es.ucm.fdi.ini.IniSection;
 
 public class NewVehicle extends Event{
-	int max_speed;
-	private ArrayList<String> itinerario; //Guardamos los cruces en forma de ID
+	protected int max_speed;
+	protected ArrayList<String> itinerario; //Guardamos los cruces en forma de ID
 	
 	public NewVehicle(int time, String id, int max_speed, ArrayList<String> itinerario) {
 		super(time, id);

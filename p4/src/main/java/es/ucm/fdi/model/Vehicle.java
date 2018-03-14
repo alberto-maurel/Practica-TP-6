@@ -123,6 +123,12 @@ public class Vehicle extends SimulatedObject {
 	}
 	
 	protected void fillReportDetails(Map<String, String> out) {
+		if(this instanceof Bike) {
+			out.put("type", addTypeOfVehicle());
+		}
+		else if (this instanceof Car) {
+			out.put("type", addTypeOfVehicle());
+		}
 		out.put("speed", String.valueOf(velActual));
 		out.put("kilometrage", String.valueOf(kilometrage));
 		out.put("faulty", String.valueOf(tiempoAveria));
@@ -131,5 +137,9 @@ public class Vehicle extends SimulatedObject {
 		} else {
 			out.put("location", "(" + carreteraActual.identificador + "," + localizacionCarretera + ")");
 		}
+	}
+	
+	protected String addTypeOfVehicle() {
+		return null;
 	}
 }

@@ -13,4 +13,8 @@ public class Bike extends Vehicle{
 			tiempoAveria += averia;
 		}
 	}
+	
+	protected String addTypeOfVehicle() {
+		return "bike";
+	}
 }

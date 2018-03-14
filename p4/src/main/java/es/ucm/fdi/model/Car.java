@@ -63,5 +63,9 @@ public class Car extends Vehicle{
 			}
 		}	
 	}
+	
+	protected String addTypeOfVehicle() {
+		return "car";
+	}
 
 }
