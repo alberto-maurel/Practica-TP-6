@@ -3,6 +3,8 @@ package es.ucm.fdi.util;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import es.ucm.fdi.model.Event;
+
 /**
  * A TreeMap that supports multiple values for the same key, via ArrayLists.
  *
@@ -12,7 +14,16 @@ import java.util.stream.Collectors;
  */
 public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
 
-    public MultiTreeMap() {}
+	/*
+	public class ModifiedComparator implements Comparator<K>{
+	    public int compare(K a, K b) {
+	        return a - b;
+	    }
+	}
+	*/
+    public MultiTreeMap() {
+    	//super((a,b) -> a-b);
+    }
 
     public MultiTreeMap(Comparator<K> comparator) {
         super(comparator);

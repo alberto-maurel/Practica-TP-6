@@ -44,18 +44,16 @@ public class Junction extends SimulatedObject{
 	}
 	
 	public void avanza() {
+		//Y encendemos el semaforo de la siguiente interseccion independientemente de si hemos movido algún coche o no
+		actualizarSemaforo();
 		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
-		//if(colasCoches.size() > 0 && colasCoches.get(semaforoVerde) != null && colasCoches.get(semaforoVerde).size() > 0) {
-			
 		if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
-				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+			   colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
 					//En dicho caso sacamos el coche
 					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
 					//Y lo movemos a su siguiente carretera
 					v.moverASiguienteCarretera();		
 		}
-		//Y encendemos el semaforo de la siguiente interseccion independientemente de si hemos movido algún coche o no
-		actualizarSemaforo();
 	}
 	
 	public void actualizarSemaforo() {
@@ -90,21 +88,33 @@ public class Junction extends SimulatedObject{
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
 			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
 			
-			if(semaforoVerde == i) {
-				aux += "green,";
+			if(i == carreterasEntrantesOrdenadas.size() - 1) {
+				if(semaforoVerde == 0) {
+					aux += "green,";
+				} else {
+					aux += "red,";
+				}	
 			} else {
-				aux += "red,";
+				if(semaforoVerde == i + 1) {
+					aux += "green,";
+				} else {
+					aux += "red,";
+				}	
 			}
 			aux += '[';
 			//And now we add all the cars
 			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {
 				aux += v.identificador + ',';
 			}
+			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() > 0) {			
+				aux = aux.substring(0, aux.length() - 1);
+			}
 			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() != 0) {
 				carreterasEntrantesOrdenadas.get(i);
 			}
 			aux += ']';
 			aux += ')';
+			if(i != carreterasEntrantesOrdenadas.size() - 1) aux += ',';
 		}
 		out.put("queues", aux);
 	}

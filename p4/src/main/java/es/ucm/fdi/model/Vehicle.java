@@ -46,16 +46,23 @@ public class Vehicle extends SimulatedObject {
 			if(localizacionCarretera + velActual < carreteraActual.longitud) {
 				localizacionCarretera += velActual;
 				kilometrage += velActual;
-			} else { //El coche entra en la intersección
+				//Y lo volvemos a meter donde debería ir
+				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
+			} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección
 				kilometrage += (carreteraActual.longitud - localizacionCarretera);
 				localizacionCarretera = carreteraActual.longitud;
 				velActual = 0;
-				if(localizacionCarretera == carreteraActual.longitud){
-					carreteraActual.cruceFin.entraVehiculo(this);
-				}
+				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
+				carreteraActual.cruceFin.entraVehiculo(this);
+				//if(!carreteraActual.cruceFin.identificador.equals(itinerario.get(itinerario.size() - 1).identificador)) {
+					//Y lo volvemos a meter donde debería ir
+					//carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
+					//carreteraActual.cruceFin.entraVehiculo(this);
+				//}
+			} else {
+				velActual = 0;
+				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
 			}
-			//Y lo volvemos a meter donde debería ir
-			carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
 		}	
 	}
 	

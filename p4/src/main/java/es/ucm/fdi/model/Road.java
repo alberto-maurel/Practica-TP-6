@@ -67,7 +67,6 @@ public class Road extends SimulatedObject{
 		int factorReduccion;
 		int nVehiculosAveriadosHastaElMomento = 0;
 		for(Vehicle v: situacionCarreteraAuxiliar.innerValues()) {
-						
 			if(v.isCocheAveriado()) {
 				++nVehiculosAveriadosHastaElMomento;
 				v.setVelocidadActual(0);
@@ -98,9 +97,9 @@ public class Road extends SimulatedObject{
 	
 	protected void fillReportDetails(Map<String, String> out) {
 		String aux = "";
-		//Como se itera en orden inverso (de más pequeño a más grande), vamos insertando al revés
 		for (Vehicle v: situacionCarretera.innerValues()) {
-			if(v.localizacionCarretera != v.carreteraActual.longitud) aux += "(" + v.identificador + "," + v.localizacionCarretera + "),";// + aux;
+			//if(v.localizacionCarretera != v.carreteraActual.longitud) 
+			aux += "(" + v.identificador + "," + v.localizacionCarretera + "),";// + aux;
 		}
 		//Los metemos todos en un string y quitamos la ultima coma
 		if(aux.length() > 0) {
