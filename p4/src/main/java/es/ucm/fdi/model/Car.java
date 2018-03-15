@@ -1,6 +1,7 @@
 package es.ucm.fdi.model;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class Car extends Vehicle{
@@ -8,10 +9,10 @@ public class Car extends Vehicle{
 	protected double fault_probability;
 	protected int max_fault_duration;
 	protected long seed = System.currentTimeMillis();
-	protected int kmSinceLastFailure; // Cuenta cuanto ha recorrido desde la última vez que se averió, no el tiempo, no?
+	protected int kmSinceLastFailure; // Cuenta cuanto ha recorrido desde la última vez que se averió
 	private Random numAleatorio;
 
-	
+	//Constructor sin semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration) {
 		super(id, velMaxima, itinerario);
 		this.resistance = resistance;
@@ -21,6 +22,7 @@ public class Car extends Vehicle{
 		numAleatorio = new Random(seed);
 	}
 	
+	//Constructor con semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration, long seed) {
 		super(id, velMaxima, itinerario);
 		this.resistance = resistance;
@@ -31,6 +33,7 @@ public class Car extends Vehicle{
 		numAleatorio = new Random(seed);
 	}
 	
+
 	public void avanza() {
 		if(tiempoAveria > 0) {
 			--tiempoAveria;
@@ -47,25 +50,35 @@ public class Car extends Vehicle{
 			}
 			
 			if(isCarOk) {		
-				//Eliminamos el coche de la carretera
+				//Sacamos el coche de la carretera
 				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this);
+				
+				//Procesamos el vehículo
+				//Si el vehículo no llega en este tick al final de la carretera
 				if(localizacionCarretera + velActual < carreteraActual.longitud) {
 					localizacionCarretera += velActual;
 					kilometrage += velActual;
 					kmSinceLastFailure += velActual;
-				} else {
+
+				} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección (pero aún no estaba)
 					kilometrage += (carreteraActual.longitud - localizacionCarretera);
-					kmSinceLastFailure += (carreteraActual.longitud - localizacionCarretera);
 					localizacionCarretera = carreteraActual.longitud;
+					kmSinceLastFailure += (carreteraActual.longitud - localizacionCarretera);
+					velActual = 0;
+					carreteraActual.cruceFin.entraVehiculo(this);
+					
+				} else { //El coche ya estaba en la intersección
+					velActual = 0;
+					
 				}
-				//Y lo volvemos a meter donde debería ir
+				//Y volvemos a meter el coche en la posición en la que debería ir
 				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
 			}
 		}	
 	}
 	
-	protected String addTypeOfVehicle() {
-		return "car";
+	protected void fillReportDetails(Map<String, String> out) {
+		out.put("type", "car");
+		super.fillReportDetails(out);
 	}
-
 }

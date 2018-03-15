@@ -11,7 +11,7 @@ public class Vehicle extends SimulatedObject {
 	protected Road carreteraActual;
 	protected int localizacionCarretera;
 	protected ArrayList<Junction> itinerario; 
-	protected int indItinerario;   		  //y un contador que nos indica en cual nos encontramos
+	protected int indItinerario;  //Contador que nos indica en qué junction nos encontramos
 	protected int tiempoAveria;
 	protected int kilometrage;
 	
@@ -32,37 +32,36 @@ public class Vehicle extends SimulatedObject {
 		kilometrage = 0;
 	}
 	
-	
 	//Métodos
 	/**
 	 * Avanza el estado actual del coche
 	 */
 	void avanza() {
+		//Si está averiado
 		if(tiempoAveria > 0) {
 			--tiempoAveria;
-		} else {
-			//Eliminamos el coche de la carretera
+		} else { //Si no está averiado
+			//Sacamos el coche de la carretera
 			carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this);
+			
+			//Procesamos el vehículo
+			//Si el vehículo no llega en este tick al final de la carretera
 			if(localizacionCarretera + velActual < carreteraActual.longitud) {
 				localizacionCarretera += velActual;
 				kilometrage += velActual;
-				//Y lo volvemos a meter donde debería ir
-				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
-			} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección
+
+			} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección (pero aún no estaba)
 				kilometrage += (carreteraActual.longitud - localizacionCarretera);
 				localizacionCarretera = carreteraActual.longitud;
 				velActual = 0;
-				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
 				carreteraActual.cruceFin.entraVehiculo(this);
-				//if(!carreteraActual.cruceFin.identificador.equals(itinerario.get(itinerario.size() - 1).identificador)) {
-					//Y lo volvemos a meter donde debería ir
-					//carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
-					//carreteraActual.cruceFin.entraVehiculo(this);
-				//}
-			} else {
+				
+			} else { //El coche ya estaba en la intersección
 				velActual = 0;
-				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
+				
 			}
+			//Y volvemos a meter el coche en la posición en la que debería ir
+			carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
 		}	
 	}
 	
@@ -74,12 +73,16 @@ public class Vehicle extends SimulatedObject {
 		carreteraActual.saleVehiculo(this);
 		
 		//Cambiamos de carretera
+		
+		//Buscamos cuál es el siguiente cruce
 		Junction cruceActual = itinerario.get(indItinerario);
 		++indItinerario;
+		//Si ya hemos llegado al final marcamos como llegado
 		if(indItinerario == itinerario.size()){
 			localizacionCarretera = arrived;
-		} else {
-			//Para ello buscamos que carretera va de un cruce al otro
+		} else { //Si no hemos llegado aún a la última intersección
+			
+			//Buscamos que carretera va de un cruce al otro
 			Junction siguienteCruce = itinerario.get(indItinerario);
 			carreteraActual = cruceActual.buscarCarretera(siguienteCruce);
 			
@@ -123,23 +126,13 @@ public class Vehicle extends SimulatedObject {
 	}
 	
 	protected void fillReportDetails(Map<String, String> out) {
-		if(this instanceof Bike) {
-			out.put("type", addTypeOfVehicle());
-		}
-		else if (this instanceof Car) {
-			out.put("type", addTypeOfVehicle());
-		}
 		out.put("speed", String.valueOf(velActual));
 		out.put("kilometrage", String.valueOf(kilometrage));
 		out.put("faulty", String.valueOf(tiempoAveria));
-		if(localizacionCarretera == arrived || localizacionCarretera == carreteraActual.longitud && carreteraActual.cruceFin == itinerario.get(itinerario.size() - 1)){
+		if(localizacionCarretera == arrived) {
 			out.put("location", "arrived");
 		} else {
 			out.put("location", "(" + carreteraActual.identificador + "," + localizacionCarretera + ")");
 		}
-	}
-	
-	protected String addTypeOfVehicle() {
-		return null;
 	}
 }

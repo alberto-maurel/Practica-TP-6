@@ -30,25 +30,28 @@ public class Junction extends SimulatedObject{
 		this.carreterasSalientes = new HashMap<>(); 
 		this.carreterasEntrantesOrdenadas = new ArrayList<>();
 	}
-	
-	public Junction(String id, HashMap<String, Queue<Vehicle>> colasCoches) {
-		super(id);
-		semaforoVerde = 0;
-		this.colasCoches = colasCoches;
-		this.carreterasSalientes = new HashMap<>(); 
-		this.carreterasEntrantesOrdenadas = new ArrayList<>();
-	}
-	
+		
+	/**
+	 * Entra un vehículo en el cruce
+	 * @param vehiculo
+	 */
 	void entraVehiculo(Vehicle vehiculo) {
 		colasCoches.get(vehiculo.carreteraActual.identificador).offer(vehiculo);
 	}
 	
+	/**
+	 * Avanzamos un tick ell cruce
+	 */
 	public void avanza() {
-		//Y encendemos el semaforo de la siguiente interseccion independientemente de si hemos movido algún coche o no
+		//Actualizamos los semáforos
 		actualizarSemaforo();
-		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
+		//NOTA: en el guión de la práctica se especificaba que en primer lugar tenían que actualizarse los vehículos del cruce y después
+		//cambiar el semáforo. Sin embargo, nos parece que el comportamiento simulado se asemeja más al de actualizar de antemano el cruce
+		//y posteriormente mover los coches.		
+		
+		//Vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
 		if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
-			   colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
 					//En dicho caso sacamos el coche
 					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
 					//Y lo movemos a su siguiente carretera
@@ -88,6 +91,7 @@ public class Junction extends SimulatedObject{
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
 			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
 			
+			
 			if(i == carreterasEntrantesOrdenadas.size() - 1) {
 				if(semaforoVerde == 0) {
 					aux += "green,";
@@ -101,6 +105,7 @@ public class Junction extends SimulatedObject{
 					aux += "red,";
 				}	
 			}
+			
 			aux += '[';
 			//And now we add all the cars
 			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {

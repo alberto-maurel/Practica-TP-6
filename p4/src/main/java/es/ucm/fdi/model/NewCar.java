@@ -36,7 +36,7 @@ public class NewCar extends NewVehicle {
 					ArrayList<String> itinerario = new ArrayList<>(Arrays.asList(itinerarioString));
 					
 					for(String juntName: itinerario){
-						if(!isValidId(juntName)) throw new SimulationException("El nombre de una junction del itinerario es incorrecto");
+						if(!isValidId(juntName)) throw new SimulationException("El nombre de una junction del itinerario no es válido");
 					}
 				
 					return new NewCar(Integer.parseInt(sec.getValue("time")), 

@@ -1,6 +1,7 @@
 package es.ucm.fdi.model;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Bike extends Vehicle{
 	
@@ -14,7 +15,8 @@ public class Bike extends Vehicle{
 		}
 	}
 	
-	protected String addTypeOfVehicle() {
-		return "bike";
+	protected void fillReportDetails(Map<String, String> out) {
+		out.put("type", "bike");
+		super.fillReportDetails(out);
 	}
 }

@@ -31,7 +31,6 @@ public class NewJunction extends Event{
 	public void execute(RoadMap roadMap) throws SimulationException{
 		//Comprobamos que la intersección no exista previamente
 		if(roadMap.getConstantSimObjects().get(id) == null) {
-			
 			Junction jActual = new Junction(id);
 			//Y en caso de no existir la añadimos
 			roadMap.getSimObjects().put(id, jActual);
