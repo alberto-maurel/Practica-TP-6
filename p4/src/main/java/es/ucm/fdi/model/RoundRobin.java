@@ -37,29 +37,37 @@ public class RoundRobin extends Junction {
 	
 	
 	public void avanza() {
-		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar			
-		if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
-				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
-					//En dicho caso sacamos el coche
-					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
-					//Y lo movemos a su siguiente carretera
-					v.moverASiguienteCarretera();
-					//Añadimos uno al numero de coches que han pasado en el intervalo
-					//pasados.set(semaforoVerde, pasados.get(semaforoVerde) + 1);
-					++pasados;
-		}
+		if (semaforoVerde != -1) {
+			//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar			
+			if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
+					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+						//En dicho caso sacamos el coche
+						Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
+						//Y lo movemos a su siguiente carretera
+						v.moverASiguienteCarretera();
+						//Añadimos uno al numero de coches que han pasado en el intervalo
+						//pasados.set(semaforoVerde, pasados.get(semaforoVerde) + 1);
+						++pasados;
+			}
+		}		
 		actualizarSemaforo();
 	}
 	
 	public void actualizarSemaforo() {
-		//En primer lugar vemos si hemos agotado el tiempo del semáforo actual
-		if (intervaloDeTiempo.get(semaforoVerde) == unidadesDeTiempoUsadas) {
-			//2. Actualizar intervalo de tiempo
-			if (pasados == intervaloDeTiempo.get(semaforoVerde)) { //Si en cada paso ha cruzado un coche
-				intervaloDeTiempo.set(semaforoVerde, Math.min(intervaloDeTiempo.get(semaforoVerde) + 1, maxValorIntervalo));
-			} else if (pasados == 0) { // Si no ha pasado ningún coche durante el intervalo
-				intervaloDeTiempo.set(semaforoVerde, Math.max(intervaloDeTiempo.get(semaforoVerde) - 1, minValorIntervalo));
-			} // En caso contrario, el intervalo no se modifica.
+		if (semaforoVerde != -1) {
+			//En primer lugar vemos si hemos agotado el tiempo del semáforo actual
+			if (intervaloDeTiempo.get(semaforoVerde) == unidadesDeTiempoUsadas) {
+				//2. Actualizar intervalo de tiempo
+				if (pasados == intervaloDeTiempo.get(semaforoVerde)) { //Si en cada paso ha cruzado un coche
+					intervaloDeTiempo.set(semaforoVerde, Math.min(intervaloDeTiempo.get(semaforoVerde) + 1, maxValorIntervalo));
+				} else if (pasados == 0) { // Si no ha pasado ningún coche durante el intervalo
+					intervaloDeTiempo.set(semaforoVerde, Math.max(intervaloDeTiempo.get(semaforoVerde) - 1, minValorIntervalo));
+				} // En caso contrario, el intervalo no se modifica.
+			} else {
+				cambioDeSemaforoEsteTurno = false;
+				++unidadesDeTiempoUsadas;
+			}
+		}
 			
 			//1. Pone semáforo verde a rojo
 			super.actualizarSemaforo();
@@ -67,10 +75,6 @@ public class RoundRobin extends Junction {
 			
 			unidadesDeTiempoUsadas = 1; // Volvemos a poner las unidades de tiempo usadas a 0
 			pasados = 0; //Y también el contador de coches de esa carretera entrante
-		} else {
-			cambioDeSemaforoEsteTurno = false;
-			++unidadesDeTiempoUsadas;
-		}
 	}
 	
 	protected void fillReportDetails(Map<String, String> out) {
@@ -78,21 +82,12 @@ public class RoundRobin extends Junction {
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
 			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
 			
-			//El semáforo está correctamente colocado
-			if(!cambioDeSemaforoEsteTurno) {
-				if(semaforoVerde == i) {
-					aux += "green:" + Integer.toString(intervaloDeTiempo.get(i) - unidadesDeTiempoUsadas + 1) + ",";
-				}
-				else {
-					aux += "red,";
-				}
-			} else { //Hemos cambiado de semáforo
-				if(semaforoVerde == i) {
-					aux += "green:" + Integer.toString(intervaloDeTiempo.get(i) - unidadesDeTiempoUsadas + 1) + ",";
-				}
-				else {
-					aux += "red,";
-				}
+
+			if (semaforoVerde == i) {
+				aux += "green:" + Integer.toString(intervaloDeTiempo.get(i) - unidadesDeTiempoUsadas + 1) + ",";
+			}
+			else {
+				aux += "red,";
 			}
 			aux += '[';
 			//And now we add all the cars

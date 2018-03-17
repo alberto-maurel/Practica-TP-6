@@ -17,24 +17,50 @@ public class MostCrowded extends Junction {
 private String buscarCarreteraAtascada(String id) {
 		int maxActual = -1;
 		String idAct = "";
+		
 		for (String carreteraAct: carreterasEntrantesOrdenadas) {
 			if(!colasCoches.get(carreteraAct).isEmpty() &&
- 					colasCoches.get(carreteraAct).size() > maxActual) {
+ 					colasCoches.get(carreteraAct).size() > maxActual && !id.equals(carreteraAct)) {
 				idAct = carreteraAct;
 				maxActual = colasCoches.get(carreteraAct).size();
 			}
 			else if(colasCoches.get(carreteraAct).isEmpty() &&
- 					colasCoches.get(carreteraAct).size() > maxActual) {
+ 					colasCoches.get(carreteraAct).size() > maxActual && !id.equals(carreteraAct)) {
 				idAct = carreteraAct;
 				maxActual = 0;
-			}
+			} else idAct = id;
 		}
 		return idAct;
 	}
+
+private String buscarCarreteraAtascadaIni() {
+	int maxActual = -1;
+	String idAct = "";
+	
+	for (String carreteraAct: carreterasEntrantesOrdenadas) {
+		if(!colasCoches.get(carreteraAct).isEmpty() &&
+					colasCoches.get(carreteraAct).size() > maxActual) {
+			idAct = carreteraAct;
+			maxActual = colasCoches.get(carreteraAct).size();
+		}
+		else if(colasCoches.get(carreteraAct).isEmpty() &&
+					colasCoches.get(carreteraAct).size() > maxActual) {
+			idAct = carreteraAct;
+			maxActual = 0;
+		}
+	}
+	return idAct;
+}
 	
 	public void actualizarSemaforo() {
+		
 		if (unidadesDeTiempoUsadas == intervaloDeTiempo) {
-			String carreteraAtascada = buscarCarreteraAtascada(carreterasEntrantesOrdenadas.get(semaforoVerde));
+			String carreteraAtascada;
+			if (semaforoVerde != -1) {
+				 carreteraAtascada = buscarCarreteraAtascada(carreterasEntrantesOrdenadas.get(semaforoVerde));
+			} else {
+				carreteraAtascada = buscarCarreteraAtascadaIni();
+			}
 			semaforoVerde = carreterasEntrantesOrdenadas.indexOf(carreteraAtascada);
 			if(!carreterasEntrantesOrdenadas.get(semaforoVerde).isEmpty()) 
 				intervaloDeTiempo = Math.max(colasCoches.get(carreteraAtascada).size() / 2, 1);
@@ -46,16 +72,19 @@ private String buscarCarreteraAtascada(String id) {
 			++unidadesDeTiempoUsadas;
 			cambioDeSemaforoEsteTurno = false;
 		}
+			
 	}
 	
 	public void avanza() {
-		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar			
-		if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
-				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
-					//En dicho caso sacamos el coche
-					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
-					//Y lo movemos a su siguiente carretera
-					v.moverASiguienteCarretera();
+		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
+		if (semaforoVerde != -1) {
+			if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
+					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+						//En dicho caso sacamos el coche
+						Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
+						//Y lo movemos a su siguiente carretera
+						v.moverASiguienteCarretera();
+			}
 		}
 		actualizarSemaforo();
 	}
@@ -78,19 +107,10 @@ private String buscarCarreteraAtascada(String id) {
 					aux += "red,";
 				}
 			} else {
-				if(i == 0) {
-					if(semaforoVerde == carreterasEntrantesOrdenadas.size() - 1) {
-						aux += "green:1,";	
-					} else {
-						aux += "red,";
-					}
-				}
-				else {
-					if(semaforoVerde == i + 1) {
-						aux += "green:1,";	
-					} else {
-						aux += "red,";
-					}
+				if (semaforoVerde == i) {
+					aux += "green:1,";
+				} else {
+					aux += "red,";
 				}
 			}
 			

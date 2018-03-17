@@ -16,7 +16,7 @@ public class Junction extends SimulatedObject {
 	
 	public Junction() {
 		super();
-		semaforoVerde = 0;
+		semaforoVerde = -1;
 		this.colasCoches = new HashMap<>();
 		this.carreterasSalientes = new HashMap<>(); 
 		this.carreterasEntrantesOrdenadas = new ArrayList<>();
@@ -24,7 +24,7 @@ public class Junction extends SimulatedObject {
 	
 	public Junction(String id) {
 		super(id);
-		semaforoVerde = 0;
+		semaforoVerde = -1;
 		this.colasCoches = new HashMap<>();
 		this.carreterasSalientes = new HashMap<>(); 
 		this.carreterasEntrantesOrdenadas = new ArrayList<>();
@@ -43,24 +43,28 @@ public class Junction extends SimulatedObject {
 	 * Avanzamos un tick ell cruce
 	 */
 	public void avanza() {
+		if (semaforoVerde != -1) { //Vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
+			if (colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null &&
+					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+				//En dicho caso sacamos el coche
+				Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
+				//Y lo movemos a su siguiente carretera
+				v.moverASiguienteCarretera();	
+			}					
+		}
 		//Actualizamos los semáforos
 		actualizarSemaforo();
+		// He cambiado el orden de esto para pasar todos los tests básicos (en realidad la nota ya no sirve pa na)
+		// De hecho en RoundRobin está hecho así
 		/* NOTA: en el guión de la práctica se especificaba que en primer lugar tenían que actualizarse los vehículos del cruce y después
 				 cambiar el semáforo. Sin embargo, nos parece que el comportamiento simulado se asemeja más al de actualizar de antemano 
 				 el cruce y posteriormente mover los coches. */
 		
-		//Vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
-		if (colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
-				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
-					//En dicho caso sacamos el coche
-					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
-					//Y lo movemos a su siguiente carretera
-					v.moverASiguienteCarretera();		
-		}
 	}
 	
 	public void actualizarSemaforo() {
 		if(colasCoches.size() > 0) semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
+		else if (semaforoVerde == -1) semaforoVerde = 0;
 	}
 	
 	public Road buscarCarretera(Junction sigCruce) {
@@ -89,9 +93,14 @@ public class Junction extends SimulatedObject {
 	protected void fillReportDetails(Map<String, String> out) {
 		String aux = "";
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
-			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
+			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";			
+			if (i == semaforoVerde) {
+				aux += "green,";
+			} else {
+				aux += "red,";
+			}
 			
-			if (i == carreterasEntrantesOrdenadas.size() - 1) {
+			/*if (i == carreterasEntrantesOrdenadas.size() - 1) {
 				if(semaforoVerde == 0) {
 					aux += "green,";
 				} else {
@@ -103,7 +112,7 @@ public class Junction extends SimulatedObject {
 				} else {
 					aux += "red,";
 				}	
-			}
+			}*/
 			
 			aux += '[';
 			//And now we add all the cars
