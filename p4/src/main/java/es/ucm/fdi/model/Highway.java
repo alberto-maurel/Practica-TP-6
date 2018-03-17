@@ -1,5 +1,7 @@
 package es.ucm.fdi.model;
 
+import java.util.Map;
+
 public class Highway extends Road{
 	protected int lanes;
 	
@@ -19,5 +21,10 @@ public class Highway extends Road{
 	protected int calcularFactorReduccion(int nVehiculosAveriados) {
 		if(lanes > nVehiculosAveriados) return 1;
 		else return 2;
+	}
+	
+	protected void fillReportDetails(Map<String, String> out) {
+		out.put("type", "lanes");
+		super.fillReportDetails(out);
 	}
 }

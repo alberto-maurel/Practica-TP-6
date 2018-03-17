@@ -23,4 +23,16 @@ public class NewMostCrowded extends NewJunction {
 			return null;
 		}
 	}	
+	
+	public void execute(RoadMap roadMap) throws SimulationException{
+		//Comprobamos que la intersección no exista previamente
+		if(roadMap.getConstantSimObjects().get(id) == null) {
+			MostCrowded jActual = new MostCrowded(id);
+			//Y en caso de no existir la añadimos
+			roadMap.getSimObjects().put(id, jActual);
+			roadMap.getJunctions().add(jActual);
+		} else {
+			throw new SimulationException("Ya existe un cruce con el mismo identificador");
+		}
+	}
 }

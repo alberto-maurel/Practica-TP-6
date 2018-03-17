@@ -33,4 +33,28 @@ public class NewHighway extends NewRoad {
 			return null;	
 		}
 	}
+	
+	public void execute(RoadMap roadMap) throws SimulationException {
+		//Comprobamos que no haya otra carretera con el mismo id
+		SimulatedObject J1, J2;
+		if(roadMap.getConstantSimObjects().get(id) == null) {
+			//Comprobamos que existan ambos cruces
+			if(roadMap.getConstantSimObjects().get(src) == null) {
+				throw new SimulationException("El cruce no existe");
+			}
+			J1 = roadMap.getSimObjects().get(src); 
+
+			if(roadMap.getSimObjects().get(dest) == null) {
+				throw new SimulationException("El cruce no existe");
+			} 
+			J2 = roadMap.getSimObjects().get(dest); 
+			
+			Highway nuevaCarretera = new Highway(id, length, max_speed, (Junction) J1, (Junction) J2, lanes);
+
+			roadMap.getSimObjects().put(id, nuevaCarretera);
+			roadMap.getRoads().add(nuevaCarretera);
+		} else {
+			throw new SimulationException("El identificador está duplicado");
+		}
+	}
 }
