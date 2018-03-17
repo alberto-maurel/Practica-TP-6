@@ -1,10 +1,12 @@
 package es.ucm.fdi.model;
 
-public class SimulationException extends RuntimeException{
+public class SimulationException extends RuntimeException {
+	
 	private String mensaje;
 	private Throwable cause;
 	
-	public SimulationException(){}
+	
+	public SimulationException() {}
 	
 	public SimulationException(String s) {
 		mensaje = s;
@@ -18,7 +20,6 @@ public class SimulationException extends RuntimeException{
 		mensaje = s;
 		cause = c;
 	}
-
 
 	public String getMessage() {
 		return mensaje;
@@ -35,4 +36,6 @@ public class SimulationException extends RuntimeException{
 	public void printMessage() {
 		System.out.println(mensaje);
 	}
+	
+	
 }

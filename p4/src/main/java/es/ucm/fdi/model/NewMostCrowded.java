@@ -8,7 +8,9 @@ public class NewMostCrowded extends NewJunction {
 		super(t, id);
 	}
 	
+	
 	public static class Builder implements EventBuilder {
+		
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_junction")) {
 				return null;
@@ -22,9 +24,10 @@ public class NewMostCrowded extends NewJunction {
 			}
 			return null;
 		}
+    
 	}	
 	
-	public void execute(RoadMap roadMap) throws SimulationException{
+	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que la intersección no exista previamente
 		if(roadMap.getConstantSimObjects().get(id) == null) {
 			MostCrowded jActual = new MostCrowded(id);
@@ -35,4 +38,6 @@ public class NewMostCrowded extends NewJunction {
 			throw new SimulationException("Ya existe un cruce con el mismo identificador");
 		}
 	}
+  
+	
 }

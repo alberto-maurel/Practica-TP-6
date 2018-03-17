@@ -8,13 +8,13 @@ public class NewPath extends NewRoad {
 		super(time, id, max_speed, length, src, dest);
 	}
 	
+	
 	public static class Builder implements EventBuilder {
 
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_road")) {
 				return null;
-			}
-			
+			}			
 			if ("dirt".equals(sec.getValue("type"))) {
 				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
 						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0) && 
@@ -30,8 +30,10 @@ public class NewPath extends NewRoad {
 			} 
 			return null;	
 		}
+		
 	}
 	
+  
 	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que no haya otra carretera con el mismo id
 		SimulatedObject J1, J2;
@@ -55,4 +57,6 @@ public class NewPath extends NewRoad {
 			throw new SimulationException("El identificador está duplicado");
 		}
 	}
+
+  
 }

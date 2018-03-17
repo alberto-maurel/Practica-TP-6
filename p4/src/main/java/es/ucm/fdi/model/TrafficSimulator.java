@@ -28,67 +28,67 @@ public class TrafficSimulator {
 		this.out = out;
 	}
 	
+	
 	public class SortbyTime implements Comparator<Event>{
 	    public int compare(Event a, Event b) {
 	        return a.time - b.time;
 	    }
 	}
 	
+	
 	//Métodos
-	public void run(int time){
-		//Before running the simulation we ensure that all the events are sorted by it's starting time
+	public void run(int time) throws SimulationException {
 		
+		//Before running the simulation we ensure that all the events are sorted by it's starting time		
 		Collections.sort(listaEventos, new SortbyTime());
 		
-		while (tick < time) {
 		try {
-			//En primer lugar carga los eventos correspondientes a dicho tick
-			while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tick){
-				listaEventos.get(indiceActualEventos).execute(mapaTrafico);
-				++indiceActualEventos;
-			}
-			
-			//Ahora avanzo cada una de las carreteras (y ellas a su vez hacen avanzar a los coches)
-			for(Road r: mapaTrafico.getRoads()) {
-				r.avanza();
-			}
-			
-			//Avanzamos los cruces
-			for(Junction j: mapaTrafico.getJunctions()) {
-				j.avanza();
-			}
-			
-			//Y por último escribimos los informes en el orden indicado
-			
-			++tick;
-			
-			//Hacer refactoring de estas 3 cosas
-			for(Junction j: mapaTrafico.getConstantJunctions()) {
-				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-				j.generarInforme(tick, reporte);
-				writeReport(reporte, out);
-			}
-			
-			for(Road j:mapaTrafico.getConstantRoads()) {
-				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-				j.generarInforme(tick, reporte);
-				writeReport(reporte, out);
-			}
-			
-			for(Vehicle j:mapaTrafico.getConstantVehicles()) {
-				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-				j.generarInforme(tick, reporte);
-				writeReport(reporte, out);
-			}
+			while (tick < time) {
+				//En primer lugar carga los eventos correspondientes a dicho tick
+				while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tick){
+					listaEventos.get(indiceActualEventos).execute(mapaTrafico);
+					++indiceActualEventos;
+				}
+				
+				//Ahora avanzo cada una de las carreteras (y ellas a su vez hacen avanzar a los coches)
+				for(Road r: mapaTrafico.getRoads()) {
+					r.avanza();
+				}
+				
+				//Avanzamos los cruces
+				for(Junction j: mapaTrafico.getJunctions()) {
+					j.avanza();
+				}
+				
+				//Y por último escribimos los informes en el orden indicado
+				
+				++tick;
+				
+				//Hacer refactoring de estas 3 cosas
+				for(Junction j: mapaTrafico.getConstantJunctions()) {
+					LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+					j.generarInforme(tick, reporte);
+					writeReport(reporte, out);
+				}
+				
+				for(Road j:mapaTrafico.getConstantRoads()) {
+					LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+					j.generarInforme(tick, reporte);
+					writeReport(reporte, out);
+				}
+				
+				for(Vehicle j:mapaTrafico.getConstantVehicles()) {
+					LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+					j.generarInforme(tick, reporte);
+					writeReport(reporte, out);
+				}
+			}		
 		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
-		
+			throw new SimulationException(e.getMessage());
+		}		
 	}
 	
-	public void writeReport(Map<String, String> report, OutputStream out) throws IOException{
+	public void writeReport(Map<String, String> report, OutputStream out) throws IOException {
 		try {
 			for(Map.Entry<String,String> campo: report.entrySet()) {
 				if(campo.getKey().equals("")) {
@@ -113,7 +113,7 @@ public class TrafficSimulator {
 	 * Inserta el evento de forma ordenada según el momento en el que se produce
 	 * @param evento
 	 */
-	public void insertaEvento(Event evento) throws SimulationException{
+	public void insertaEvento(Event evento) throws SimulationException {
 		//Comprobamos si el evento se ejecuta en un ciclo que no haya ocurrido ya
 		if(evento.time >= tick) {
 			//Recorremos el array buscando donde insertarlo y hacemos lo propio

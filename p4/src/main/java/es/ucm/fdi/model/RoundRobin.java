@@ -18,8 +18,8 @@ public class RoundRobin extends Junction {
 	protected int unidadesDeTiempoUsadas;
 	protected int pasados; // Indica el numero de vehículos que han pasado por la carretera 
 										// entrante durante el intervalo
-	
 	private boolean cambioDeSemaforoEsteTurno = false; //booleano para facilitar el writeReport
+
 	
 	public RoundRobin(String id, int max, int min) {
 		super(id);
@@ -35,6 +35,7 @@ public class RoundRobin extends Junction {
 		super.nuevaCarreteraEntrante(road);
 		intervaloDeTiempo.add(maxValorIntervalo);
 	}
+	
 	
 	public void avanza() {
 		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar			

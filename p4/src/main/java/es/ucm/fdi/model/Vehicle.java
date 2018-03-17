@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Vehicle extends SimulatedObject {
-	protected final int arrived = -1;
 	
+	protected final int arrived = -1;	
 	protected int velMaxima;
 	protected int velActual;
 	protected Road carreteraActual;
@@ -15,15 +15,14 @@ public class Vehicle extends SimulatedObject {
 	protected int tiempoAveria;
 	protected int kilometrage;
 	
-	//Constructores
+	
 	public Vehicle() {}
 	
 	public Vehicle(String id, int velMaxima, ArrayList<Junction> itinerario) {
 		super(id);
 		this.velMaxima = velMaxima;
 		this.velActual = 0;
-		this.itinerario = itinerario;
-	
+		this.itinerario = itinerario;	
 		carreteraActual = itinerario.get(0).buscarCarretera(itinerario.get(1));
 		carreteraActual.entraVehiculo(this);
 		localizacionCarretera = 0;
@@ -32,7 +31,7 @@ public class Vehicle extends SimulatedObject {
 		kilometrage = 0;
 	}
 	
-	//Métodos
+	
 	/**
 	 * Avanza el estado actual del coche
 	 */
@@ -135,4 +134,6 @@ public class Vehicle extends SimulatedObject {
 			out.put("location", "(" + carreteraActual.identificador + "," + localizacionCarretera + ")");
 		}
 	}
+	
+	
 }

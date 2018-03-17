@@ -33,7 +33,11 @@ public class Controller {
 		for(IniSection is: eventosPorProcesar.getSections()) {
 			this.parseEvent(is);
 		}
-		simulador.run(nPasos);
+		try {
+			simulador.run(nPasos);
+		} catch (SimulationException e) {
+			e.printMessage();
+		}
 	}
 	
 	public void parseEvent(IniSection ini) {

@@ -7,13 +7,16 @@ public class NewRoundRobin extends NewJunction {
 	protected int max_time_slice;
 	protected int min_time_slice;
 	
+	
 	public NewRoundRobin(int time, String id, int max, int min) {
 		super(time, id);
-		max_time_slice = max;
-		min_time_slice = min;
+		this.max_time_slice = max;
+		this.min_time_slice = min;
 	}
 	
+	
 	public static class Builder implements EventBuilder {
+		
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_junction")) {
 				return null;
@@ -29,6 +32,7 @@ public class NewRoundRobin extends NewJunction {
 			}
 			return null;
 		}
+    
 	}	
 	
 	public void execute(RoadMap roadMap) throws SimulationException{
@@ -41,5 +45,7 @@ public class NewRoundRobin extends NewJunction {
 		} else {
 			throw new SimulationException("Ya existe un cruce con el mismo identificador");
 		}
+	}
+		
 	}
 }

@@ -11,16 +11,16 @@ import java.util.Queue;
 public class MostCrowded extends Junction {
 	private int intervaloDeTiempo;
 	private int unidadesDeTiempoUsadas;
-	
 	private boolean cambioDeSemaforoEsteTurno = false;
-	
+  
+  
 	public MostCrowded(String id) {
 		super(id);
 		intervaloDeTiempo = 0;
 		unidadesDeTiempoUsadas = 0;
 	}
 	
-	private String buscarCarreteraAtascada(String id) {
+private String buscarCarreteraAtascada(String id) {
 		int maxActual = -1;
 		String idAct = "";
 		for (String carreteraAct: carreterasEntrantesOrdenadas) {
@@ -120,5 +120,6 @@ public class MostCrowded extends Junction {
 		out.put("queues", aux);
 		out.put("type", "mc");
 	}
+	
 	
 }

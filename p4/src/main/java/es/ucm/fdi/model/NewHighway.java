@@ -6,17 +6,19 @@ public class NewHighway extends NewRoad {
 	
 	protected int lanes;
 	
+	
 	public NewHighway(int time, String id, int max_speed, int length, String src, String dest, int l) {
 		super(time, id, max_speed, length, src, dest);
-		lanes = l;
+		this.lanes = l;
 	}
 	
+	
 	public static class Builder implements EventBuilder {
+		
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_road")) {
 				return null;
-			}
-			
+			}			
 			if ("lanes".equals(sec.getValue("type"))) {
 				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
 						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0) && 
@@ -32,8 +34,34 @@ public class NewHighway extends NewRoad {
 			} 			
 			return null;	
 		}
+		
 	}
 	
+	
+	public void execute(RoadMap roadMap) throws SimulationException {		
+		SimulatedObject J1, J2;
+		if(roadMap.getConstantSimObjects().get(id) == null) { //Comprobamos que no haya otra carretera con el mismo id
+			//Comprobamos que existan ambos cruces
+			if(roadMap.getConstantSimObjects().get(src) == null) {
+				throw new SimulationException("El cruce no existe");
+			}
+			J1 = roadMap.getSimObjects().get(src); 
+
+			if(roadMap.getSimObjects().get(dest) == null) {
+				throw new SimulationException("El cruce no existe");
+			} 
+			J2 = roadMap.getSimObjects().get(dest); 
+			
+			Road nuevaCarretera = new Highway(id, length, max_speed, (Junction) J1, (Junction) J2, lanes); //Cast feillo, revisar
+
+			roadMap.getSimObjects().put(id, nuevaCarretera);
+			roadMap.getRoads().add(nuevaCarretera);
+		} else {
+			throw new SimulationException("El identificador está duplicado");
+		}
+	}
+	
+  
 	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que no haya otra carretera con el mismo id
 		SimulatedObject J1, J2;
@@ -57,4 +85,6 @@ public class NewHighway extends NewRoad {
 			throw new SimulationException("El identificador está duplicado");
 		}
 	}
+
+  
 }

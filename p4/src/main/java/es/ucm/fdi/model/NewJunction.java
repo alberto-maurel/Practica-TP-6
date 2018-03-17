@@ -2,7 +2,7 @@ package es.ucm.fdi.model;
 
 import es.ucm.fdi.ini.IniSection;
 
-public class NewJunction extends Event{
+public class NewJunction extends Event {
 	
 	/**
 	 * Constructor
@@ -13,7 +13,9 @@ public class NewJunction extends Event{
 		super(time, id);
 	}
 	
+	
 	public static class Builder implements EventBuilder {
+		
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_junction")) {
 				return null;
@@ -26,9 +28,10 @@ public class NewJunction extends Event{
 			}
 			return null;
 		}
+		
 	}		
 
-	public void execute(RoadMap roadMap) throws SimulationException{
+	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que la intersección no exista previamente
 		if(roadMap.getConstantSimObjects().get(id) == null) {
 			Junction jActual = new Junction(id);
@@ -39,5 +42,6 @@ public class NewJunction extends Event{
 			throw new SimulationException("Ya existe un cruce con el mismo identificador");
 		}
 	}
-		
+	
+	
 }

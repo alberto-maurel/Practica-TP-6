@@ -6,7 +6,7 @@ public class NewRoad extends Event{
 	protected String src;
 	protected String dest;
 	protected int max_speed;
-	protected int length;
+	protected int length;	
 	
 	public NewRoad(int time, String id, int max_speed, int length, String src, String dest) {
 		super(time, id);
@@ -16,7 +16,9 @@ public class NewRoad extends Event{
 		this.dest = dest;
 	}
 	
-	public static class Builder implements EventBuilder  {
+	
+	public static class Builder implements EventBuilder {
+		
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_road")) {
 				return null;
@@ -37,12 +39,12 @@ public class NewRoad extends Event{
 			}
 			return null;
 		}
+		
     }
 	
-	public void execute(RoadMap roadMap) throws SimulationException {
-		//Comprobamos que no haya otra carretera con el mismo id
+	public void execute(RoadMap roadMap) throws SimulationException {		
 		SimulatedObject J1, J2;
-		if(roadMap.getConstantSimObjects().get(id) == null) {
+		if(roadMap.getConstantSimObjects().get(id) == null) { //Comprobamos que no haya otra carretera con el mismo id
 			//Comprobamos que existan ambos cruces
 			if(roadMap.getConstantSimObjects().get(src) == null) {
 				throw new SimulationException("El cruce no existe");
@@ -62,4 +64,5 @@ public class NewRoad extends Event{
 			throw new SimulationException("El identificador está duplicado");
 		}
 	}
+	
 }

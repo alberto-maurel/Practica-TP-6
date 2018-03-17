@@ -6,12 +6,12 @@ public interface EventBuilder {
 
 	public Event parse(IniSection sec) throws SimulationException;
 	
-	public default boolean isValidId(String id){
+	public default boolean isValidId(String id) {
 		return id.matches("[a-zA-Z0-9_]+");
 	}
 	
 	public default boolean parseIdList(IniSection sec, String key) {
-		if(sec.getValue(key) == null){
+		if(sec.getValue(key) == null) {
 			return false;
 		}
 		return true;
@@ -37,5 +37,6 @@ public interface EventBuilder {
 		}
 		return false;
 	}
+	
 	
 }

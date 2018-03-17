@@ -13,17 +13,18 @@ import java.util.HashMap;
 import es.ucm.fdi.model.*;
 
 public class RoadMap {
+	
 	//Permite buscar los elementos
 	private HashMap<String, SimulatedObject> simObjects; //Map que contiene como claves los id del objeto y como valor el objeto
-		
 	//Listados de cada una de las clases de elementos ordenados por orden de llegada
 	private List<Junction> junctions = new ArrayList<>();
 	private List<Road> roads = new ArrayList<>();
 	private List<Vehicle> vehicles = new ArrayList<>();
+	
 
 	public RoadMap() {
-		simObjects = new HashMap<>();
 		
+		simObjects = new HashMap<>();		
 		junctions = new ArrayList<>();
 		roads = new ArrayList<>();
 		vehicles = new ArrayList<>();
@@ -62,5 +63,6 @@ public class RoadMap {
 	public Map<String, SimulatedObject> getSimObjects() {
 		return simObjects;
 	}
+	
 	
 }

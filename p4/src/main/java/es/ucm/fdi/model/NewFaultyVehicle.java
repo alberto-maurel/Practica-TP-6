@@ -20,6 +20,7 @@ public class NewFaultyVehicle extends Event {
 		this.idVehiclesInvolved = vehicles;
 	}
 	
+	
 	public static class Builder implements EventBuilder {
 		public Event parse(IniSection sec) {
 			if (!sec.getTag().equals("make_vehicle_faulty")) return null;
@@ -29,6 +30,7 @@ public class NewFaultyVehicle extends Event {
 					Integer.parseInt(sec.getValue("duration")), vehicles);
 		}
 	}
+	
 	
 	public void execute(RoadMap roadMap) {
 		for (String s: idVehiclesInvolved) {
@@ -43,7 +45,6 @@ public class NewFaultyVehicle extends Event {
 					}
 					++cont;
 				}
-				//roadMap.getVehicles().get(roadMap.getVehicles().indexOf(roadMap.getSimObjects().get(s))).setTiempoAveria(duration);
 			}
 		}
 	}
