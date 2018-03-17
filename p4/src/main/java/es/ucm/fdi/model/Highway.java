@@ -1,14 +1,17 @@
 package es.ucm.fdi.model;
 
-public class Highway extends Road{
+public class Highway extends Road {
+	
 	protected int lanes;
+	
 	
 	public Highway(){}
 	
-	public Highway(String id, int longitud, int maxVel, Junction src, Junction dest, int lanes){
+	public Highway(String id, int longitud, int maxVel, Junction src, Junction dest, int lanes) {
 		super(id, longitud, maxVel, src, dest);
 		this.lanes = lanes;
 	}
+	
 		
 	protected int calcularVelocidadBase(int velocidadMaxima) {
 		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues()));
@@ -20,4 +23,5 @@ public class Highway extends Road{
 		if(lanes > nVehiculosAveriados) return 1;
 		else return 2;
 	}
+	
 }

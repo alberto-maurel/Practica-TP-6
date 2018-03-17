@@ -5,12 +5,14 @@ import java.util.Map;
 import java.util.Random;
 
 public class Car extends Vehicle {
+	
 	protected int resistance;
 	protected double fault_probability;
 	protected int max_fault_duration;
 	protected long seed = System.currentTimeMillis();
-	protected int kmSinceLastFailure; // Cuenta cuanto ha recorrido desde la última vez que se averió
+	protected int kmSinceLastFailure;
 	private Random numAleatorio;
+	
 
 	//Constructor sin semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration) {
@@ -18,9 +20,10 @@ public class Car extends Vehicle {
 		this.resistance = resistance;
 		this.fault_probability = fault_probability;
 		this.max_fault_duration = max_fault_duration;
-		kmSinceLastFailure = 0;
-		numAleatorio = new Random(seed);
+		this.kmSinceLastFailure = 0;
+		this.numAleatorio = new Random(seed);
 	}
+	
 	
 	//Constructor con semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration, long seed) {
@@ -29,20 +32,19 @@ public class Car extends Vehicle {
 		this.fault_probability = fault_probability;
 		this.max_fault_duration = max_fault_duration;
 		this.seed = seed;
-		kmSinceLastFailure = 0;
-		numAleatorio = new Random(seed);
+		this.kmSinceLastFailure = 0;
+		this.numAleatorio = new Random(seed);
 	}
 	
-
+	
+	
 	public void avanza() {
 		if(tiempoAveria > 0) {
 			--tiempoAveria;
-		} else {
-			//Vemos si se va a averiar en este paso
+		} else { //Vemos primero si se va a averiar en este paso antes de avanzar	
 			boolean isCarOk = true;
-			if(kmSinceLastFailure > resistance) {
-				if(numAleatorio.nextDouble() < fault_probability) {
-					//Hemos averiado el vehículo
+			if (kmSinceLastFailure > resistance) {
+				if (numAleatorio.nextDouble() < fault_probability) { //En ese caso, hemos averiado el vehículo
 					this.setTiempoAveria(numAleatorio.nextInt(max_fault_duration) + 1); 
 					isCarOk = false;
 					kmSinceLastFailure = 0;
@@ -50,31 +52,25 @@ public class Car extends Vehicle {
 				}
 			}
 			
-			if(isCarOk) {		
-				//Sacamos el coche de la carretera
-				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this);
-				
-				//Procesamos el vehículo
-				//Si el vehículo no llega en este tick al final de la carretera
-				if(localizacionCarretera + velActual < carreteraActual.longitud) {
+			if(isCarOk) { // Si el coche está bien, se mueve
+				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this); //Sacamos el coche de la carretera		 		
+				//Procesamos el vehículo				
+				if(localizacionCarretera + velActual < carreteraActual.longitud) { //Si el vehículo no llega en este tick al final de la carretera
 					localizacionCarretera += velActual;
 					kilometrage += velActual;
 					kmSinceLastFailure += velActual;
-
 				} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección (pero aún no estaba)
 					kilometrage += (carreteraActual.longitud - localizacionCarretera);
 					localizacionCarretera = carreteraActual.longitud;
 					kmSinceLastFailure += (carreteraActual.longitud - localizacionCarretera);
 					velActual = 0;
-					carreteraActual.cruceFin.entraVehiculo(this);
-					
+					carreteraActual.cruceFin.entraVehiculo(this);	
 				} else { //El coche ya estaba en la intersección
-					velActual = 0;
-					
+					velActual = 0;					
 				}
-				//Y volvemos a meter el coche en la posición en la que debería ir
+				//Volvemos a meter el coche en la posición en la que debería ir
 				carreteraActual.situacionCarretera.putValue(localizacionCarretera, this);
-			} else {
+			} else { //Si el coche está averiado
 				--tiempoAveria;
 			}
 		}
@@ -84,4 +80,5 @@ public class Car extends Vehicle {
 		out.put("type", "car");
 		super.fillReportDetails(out);
 	}
+	
 }

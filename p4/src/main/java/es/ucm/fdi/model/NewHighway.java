@@ -6,17 +6,19 @@ public class NewHighway extends NewRoad {
 	
 	protected int lanes;
 	
+	
 	public NewHighway(int time, String id, int max_speed, int length, String src, String dest, int l) {
 		super(time, id, max_speed, length, src, dest);
-		lanes = l;
+		this.lanes = l;
 	}
 	
+	
 	public static class Builder implements EventBuilder {
+		
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_road")) {
 				return null;
-			}
-			
+			}			
 			if ("lanes".equals(sec.getValue("type"))) {
 				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
 						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0) && 
@@ -32,5 +34,8 @@ public class NewHighway extends NewRoad {
 			} 			
 			return null;	
 		}
+		
 	}
+	
+	
 }

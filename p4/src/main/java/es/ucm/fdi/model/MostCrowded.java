@@ -13,10 +13,12 @@ public class MostCrowded extends Junction {
 	private int intervaloDeTiempo;
 	private int unidadesDeTiempoUsadas;
 	
+	
 	public MostCrowded() {
 		intervaloDeTiempo = 0;
 		unidadesDeTiempoUsadas = 0;
 	}
+	
 	
 	// No sé si hay una forma más fácil de hacer esto xD
 	private String buscarCarreteraAtascada(String id) {
@@ -43,5 +45,6 @@ public class MostCrowded extends Junction {
 	protected void fillReportDetails(Map<String, String> out) {
 		
 	}
+	
 	
 }

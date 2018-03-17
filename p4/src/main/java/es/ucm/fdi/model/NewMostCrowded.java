@@ -8,7 +8,9 @@ public class NewMostCrowded extends NewJunction {
 		super(t, id);
 	}
 	
+	
 	public static class Builder implements EventBuilder {
+		
 		public Event parse(IniSection sec) throws SimulationException {
 			if (!sec.getTag().equals("new_junction")) {
 				return null;
@@ -22,5 +24,8 @@ public class NewMostCrowded extends NewJunction {
 			}
 			return null;
 		}
-	}	
+		
+	}
+	
+	
 }

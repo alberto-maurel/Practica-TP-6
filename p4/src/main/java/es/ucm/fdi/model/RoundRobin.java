@@ -18,6 +18,7 @@ public class RoundRobin extends Junction {
 	private ArrayList<Integer> pasados; // Indica el numero de vehículos que han pasado por la carretera 
 										// entrante durante el intervalo
 	
+	
 	public RoundRobin(String id, int max, int min) {
 		super(id);
 		maxValorIntervalo = max;
@@ -27,6 +28,7 @@ public class RoundRobin extends Junction {
 		pasados.ensureCapacity(colasCoches.size());
 		Collections.fill(pasados, 0);
 	}
+	
 	
 	public void avanza() {
 		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar			

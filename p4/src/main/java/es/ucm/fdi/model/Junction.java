@@ -9,11 +9,13 @@ import java.util.Queue;
 
 import es.ucm.fdi.util.*;
 
-public class Junction extends SimulatedObject{
+public class Junction extends SimulatedObject {
+	
 	protected int semaforoVerde; //Indica el número del semáforo que se encuentra en verde
 	protected HashMap<String, Queue<Vehicle>> colasCoches; //Array con pares de id de las carreteras y colas de vehículos que proceden de dicha carretera
 	protected HashMap<String, Road> carreterasSalientes;
 	protected ArrayList<String> carreterasEntrantesOrdenadas;
+	
 	
 	public Junction() {
 		super();
@@ -30,6 +32,7 @@ public class Junction extends SimulatedObject{
 		this.carreterasSalientes = new HashMap<>(); 
 		this.carreterasEntrantesOrdenadas = new ArrayList<>();
 	}
+	
 		
 	/**
 	 * Entra un vehículo en el cruce
@@ -45,12 +48,12 @@ public class Junction extends SimulatedObject{
 	public void avanza() {
 		//Actualizamos los semáforos
 		actualizarSemaforo();
-		//NOTA: en el guión de la práctica se especificaba que en primer lugar tenían que actualizarse los vehículos del cruce y después
-		//cambiar el semáforo. Sin embargo, nos parece que el comportamiento simulado se asemeja más al de actualizar de antemano el cruce
-		//y posteriormente mover los coches.		
+		/* NOTA: en el guión de la práctica se especificaba que en primer lugar tenían que actualizarse los vehículos del cruce y después
+				 cambiar el semáforo. Sin embargo, nos parece que el comportamiento simulado se asemeja más al de actualizar de antemano 
+				 el cruce y posteriormente mover los coches. */
 		
 		//Vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
-		if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
+		if (colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
 				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
 					//En dicho caso sacamos el coche
 					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
@@ -91,8 +94,7 @@ public class Junction extends SimulatedObject{
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
 			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
 			
-			
-			if(i == carreterasEntrantesOrdenadas.size() - 1) {
+			if (i == carreterasEntrantesOrdenadas.size() - 1) {
 				if(semaforoVerde == 0) {
 					aux += "green,";
 				} else {
@@ -123,4 +125,6 @@ public class Junction extends SimulatedObject{
 		}
 		out.put("queues", aux);
 	}
+	
+	
 }

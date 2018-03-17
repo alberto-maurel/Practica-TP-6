@@ -11,23 +11,24 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Road extends SimulatedObject{
+public class Road extends SimulatedObject {
+	
 	protected int longitud;
 	protected int maxVel;
 	protected MultiTreeMap<Integer, Vehicle> situacionCarretera;
 	protected Junction cruceIni;
 	protected Junction cruceFin;
 	
-	//Constructores
+	
 	public Road(){}
 	
-	public Road(String id, int longitud, int maxVel, Junction src, Junction dest){
+	public Road(String id, int longitud, int maxVel, Junction src, Junction dest) {
 		super(id);
 		this.longitud = longitud;
 		this.maxVel = maxVel;
-		situacionCarretera = new MultiTreeMap<>((a,b) -> b - a);
-		cruceIni = src;
-		cruceFin = dest;
+		this.situacionCarretera = new MultiTreeMap<>((a,b) -> b - a);
+		this.cruceIni = src;
+		this.cruceFin = dest;
 		src.nuevaCarreteraSaliente(this);
 		dest.nuevaCarreteraEntrante(this);
 	}
@@ -110,4 +111,6 @@ public class Road extends SimulatedObject{
 		}
 		out.put("state", aux);
 	}
+	
+	
 }

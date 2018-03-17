@@ -1,6 +1,7 @@
 package es.ucm.fdi.model;
 
 public abstract class Event {
+	
 	protected int time;
 	protected String id;
 	
@@ -17,5 +18,7 @@ public abstract class Event {
 		this.id = id;
 	}
 	
+	
 	public abstract void execute(RoadMap roadMap) throws Exception;
+	
 }
