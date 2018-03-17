@@ -2,13 +2,11 @@ package es.ucm.fdi.model;
 
 import es.ucm.fdi.ini.IniSection;
 
-public class NewRoad extends Event {
-	
+public class NewRoad extends Event{
 	protected String src;
 	protected String dest;
-	int max_speed;
-	int length;
-	
+	protected int max_speed;
+	protected int length;	
 	
 	public NewRoad(int time, String id, int max_speed, int length, String src, String dest) {
 		super(time, id);

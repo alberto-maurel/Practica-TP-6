@@ -1,6 +1,7 @@
 package es.ucm.fdi.model;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import es.ucm.fdi.util.MultiTreeMap;
 
@@ -21,5 +22,10 @@ public class Path extends Road {
 		return 1 + nVehiculosAveriados;
 	}
 	
-	
+
+	protected void fillReportDetails(Map<String, String> out) {
+		out.put("type", "dirt");
+		super.fillReportDetails(out);
+	}
+  
 }

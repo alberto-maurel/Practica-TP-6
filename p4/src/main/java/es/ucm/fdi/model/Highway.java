@@ -3,7 +3,7 @@ package es.ucm.fdi.model;
 import java.util.Map;
 
 public class Highway extends Road {
-	
+  
 	protected int lanes;
 	
 	
@@ -30,5 +30,6 @@ public class Highway extends Road {
 		out.put("type", "lanes");
 		super.fillReportDetails(out);
 	}
-	
+
+  
 }
