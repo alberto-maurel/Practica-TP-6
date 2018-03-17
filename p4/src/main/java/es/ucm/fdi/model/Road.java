@@ -11,9 +11,6 @@ public class Road extends SimulatedObject {
 	protected Junction cruceIni;
 	protected Junction cruceFin;
 	
-	
-	public Road(){}
-	
 	public Road(String id, int longitud, int maxVel, Junction src, Junction dest) {
 		super(id);
 		this.longitud = longitud;
@@ -96,13 +93,8 @@ public class Road extends SimulatedObject {
 		}
 		//Los metemos todos en un string y quitamos la ultima coma
 		if(aux.length() > 0) {
-			aux = aux.substring(0, aux.length() - 1); // Cutre jeje
-		} else {
-			//Carretera vacía
-			//aux = "empty";
+			aux = aux.substring(0, aux.length() - 1); 
 		}
 		out.put("state", aux);
 	}
-	
-	
 }

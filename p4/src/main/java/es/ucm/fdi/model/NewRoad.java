@@ -43,26 +43,28 @@ public class NewRoad extends Event{
     }
 	
 	public void execute(RoadMap roadMap) throws SimulationException {		
-		SimulatedObject J1, J2;
+		Junction J1, J2;
 		if(roadMap.getConstantSimObjects().get(id) == null) { //Comprobamos que no haya otra carretera con el mismo id
 			//Comprobamos que existan ambos cruces
-			if(roadMap.getConstantSimObjects().get(src) == null) {
-				throw new SimulationException("El cruce no existe");
-			}
-			J1 = roadMap.getSimObjects().get(src); 
-
-			if(roadMap.getSimObjects().get(dest) == null) {
-				throw new SimulationException("El cruce no existe");
-			} 
-			J2 = roadMap.getSimObjects().get(dest); 
 			
-			Road nuevaCarretera = new Road(id, length, max_speed, (Junction) J1, (Junction) J2); //Cast feillo, revisar
+			J1 = parsearCruce(roadMap, src);
+			J2 = parsearCruce(roadMap, dest);
+			
+			Road nuevaCarretera = new Road(id, length, max_speed, J1, J2); //Cast feillo, revisar
 
 			roadMap.getSimObjects().put(id, nuevaCarretera);
 			roadMap.getRoads().add(nuevaCarretera);
 		} else {
 			throw new SimulationException("El identificador está duplicado");
 		}
+	}
+	
+	protected Junction parsearCruce(RoadMap roadMap, String identificadorCruce) {
+		if(roadMap.getConstantSimObjects().get(identificadorCruce) == null) {
+			throw new SimulationException("El cruce no existe");
+		}
+		Junction J1 = (Junction) roadMap.getSimObjects().get(identificadorCruce);
+		return J1;
 	}
 	
 }
