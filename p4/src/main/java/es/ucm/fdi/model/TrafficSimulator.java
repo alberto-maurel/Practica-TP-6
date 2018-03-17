@@ -3,12 +3,9 @@ package es.ucm.fdi.model;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TrafficSimulator {
@@ -19,7 +16,6 @@ public class TrafficSimulator {
 	private RoadMap mapaTrafico;
 	private OutputStream out;
 	
-
 	public TrafficSimulator(OutputStream out) {
 		indiceActualEventos = 0;
 		this.listaEventos = new ArrayList<>();
@@ -33,8 +29,7 @@ public class TrafficSimulator {
 	        return a.time - b.time;
 	    }
 	}
-	
-	
+		
 	//Métodos
 	public void run(int time) throws SimulationException {
 		
@@ -98,7 +93,6 @@ public class TrafficSimulator {
 					String aux = campo.getKey() + " = " + campo.getValue() + "\n";
 					out.write(aux.getBytes());
 				}
-				
 			}
 		}
 		catch(IOException io) {
@@ -126,30 +120,4 @@ public class TrafficSimulator {
 			throw new SimulationException("Se ha añadido un evento en un momento posterior a su ejecución");
 		}
 	}
-	
-	/**
-	 * Para tests jUnit
-	 * @return nº de eventos en la simulación
-	 */
-	public int numberOfEvents() {
-		return listaEventos.size();
-	}
-
-	
-	/**
-	 * Ayudita
-	 * en el simulador principal, en Run,
-	 * 
-	 * para cada tick a simular
-	 *    - ejecuto eventos del tick
-	 *    - avanzo carreteras
-	 *       - y cada una avanza sus coches, tras darles velocidad
-	 *    - avanzo cruces
-	 *    - escribo informes
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	
 }

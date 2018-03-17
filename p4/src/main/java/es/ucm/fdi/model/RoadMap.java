@@ -1,21 +1,16 @@
 package es.ucm.fdi.model;
 
-import es.ucm.fdi.util.*;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import es.ucm.fdi.model.*;
-
 public class RoadMap {
 	
-	//Permite buscar los elementos
-	private HashMap<String, SimulatedObject> simObjects; //Map que contiene como claves los id del objeto y como valor el objeto
+	//Map que contiene como claves los id del objeto y como valor el objeto
+	private HashMap<String, SimulatedObject> simObjects; //Permite buscar los elementos
+	
 	//Listados de cada una de las clases de elementos ordenados por orden de llegada
 	private List<Junction> junctions = new ArrayList<>();
 	private List<Road> roads = new ArrayList<>();
@@ -23,7 +18,6 @@ public class RoadMap {
 	
 
 	public RoadMap() {
-		
 		simObjects = new HashMap<>();		
 		junctions = new ArrayList<>();
 		roads = new ArrayList<>();
@@ -47,7 +41,6 @@ public class RoadMap {
 		return Collections.unmodifiableMap(simObjects);
 	}
 	
-	
 	public List<Junction> getJunctions() {
 		return junctions;
 	}
@@ -63,6 +56,4 @@ public class RoadMap {
 	public Map<String, SimulatedObject> getSimObjects() {
 		return simObjects;
 	}
-	
-	
 }

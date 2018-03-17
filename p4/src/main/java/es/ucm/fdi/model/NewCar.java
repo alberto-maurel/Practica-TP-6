@@ -1,7 +1,6 @@
 package es.ucm.fdi.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import es.ucm.fdi.ini.IniSection;
 
 public class NewCar extends NewVehicle {
@@ -34,7 +33,6 @@ public class NewCar extends NewVehicle {
 						parseInt(sec, "max_fault_duration", 0) && parseLong(sec, "seed", 0)) {
 					
 					//Creamos el itinerario
-					String[] itinerarioString = sec.getValue("itinerary").split("[ ,]");
 					ArrayList<String> itinerario = parsearItinerario(sec);
 				
 					return new NewCar(Integer.parseInt(sec.getValue("time")), 

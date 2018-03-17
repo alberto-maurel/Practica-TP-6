@@ -1,12 +1,6 @@
 package es.ucm.fdi.model;
 
 import java.util.Map;
-import java.util.Queue;
-
-/* - Creo que no actualiza el semáforo según el orden de adición de las carreteras
- * - fillReportDetails
- * 
- */
 
 public class MostCrowded extends Junction {
 	private int intervaloDeTiempo;
@@ -38,9 +32,7 @@ private String buscarCarreteraAtascada(String id) {
 		return idAct;
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
 	public void actualizarSemaforo() {
-		String semaforoIndex;
 		if (unidadesDeTiempoUsadas == intervaloDeTiempo) {
 			String carreteraAtascada = buscarCarreteraAtascada(carreterasEntrantesOrdenadas.get(semaforoVerde));
 			semaforoVerde = carreterasEntrantesOrdenadas.indexOf(carreteraAtascada);

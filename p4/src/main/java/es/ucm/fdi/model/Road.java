@@ -1,14 +1,6 @@
 package es.ucm.fdi.model;
 
 import es.ucm.fdi.util.MultiTreeMap;
-import es.ucm.fdi.model.*;
-
-import java.lang.Math;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Map;
 
 public class Road extends SimulatedObject {

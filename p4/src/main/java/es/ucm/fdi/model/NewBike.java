@@ -1,7 +1,6 @@
 package es.ucm.fdi.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import es.ucm.fdi.ini.IniSection;
 
 public class NewBike extends NewVehicle {
