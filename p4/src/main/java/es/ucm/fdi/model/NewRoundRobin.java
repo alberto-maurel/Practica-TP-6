@@ -46,6 +46,6 @@ public class NewRoundRobin extends NewJunction {
 			throw new SimulationException("Ya existe un cruce con el mismo identificador");
 		}
 	}
-		
-	}
+
+	
 }
