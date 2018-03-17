@@ -4,8 +4,8 @@ import es.ucm.fdi.ini.IniSection;
 
 public class NewRoad extends Event {
 	
-	private String src;
-	private String dest;
+	protected String src;
+	protected String dest;
 	int max_speed;
 	int length;
 	
