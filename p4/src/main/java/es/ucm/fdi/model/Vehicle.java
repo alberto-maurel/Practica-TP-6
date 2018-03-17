@@ -15,15 +15,14 @@ public class Vehicle extends SimulatedObject {
 	protected int tiempoAveria;
 	protected int kilometrage;
 	
-	
-	public Vehicle() {}
-	
 	public Vehicle(String id, int velMaxima, ArrayList<Junction> itinerario) {
 		super(id);
 		this.velMaxima = velMaxima;
 		this.velActual = 0;
-		this.itinerario = itinerario;	
+		this.itinerario = itinerario;
+		//Indicamos al coche cual es su carretera
 		carreteraActual = itinerario.get(0).buscarCarretera(itinerario.get(1));
+		//E introducimos el coche en la carretera
 		carreteraActual.entraVehiculo(this);
 		localizacionCarretera = 0;
 		indItinerario = 1;
@@ -35,7 +34,7 @@ public class Vehicle extends SimulatedObject {
 	/**
 	 * Avanza el estado actual del coche
 	 */
-	void avanza() {
+	public void avanza() {
 		//Si está averiado
 		if(tiempoAveria > 0) {
 			--tiempoAveria;
@@ -46,16 +45,14 @@ public class Vehicle extends SimulatedObject {
 			//Procesamos el vehículo
 			//Si el vehículo no llega en este tick al final de la carretera
 			if(localizacionCarretera + velActual < carreteraActual.longitud) {
-				localizacionCarretera += velActual;
-				kilometrage += velActual;
-
-			} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección (pero aún no estaba)
-				kilometrage += (carreteraActual.longitud - localizacionCarretera);
-				localizacionCarretera = carreteraActual.longitud;
-				velActual = 0;
-				carreteraActual.cruceFin.entraVehiculo(this);
+				avanzarCocheSinLlegarAlFinal();
 				
-			} else { //El coche ya estaba en la intersección
+				//El coche entra en la intersección (pero aún no estaba)
+			} else if (localizacionCarretera != carreteraActual.longitud) { 
+				avanzarCocheLlegandoAlFinal();
+				
+				//El coche ya estaba en la intersección
+			} else { 
 				velActual = 0;
 				
 			}
@@ -64,22 +61,35 @@ public class Vehicle extends SimulatedObject {
 		}	
 	}
 	
+	protected void avanzarCocheSinLlegarAlFinal() {
+		localizacionCarretera += velActual;
+		kilometrage += velActual;
+	}
+	
+	protected void avanzarCocheLlegandoAlFinal() {
+		kilometrage += (carreteraActual.longitud - localizacionCarretera);
+		localizacionCarretera = carreteraActual.longitud;
+		velActual = 0;
+		carreteraActual.cruceFin.entraVehiculo(this);
+	}
+	
 	/**
 	 * Pasamos el vehículo desde la carretera actual a la siguiente en el itinerario
 	 */
-	void moverASiguienteCarretera() {
+	public void moverASiguienteCarretera() {
 		//Informamos a la carretera de que la hemos dejado
 		carreteraActual.saleVehiculo(this);
 		
 		//Cambiamos de carretera
-		
 		//Buscamos cuál es el siguiente cruce
 		Junction cruceActual = itinerario.get(indItinerario);
 		++indItinerario;
 		//Si ya hemos llegado al final marcamos como llegado
 		if(indItinerario == itinerario.size()){
 			localizacionCarretera = arrived;
-		} else { //Si no hemos llegado aún a la última intersección
+			
+		//Si no hemos llegado aún a la última intersección
+		} else { 
 			
 			//Buscamos que carretera va de un cruce al otro
 			Junction siguienteCruce = itinerario.get(indItinerario);
@@ -133,7 +143,5 @@ public class Vehicle extends SimulatedObject {
 		} else {
 			out.put("location", "(" + carreteraActual.identificador + "," + localizacionCarretera + ")");
 		}
-	}
-	
-	
+	}	
 }

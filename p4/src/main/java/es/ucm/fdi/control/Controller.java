@@ -17,9 +17,10 @@ public class Controller {
 	private TrafficSimulator simulador;
 	private InputStream input;
 	private OutputStream output;
-	private EventBuilder[] eventosDisponibles = { new NewJunction.Builder(), new NewVehicle.Builder(), new NewRoad.Builder(),
-			new NewFaultyVehicle.Builder(), new NewCar.Builder(), new NewBike.Builder(), new NewHighway.Builder(), new NewPath.Builder(),
-		new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
+	private EventBuilder[] eventosDisponibles = { new NewJunction.Builder(), new NewVehicle.Builder(), 
+			new NewRoad.Builder(), new NewFaultyVehicle.Builder(), new NewCar.Builder(),
+		new NewBike.Builder(), new NewHighway.Builder(), new NewPath.Builder(), 
+			new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
 		
 	public Controller(int nPasos, InputStream input, OutputStream output) {
 		this.nPasos = nPasos;
@@ -37,6 +38,7 @@ public class Controller {
 			simulador.run(nPasos);
 		} catch (SimulationException e) {
 			e.printMessage();
+			e.printStackTrace();
 		}
 	}
 	
@@ -51,8 +53,10 @@ public class Controller {
 			}
 			simulador.insertaEvento(eventoActual);
 		}
-		catch(Exception e){
-			
+		catch(SimulationException e){
+			System.out.println("Se ha producido un error durante la creación de los eventos");
+			e.printMessage();
+			e.printStackTrace();
 		}
 	}
 	
@@ -69,8 +73,7 @@ public class Controller {
 
 	public void output(IniSection ini) {
 		try{		
-			File file = new File("C:/Users/Alberto/git/Practica-TP-4/p4/output1.ini");
-			OutputStream s = new FileOutputStream(file);
+			OutputStream s = output;
 			ini.store(s);
 		}
 		catch (IOException io){

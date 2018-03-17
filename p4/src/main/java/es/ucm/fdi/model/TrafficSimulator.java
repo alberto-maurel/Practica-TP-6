@@ -28,7 +28,6 @@ public class TrafficSimulator {
 		this.out = out;
 	}
 	
-	
 	public class SortbyTime implements Comparator<Event>{
 	    public int compare(Event a, Event b) {
 	        return a.time - b.time;

@@ -36,8 +36,6 @@ public class Car extends Vehicle {
 		this.numAleatorio = new Random(seed);
 	}
 	
-	
-	
 	public void avanza() {
 		if(tiempoAveria > 0) {
 			--tiempoAveria;
@@ -56,14 +54,10 @@ public class Car extends Vehicle {
 				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this); //Sacamos el coche de la carretera		 		
 				//Procesamos el vehículo				
 				if(localizacionCarretera + velActual < carreteraActual.longitud) { //Si el vehículo no llega en este tick al final de la carretera
-					localizacionCarretera += velActual;
-					kilometrage += velActual;
+					avanzarCocheSinLlegarAlFinal();
 					kmSinceLastFailure += velActual;
 				} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección (pero aún no estaba)
-					kilometrage += (carreteraActual.longitud - localizacionCarretera);
-					localizacionCarretera = carreteraActual.longitud;
-					kmSinceLastFailure += (carreteraActual.longitud - localizacionCarretera);
-					velActual = 0;
+					avanzarCocheLlegandoAlFinal();
 					carreteraActual.cruceFin.entraVehiculo(this);	
 				} else { //El coche ya estaba en la intersección
 					velActual = 0;					
@@ -79,6 +73,5 @@ public class Car extends Vehicle {
 	protected void fillReportDetails(Map<String, String> out) {
 		out.put("type", "car");
 		super.fillReportDetails(out);
-	}
-	
+	}	
 }

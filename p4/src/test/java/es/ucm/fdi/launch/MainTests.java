@@ -10,7 +10,7 @@ public class MainTests {
 	public void basicTest() {
 		ExampleMain mainBasico = new ExampleMain();
 		try {
-			//mainBasico.test("C:\\Users\\Alberto\\git\\Practica-TP-4\\p4\\src\\test\\java\\es\\ucm\\fdi\\launch\\basic");
+			mainBasico.test("C:\\Users\\Alberto\\git\\Practica-TP-4\\p4\\src\\test\\java\\es\\ucm\\fdi\\launch\\basic");
 			mainBasico.test("C:\\Users\\Alberto\\git\\Practica-TP-4\\p4\\src\\test\\java\\es\\ucm\\fdi\\launch\\advanced");
 		}
 		catch(Exception e) {

@@ -151,7 +151,12 @@ public class ExampleMain {
 	 */
 	private static void startBatchMode() throws IOException {
 		InputStream in = new FileInputStream(_inFile);
-		OutputStream out = new FileOutputStream(_outFile);
+		OutputStream out;
+		if(_outFile != null) {
+			out = new FileOutputStream(_outFile);
+		} else {
+			out = System.out;
+		}
 		Controller controlador = new Controller(_timeLimit, in, out);
 		controlador.run();
 	}

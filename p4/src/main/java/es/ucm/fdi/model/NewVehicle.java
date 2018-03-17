@@ -26,15 +26,7 @@ public class NewVehicle extends Event {
 				if(parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
 						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0)) {
 					
-					//Creamos el itinerario
-					String[] itinerarioString = sec.getValue("itinerary").split("[ ,]");
-					ArrayList<String> itinerario = new ArrayList<>(Arrays.asList(itinerarioString));
-					
-					for(String juntName: itinerario) {
-						if(!isValidId(juntName)) {
-							throw new SimulationException("El nombre de una junction del itinerario no es válido");
-						}
-					}
+					ArrayList<String> itinerario = parsearItinerario(sec);
 				
 					//Tenemos garantizado que los argumentos que nos han introducido son válidos
 					return new NewVehicle(Integer.parseInt(sec.getValue("time")), sec.getValue("id"),
@@ -50,19 +42,11 @@ public class NewVehicle extends Event {
 	}
 	
 	
+	
 	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que no existiera previamente el vehículo
 		if(roadMap.getConstantSimObjects().get(id) == null) {	
-			ArrayList<Junction> itinerarioVehiculoJunctions = new ArrayList<Junction> ();
-			
-			//Para cada cruce que pertenezca al itinerario del vehículo
-			for(String idJunction: itinerario) {
-				//Añadimos el cruce al arrayList de Junctions que representa el itinerario del vehículo
-				if(roadMap.getConstantSimObjects().get(idJunction) == null) {
-					throw new SimulationException("El cruce no existe");
-				}
-				itinerarioVehiculoJunctions.add((Junction) roadMap.getSimObjects().get(idJunction));	
-			}
+			ArrayList<Junction> itinerarioVehiculoJunctions = crearItinerario(roadMap);
 			
 			//Llamamos al constructor del vehículo
 			Vehicle nuevoVehiculo = new Vehicle(id, max_speed, itinerarioVehiculoJunctions);
@@ -75,6 +59,19 @@ public class NewVehicle extends Event {
 		}
 	}
 	
-	
+	protected ArrayList<Junction> crearItinerario(RoadMap roadMap) throws SimulationException{
+		//Creamos el itinerario
+		ArrayList<Junction> itinerarioVehiculoJunctions = new ArrayList<Junction> ();
+		
+		//Para cada cruce que pertenezca al itinerario del vehículo
+		for(String idJunction: itinerario) {
+			//Añadimos el cruce al arrayList de Junctions que representa el itinerario del vehículo
+			if(roadMap.getConstantSimObjects().get(idJunction) == null) {
+				throw new SimulationException("El cruce no existe");
+			}
+			itinerarioVehiculoJunctions.add((Junction) roadMap.getSimObjects().get(idJunction));	
+		}
+		return itinerarioVehiculoJunctions;
+	}
 }
 
