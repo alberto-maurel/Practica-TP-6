@@ -3,7 +3,7 @@ package es.ucm.fdi.model;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Bike extends Vehicle{
+public class Bike extends Vehicle {
 	
 	public Bike(String id, int velMaxima, ArrayList<Junction> itinerario) {
 		super(id, velMaxima, itinerario);
