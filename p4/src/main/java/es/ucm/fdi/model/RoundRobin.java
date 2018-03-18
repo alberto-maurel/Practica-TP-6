@@ -63,18 +63,21 @@ public class RoundRobin extends Junction {
 				} else if (pasados == 0) { // Si no ha pasado ningún coche durante el intervalo
 					intervaloDeTiempo.set(semaforoVerde, Math.max(intervaloDeTiempo.get(semaforoVerde) - 1, minValorIntervalo));
 				} // En caso contrario, el intervalo no se modifica.
+				super.actualizarSemaforo();
+				cambioDeSemaforoEsteTurno = true;
+				unidadesDeTiempoUsadas = 1;
+				pasados = 0;
 			} else {
 				cambioDeSemaforoEsteTurno = false;
 				++unidadesDeTiempoUsadas;
 			}
-		}
-			
-			//1. Pone semáforo verde a rojo
+		} else { // Si es el primer cambio de semáforo
 			super.actualizarSemaforo();
 			cambioDeSemaforoEsteTurno = true;
+			unidadesDeTiempoUsadas = 1;
+			pasados = 0;
+		} 		
 			
-			unidadesDeTiempoUsadas = 1; // Volvemos a poner las unidades de tiempo usadas a 0
-			pasados = 0; //Y también el contador de coches de esa carretera entrante
 	}
 	
 	protected void fillReportDetails(Map<String, String> out) {
