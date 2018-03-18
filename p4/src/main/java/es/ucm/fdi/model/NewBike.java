@@ -34,7 +34,6 @@ public class NewBike extends NewVehicle {
 		
 	}
 	
-	
 	public void execute(RoadMap roadMap) throws SimulationException {
 		//Comprobamos que no existiera previamente el vehículo
 		if(roadMap.getConstantSimObjects().get(id) == null) {	

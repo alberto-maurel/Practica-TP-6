@@ -107,7 +107,6 @@ private String buscarCarreteraAtascadaIni() {
 				aux += "red,";
 			}
 			
-			
 			aux += '[';
 			//And now we add all the cars
 			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {
@@ -125,7 +124,5 @@ private String buscarCarreteraAtascadaIni() {
 		}
 		out.put("queues", aux);
 		out.put("type", "mc");
-	}
-	
-	
+	}	
 }

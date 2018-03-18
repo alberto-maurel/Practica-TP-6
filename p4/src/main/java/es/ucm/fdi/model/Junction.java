@@ -54,12 +54,6 @@ public class Junction extends SimulatedObject {
 		}
 		//Actualizamos los semáforos
 		actualizarSemaforo();
-		// He cambiado el orden de esto para pasar todos los tests básicos (en realidad la nota ya no sirve pa na)
-		// De hecho en RoundRobin está hecho así
-		/* NOTA: en el guión de la práctica se especificaba que en primer lugar tenían que actualizarse los vehículos del cruce y después
-				 cambiar el semáforo. Sin embargo, nos parece que el comportamiento simulado se asemeja más al de actualizar de antemano 
-				 el cruce y posteriormente mover los coches. */
-		
 	}
 	
 	public void actualizarSemaforo() {
@@ -99,20 +93,6 @@ public class Junction extends SimulatedObject {
 			} else {
 				aux += "red,";
 			}
-			
-			/*if (i == carreterasEntrantesOrdenadas.size() - 1) {
-				if(semaforoVerde == 0) {
-					aux += "green,";
-				} else {
-					aux += "red,";
-				}	
-			} else {
-				if(semaforoVerde == i + 1) {
-					aux += "green,";
-				} else {
-					aux += "red,";
-				}	
-			}*/
 			
 			aux += '[';
 			//And now we add all the cars
