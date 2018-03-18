@@ -28,7 +28,7 @@ private String buscarCarreteraAtascada(String id) {
  					colasCoches.get(carreteraAct).size() > maxActual && !id.equals(carreteraAct)) {
 				idAct = carreteraAct;
 				maxActual = 0;
-			} else idAct = id;
+			} else if (carreterasEntrantesOrdenadas.size() == 1) idAct = id;
 		}
 		return idAct;
 	}
@@ -53,25 +53,34 @@ private String buscarCarreteraAtascadaIni() {
 }
 	
 	public void actualizarSemaforo() {
-		String carreteraAtascada;
-		if (semaforoVerde == -1) {
-			 carreteraAtascada = buscarCarreteraAtascadaIni();
+		String carreteraAtascada;		
+		if (semaforoVerde != -1) {
+			if (intervaloDeTiempo - unidadesDeTiempoUsadas == 1) {
+				carreteraAtascada = buscarCarreteraAtascada(carreterasEntrantesOrdenadas.get(semaforoVerde));
+				semaforoVerde = carreterasEntrantesOrdenadas.indexOf(carreteraAtascada);
+				if(!carreterasEntrantesOrdenadas.get(semaforoVerde).isEmpty()) {
+					intervaloDeTiempo = Math.max(colasCoches.get(carreteraAtascada).size() / 2, 1);
+				} else {
+					intervaloDeTiempo = 0;
+					unidadesDeTiempoUsadas = 0;					
+				}
+				cambioDeSemaforoEsteTurno = true;
+			} else {
+				++unidadesDeTiempoUsadas;
+				cambioDeSemaforoEsteTurno = false;
+			}
 		} else {
-			carreteraAtascada = buscarCarreteraAtascada(carreterasEntrantesOrdenadas.get(semaforoVerde));
-		}
-		if (intervaloDeTiempo == unidadesDeTiempoUsadas) {				
+			carreteraAtascada = buscarCarreteraAtascadaIni();
 			semaforoVerde = carreterasEntrantesOrdenadas.indexOf(carreteraAtascada);
 			if(!carreterasEntrantesOrdenadas.get(semaforoVerde).isEmpty()) {
 				intervaloDeTiempo = Math.max(colasCoches.get(carreteraAtascada).size() / 2, 1);
 			} else {
 				intervaloDeTiempo = 0;
 				unidadesDeTiempoUsadas = 0;
-				cambioDeSemaforoEsteTurno = true;
 			}
-		} else {
-			++unidadesDeTiempoUsadas;
-			cambioDeSemaforoEsteTurno = false;
-		}			
+			cambioDeSemaforoEsteTurno = true;
+		}
+						
 	}
 	
 	public void avanza() {
@@ -93,35 +102,11 @@ private String buscarCarreteraAtascadaIni() {
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
 			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
 			if(semaforoVerde == i) {
-				if(intervaloDeTiempo - unidadesDeTiempoUsadas == 0) {
-					aux += "green:1,";
-				} else {
-					aux += "green:"+ Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas) +",";
-				}	
-			}
-			else {
+				aux += "green:"+ Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas) +",";	
+			} else {
 				aux += "red,";
 			}
 			
-			//El semáforo está correctamente colocado
-			/*if(!cambioDeSemaforoEsteTurno) {
-				if(semaforoVerde == i) {
-					if(intervaloDeTiempo - unidadesDeTiempoUsadas == 0) {
-						aux += "green:1,";
-					} else {
-						aux += "green:"+ Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas) +",";
-					}	
-				}
-				else {
-					aux += "red,";
-				}
-			} else {
-				if (semaforoVerde == i) {
-					aux += "green:1,";
-				} else {
-					aux += "red,";
-				}
-			}*/
 			
 			aux += '[';
 			//And now we add all the cars
