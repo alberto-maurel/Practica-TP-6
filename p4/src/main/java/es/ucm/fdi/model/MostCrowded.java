@@ -53,26 +53,25 @@ private String buscarCarreteraAtascadaIni() {
 }
 	
 	public void actualizarSemaforo() {
-		
-		if (unidadesDeTiempoUsadas == intervaloDeTiempo) {
-			String carreteraAtascada;
-			if (semaforoVerde != -1) {
-				 carreteraAtascada = buscarCarreteraAtascada(carreterasEntrantesOrdenadas.get(semaforoVerde));
-			} else {
-				carreteraAtascada = buscarCarreteraAtascadaIni();
-			}
-			semaforoVerde = carreterasEntrantesOrdenadas.indexOf(carreteraAtascada);
-			if(!carreterasEntrantesOrdenadas.get(semaforoVerde).isEmpty()) 
-				intervaloDeTiempo = Math.max(colasCoches.get(carreteraAtascada).size() / 2, 1);
-			else intervaloDeTiempo = 1;
-			unidadesDeTiempoUsadas = 0;
-			cambioDeSemaforoEsteTurno = true;
+		String carreteraAtascada;
+		if (semaforoVerde == -1) {
+			 carreteraAtascada = buscarCarreteraAtascadaIni();
+		} else {
+			carreteraAtascada = buscarCarreteraAtascada(carreterasEntrantesOrdenadas.get(semaforoVerde));
 		}
-		else {
+		if (intervaloDeTiempo == unidadesDeTiempoUsadas) {				
+			semaforoVerde = carreterasEntrantesOrdenadas.indexOf(carreteraAtascada);
+			if(!carreterasEntrantesOrdenadas.get(semaforoVerde).isEmpty()) {
+				intervaloDeTiempo = Math.max(colasCoches.get(carreteraAtascada).size() / 2, 1);
+			} else {
+				intervaloDeTiempo = 0;
+				unidadesDeTiempoUsadas = 0;
+				cambioDeSemaforoEsteTurno = true;
+			}
+		} else {
 			++unidadesDeTiempoUsadas;
 			cambioDeSemaforoEsteTurno = false;
-		}
-			
+		}			
 	}
 	
 	public void avanza() {
@@ -93,9 +92,19 @@ private String buscarCarreteraAtascadaIni() {
 		String aux = "";
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
 			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
+			if(semaforoVerde == i) {
+				if(intervaloDeTiempo - unidadesDeTiempoUsadas == 0) {
+					aux += "green:1,";
+				} else {
+					aux += "green:"+ Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas) +",";
+				}	
+			}
+			else {
+				aux += "red,";
+			}
 			
 			//El semáforo está correctamente colocado
-			if(!cambioDeSemaforoEsteTurno) {
+			/*if(!cambioDeSemaforoEsteTurno) {
 				if(semaforoVerde == i) {
 					if(intervaloDeTiempo - unidadesDeTiempoUsadas == 0) {
 						aux += "green:1,";
@@ -112,7 +121,7 @@ private String buscarCarreteraAtascadaIni() {
 				} else {
 					aux += "red,";
 				}
-			}
+			}*/
 			
 			aux += '[';
 			//And now we add all the cars

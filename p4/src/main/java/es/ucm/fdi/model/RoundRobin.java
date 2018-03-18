@@ -13,7 +13,7 @@ public class RoundRobin extends Junction {
 	
 	protected int maxValorIntervalo;
 	protected int minValorIntervalo;
-	protected ArrayList<Integer> intervaloDeTiempo; 
+	protected int intervaloDeTiempo; 
 	protected int unidadesDeTiempoUsadas;
 	protected int pasados; // Indica el numero de vehículos que han pasado por la carretera 
 										// entrante durante el intervalo
@@ -24,15 +24,14 @@ public class RoundRobin extends Junction {
 		super(id);
 		maxValorIntervalo = max;
 		minValorIntervalo = min;
-		intervaloDeTiempo = new ArrayList<>(carreterasEntrantesOrdenadas.size());
-		Collections.fill(intervaloDeTiempo, maxValorIntervalo);
+		intervaloDeTiempo = maxValorIntervalo;
 		pasados = 0;
 		unidadesDeTiempoUsadas = 0;
 	}
 	
 	public void nuevaCarreteraEntrante(Road road) {
 		super.nuevaCarreteraEntrante(road);
-		intervaloDeTiempo.add(maxValorIntervalo);
+		intervaloDeTiempo = maxValorIntervalo;
 	}
 	
 	
@@ -56,16 +55,16 @@ public class RoundRobin extends Junction {
 	public void actualizarSemaforo() {
 		if (semaforoVerde != -1) {
 			//En primer lugar vemos si hemos agotado el tiempo del semáforo actual
-			if (intervaloDeTiempo.get(semaforoVerde) == unidadesDeTiempoUsadas) {
+			if (intervaloDeTiempo - unidadesDeTiempoUsadas == 1) {
 				//2. Actualizar intervalo de tiempo
-				if (pasados == intervaloDeTiempo.get(semaforoVerde)) { //Si en cada paso ha cruzado un coche
-					intervaloDeTiempo.set(semaforoVerde, Math.min(intervaloDeTiempo.get(semaforoVerde) + 1, maxValorIntervalo));
+				if (pasados == intervaloDeTiempo) { //Si en cada paso ha cruzado un coche
+					intervaloDeTiempo = Math.min(intervaloDeTiempo + 1, maxValorIntervalo);
 				} else if (pasados == 0) { // Si no ha pasado ningún coche durante el intervalo
-					intervaloDeTiempo.set(semaforoVerde, Math.max(intervaloDeTiempo.get(semaforoVerde) - 1, minValorIntervalo));
+					intervaloDeTiempo = Math.max(intervaloDeTiempo - 1, minValorIntervalo);
 				} // En caso contrario, el intervalo no se modifica.
+				unidadesDeTiempoUsadas = 0;
 				super.actualizarSemaforo();
-				cambioDeSemaforoEsteTurno = true;
-				unidadesDeTiempoUsadas = 1;
+				cambioDeSemaforoEsteTurno = true;				
 				pasados = 0;
 			} else {
 				cambioDeSemaforoEsteTurno = false;
@@ -74,7 +73,7 @@ public class RoundRobin extends Junction {
 		} else { // Si es el primer cambio de semáforo
 			super.actualizarSemaforo();
 			cambioDeSemaforoEsteTurno = true;
-			unidadesDeTiempoUsadas = 1;
+			unidadesDeTiempoUsadas = 0;
 			pasados = 0;
 		} 		
 			
@@ -84,10 +83,9 @@ public class RoundRobin extends Junction {
 		String aux = "";
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
 			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
-			
 
 			if (semaforoVerde == i) {
-				aux += "green:" + Integer.toString(intervaloDeTiempo.get(i) - unidadesDeTiempoUsadas + 1) + ",";
+				aux += "green:" + Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas) + ",";
 			}
 			else {
 				aux += "red,";

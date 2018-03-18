@@ -63,8 +63,8 @@ public class Junction extends SimulatedObject {
 	}
 	
 	public void actualizarSemaforo() {
-		if(colasCoches.size() > 0) semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
-		else if (semaforoVerde == -1) semaforoVerde = 0;
+		if (semaforoVerde == -1) semaforoVerde = 0;
+		else if (colasCoches.size() > 0) semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
 	}
 	
 	public Road buscarCarretera(Junction sigCruce) {
