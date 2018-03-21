@@ -9,19 +9,14 @@ public class Car extends Vehicle {
 	protected int resistance;
 	protected double fault_probability;
 	protected int max_fault_duration;
-	protected long seed = System.currentTimeMillis();
+	protected long seed;
 	protected int kmSinceLastFailure;
 	private Random numAleatorio;
 	
 
 	//Constructor sin semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration) {
-		super(id, velMaxima, itinerario);
-		this.resistance = resistance;
-		this.fault_probability = fault_probability;
-		this.max_fault_duration = max_fault_duration;
-		this.kmSinceLastFailure = 0;
-		this.numAleatorio = new Random(seed);
+		this(id, velMaxima, itinerario, resistance, fault_probability, max_fault_duration, System.currentTimeMillis());
 	}
 	
 	
