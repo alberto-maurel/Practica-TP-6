@@ -15,7 +15,6 @@ public class Junction extends SimulatedObject {
 	
 	
 	public Junction() {
-		super();
 		semaforoVerde = -1;
 		this.colasCoches = new HashMap<>();
 		this.carreterasSalientes = new HashMap<>(); 
