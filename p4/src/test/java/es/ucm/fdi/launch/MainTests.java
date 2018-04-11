@@ -4,18 +4,20 @@ import org.junit.Test;
 
 import es.ucm.fdi.launcher.ExampleMain;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 public class MainTests {
 	//Testeo de funcionamiento de la práctica, con los ejemplos de entrada y salida
-	
-	//Pasa todos los tests. Los archivos están en la ruta C:\\Users\\Alberto\\git\\Practica-TP-4\\p4\\src\\test\\java\\es\\ucm\\fdi\\launch\\
-	//y en las carpetas\\basic, \\advanced, \\err
+
 	@Test
 	public void basicTest() {
 		ExampleMain mainBasico = new ExampleMain();
 		try {
-			mainBasico.test("C:\\Users\\Alberto\\git\\Practica-TP-4\\p4\\src\\test\\java\\es\\ucm\\fdi\\launch\\basic");
-			mainBasico.test("C:\\Users\\Alberto\\git\\Practica-TP-4\\p4\\src\\test\\java\\es\\ucm\\fdi\\launch\\advanced");
-			mainBasico.test("C:\\Users\\Alberto\\git\\Practica-TP-4\\p4\\src\\test\\java\\es\\ucm\\fdi\\launch\\err");
+			assertTrue("Tests basicos pasan", mainBasico.test("src/test/resources/basic"));
+			assertTrue( "Tests avanzados pasan", mainBasico.test("src/test/resources/advanced"));
+			mainBasico.test("src/test/resources/err");
+			fail("no da error con una entrada mala");
 		}
 		catch(Exception e) {
 			System.out.println("Se ha producido un error durante la ejecución");

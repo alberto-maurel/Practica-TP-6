@@ -71,9 +71,9 @@ public class Road extends SimulatedObject {
 	}
 	
 	protected int calcularVelocidadBase(int velocidadMaxima, int nVehiculosCarretera) {
-		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues()));
-		int aux2 = velocidadMaxima/aux1;
-		return Math.min(velocidadMaxima, aux2 + 1);
+		int totalCochesEnCarretera = (int)situacionCarretera.sizeOfValues();
+		return Math.min(velocidadMaxima,
+				1 + velocidadMaxima / Math.max(1, totalCochesEnCarretera));
 	}
 
 	protected int calcularFactorReduccion(int nVehiculosAveriados) {

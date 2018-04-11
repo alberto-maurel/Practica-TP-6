@@ -15,7 +15,6 @@ public class Junction extends SimulatedObject {
 	
 	
 	public Junction() {
-		super();
 		semaforoVerde = -1;
 		this.colasCoches = new HashMap<>();
 		this.carreterasSalientes = new HashMap<>(); 
@@ -85,31 +84,30 @@ public class Junction extends SimulatedObject {
 	}
 
 	protected void fillReportDetails(Map<String, String> out) {
-		String aux = "";
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
-			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";			
+			sb.append("(" + carreterasEntrantesOrdenadas.get(i) + ",");
 			if (i == semaforoVerde) {
-				aux += "green,";
+				sb.append("green,");
 			} else {
-				aux += "red,";
+				sb.append("red,");
 			}
 			
-			aux += '[';
+			sb.append("[");
 			//And now we add all the cars
 			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {
-				aux += v.identificador + ',';
+				sb.append(v.identificador + ',');
 			}
 			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() > 0) {			
-				aux = aux.substring(0, aux.length() - 1);
+				sb.setLength(sb.length()-1);
 			}
 			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() != 0) {
 				carreterasEntrantesOrdenadas.get(i);
 			}
-			aux += ']';
-			aux += ')';
-			if(i != carreterasEntrantesOrdenadas.size() - 1) aux += ',';
+			sb.append("])");
+			if(i != carreterasEntrantesOrdenadas.size() - 1) sb.append(",");
 		}
-		out.put("queues", aux);
+		out.put("queues", sb.toString());
 	}
 	
 	
