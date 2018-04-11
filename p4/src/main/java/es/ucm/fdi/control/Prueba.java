@@ -93,10 +93,16 @@ public class Prueba extends JFrame {
 				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", 
 				()->System.err.println("abriendo archivo..."));
 		
+		SimulatorAction borrar = new SimulatorAction(
+				"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
+				VK_C, "control C", ()->System.err.println("Borrando cola de eventos..."));
+		
 		JToolBar bar = new JToolBar();
 		bar.add(loadEventsFile);
-		bar.add(salir);
 		bar.add(guardar);
+		bar.add(borrar);
+		bar.add(salir);
+		
 		
 		add(bar, BorderLayout.NORTH);
 	
@@ -104,6 +110,7 @@ public class Prueba extends JFrame {
 		JMenu file = new JMenu("File");
 		file.add(loadEventsFile);
 		file.add(guardar);
+		file.add(borrar);
 		file.add(salir);
 		
 		JMenuBar menu = new JMenuBar();
