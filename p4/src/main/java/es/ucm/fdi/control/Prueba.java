@@ -23,12 +23,7 @@ public class Prueba extends JFrame {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		addBars();
-		
-		
-		
-		
-		
+		addBars();		
 		
 		
 		String[] columnNames = {"Nombre", "Apellido1", "Apellido2"};
@@ -94,17 +89,23 @@ public class Prueba extends JFrame {
 		SimulatorAction guardar = new SimulatorAction(
 				"Guardar", "save.png", "guardar cosas", KeyEvent.VK_S, "control S", ()->System.err.println("guardando... "));
 				
-		
+		SimulatorAction loadEventsFile = new SimulatorAction(
+				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", 
+				()->System.err.println("abriendo archivo..."));
 		
 		JToolBar bar = new JToolBar();
+		bar.add(loadEventsFile);
 		bar.add(salir);
 		bar.add(guardar);
+		
 		add(bar, BorderLayout.NORTH);
 	
 		
 		JMenu file = new JMenu("File");
+		file.add(loadEventsFile);
 		file.add(guardar);
 		file.add(salir);
+		
 		JMenuBar menu = new JMenuBar();
 		menu.add(file);
 		setJMenuBar(menu);
