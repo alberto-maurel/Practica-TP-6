@@ -1,22 +1,9 @@
 package es.ucm.fdi.control;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class Prueba extends JFrame {
 	public Prueba() {
@@ -28,7 +15,8 @@ public class Prueba extends JFrame {
 		
 		String[] columnNames = {"Nombre", "Apellido1", "Apellido2"};
 		Object[][] data = {
-				{"Laura", "Castilla", "Castellano"}
+				{"Laura", "Castilla", "Castellano"},
+				{"Alberto", "Maurel", "Serrano"}
 				}; 
 		
 		JTable table1 = new JTable(data, columnNames);

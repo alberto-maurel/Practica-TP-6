@@ -1,15 +1,7 @@
 package es.ucm.fdi.ini;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Map;
-
-import org.junit.Test;
 
 public class Demo {
 	public static void write() throws Exception {
@@ -97,7 +89,8 @@ public class Demo {
 		compare();
 		write();
 	}
-	
+
+	/*
 	@Test
 	//Para testear que no hay errores de ejecución en entrada/salida, pero no comprueba que esta sea correcta 
 	public void TestInputOutput() {
@@ -111,4 +104,5 @@ public class Demo {
 		}
 		
 	}
+	*/
 }
