@@ -2,7 +2,9 @@ package es.ucm.fdi.control;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class Prueba extends JFrame {
@@ -32,7 +34,6 @@ public class Prueba extends JFrame {
 		table5.setSize(100,100);
 		JTable table6 = new JTable(data, columnNames);
 		table6.setSize(100,100);
-
 		
 		//Creación de uno de los paneles que tiene las tablas dentro
 		JTextArea fichero = new JTextArea();

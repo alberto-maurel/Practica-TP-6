@@ -1,5 +1,7 @@
 package es.ucm.fdi.model;
 
+import java.util.List;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -118,6 +120,46 @@ public class TrafficSimulator {
 		}
 		else {
 			throw new SimulationException("Se ha añadido un evento en un momento posterior a su ejecución");
+		}
+	}
+	
+	public interface SimulatorListener {
+		void update(UpdateEvent ue, String error);
+	}
+	
+	public enum EventType {
+		REGISTERED,
+		RESET,
+		NEW_EVENT,
+		ADVANCED,
+		ERROR,
+	}
+	
+	public class UpdateEvent {
+		private EventType tipoEvento;
+		private List<Event> colaEventos = new ArrayList<>();
+		private int tiempoActual;
+		
+		public UpdateEvent(EventType e){
+			tipoEvento = e;
+			colaEventos = listaEventos;
+			tiempoActual = tick;
+		}
+		
+		public EventType getEvent(){
+			return tipoEvento;
+		}
+		
+		public List getVehicles(){
+			return null;
+		}
+		
+		public List<Event> getEventQueue() {
+			return colaEventos;
+		}
+		
+		public int getCurrentTime() {
+			return tiempoActual;
 		}
 	}
 }
