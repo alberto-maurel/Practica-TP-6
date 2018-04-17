@@ -2,7 +2,7 @@ package es.ucm.fdi.launch;
 
 import org.junit.Test;
 
-import es.ucm.fdi.launcher.ExampleMain;
+import es.ucm.fdi.launcher.Main;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -12,7 +12,7 @@ public class MainTests {
 
 	@Test
 	public void basicTest() {
-		ExampleMain mainBasico = new ExampleMain();
+		Main mainBasico = new Main();
 		try {
 			assertTrue("Tests basicos pasan", mainBasico.test("src/test/resources/basic"));
 			assertTrue( "Tests avanzados pasan", mainBasico.test("src/test/resources/advanced"));

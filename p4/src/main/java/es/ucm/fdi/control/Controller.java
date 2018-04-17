@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.layout.SimulatorLayout;
 import es.ucm.fdi.model.*;
 
 public class Controller {
@@ -16,7 +17,10 @@ public class Controller {
 			new NewRoad.Builder(), new NewFaultyVehicle.Builder(), new NewCar.Builder(),
 		new NewBike.Builder(), new NewHighway.Builder(), new NewPath.Builder(), 
 			new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
-		
+	
+	private SimulatorLayout ventana = new SimulatorLayout();
+	
+	
 	public Controller(int nPasos, InputStream input, OutputStream output) {
 		this.nPasos = nPasos;
 		simulador = new TrafficSimulator(output);

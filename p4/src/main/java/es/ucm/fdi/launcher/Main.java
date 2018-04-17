@@ -21,7 +21,7 @@ import org.apache.commons.cli.ParseException;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.ini.Ini;
 
-public class ExampleMain {
+public class Main {
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static Integer _timeLimit = null;
 	private static String _inFile = null;
@@ -78,7 +78,7 @@ public class ExampleMain {
 	private static void parseHelpOption(CommandLine line, Options cmdLineOptions) {
 		if (line.hasOption("h")) {
 			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp(ExampleMain.class.getCanonicalName(), cmdLineOptions, true);
+			formatter.printHelp(Main.class.getCanonicalName(), cmdLineOptions, true);
 			System.exit(0);
 		}
 	}

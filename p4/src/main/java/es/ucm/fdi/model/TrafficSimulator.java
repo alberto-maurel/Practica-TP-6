@@ -123,8 +123,30 @@ public class TrafficSimulator {
 		}
 	}
 	
-	public interface SimulatorListener {
-		void update(UpdateEvent ue, String error);
+	public interface Listener {
+		void registered(UpdateEvent ue);
+		void reset(UpdateEvent ue);
+		void newEvent(UpdateEvent ue);
+		void advanced(UpdateEvent ue);
+		void error(UpdateEvent ue, String error);
+	}
+	
+	private List<Listener> listeners = new ArrayList<>();
+	
+	public void addSimulatorListener(Listener l) {
+		listeners.add(l);
+	}
+	
+	public void removeListener(Listener l) {
+		listeners.remove(l);
+	}
+	
+	// uso interno, evita tener que escribir el mismo bucle muchas veces
+	private void fireUpdateEvent(EventType type, String error) {
+		UpdateEvent ue = new UpdateEvent(type);
+		for(Listener l: listeners) {
+			l.notify();
+		}
 	}
 	
 	public enum EventType {
@@ -137,29 +159,25 @@ public class TrafficSimulator {
 	
 	public class UpdateEvent {
 		private EventType tipoEvento;
-		private List<Event> colaEventos = new ArrayList<>();
-		private int tiempoActual;
 		
 		public UpdateEvent(EventType e){
 			tipoEvento = e;
-			colaEventos = listaEventos;
-			tiempoActual = tick;
 		}
 		
 		public EventType getEvent(){
 			return tipoEvento;
 		}
 		
-		public List getVehicles(){
-			return null;
+		public List<Vehicle> getVehicles(){
+			return mapaTrafico.getConstantVehicles();
 		}
 		
 		public List<Event> getEventQueue() {
-			return colaEventos;
+			return listaEventos;
 		}
 		
 		public int getCurrentTime() {
-			return tiempoActual;
+			return tick;
 		}
 	}
 }

@@ -114,4 +114,24 @@ public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
         return () -> new InnerIterator();
     }
     
+    private class InnerList extends AbstractList<V> {
+    	@Override
+    	public V get(int index) {
+    	if (index < 0 || isEmpty())
+    	throw new IndexOutOfBoundsException("...");
+    	Iterator<ArrayList<V>> it = values().iterator();
+    	ArrayList<V> current = it.next();
+    	int start = 0;
+    	while (index >= (start+current.size())) {
+    	if (!it.hasNext()) {
+    	throw new IndexOutOfBoundsException("...");
+    	}
+    	start += current.size();
+    	current = it.next();
+    	}
+    	return current.get(index - start);
+    	}
+    	@Override
+    	public int size() { return (int) sizeOfValues(); }
+    	}
 }

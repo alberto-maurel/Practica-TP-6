@@ -1,20 +1,21 @@
-package es.ucm.fdi.control;
+package es.ucm.fdi.layout;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import es.ucm.fdi.control.SimulatorAction;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-public class Prueba extends JFrame {
-	public Prueba() {
+public class SimulatorLayout extends JFrame {
+	public SimulatorLayout() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		addBars();		
-		
-		
+			
 		String[] columnNames = {"Nombre", "Apellido1", "Apellido2"};
 		Object[][] data = {
 				{"Laura", "Castilla", "Castellano"},
@@ -74,89 +75,6 @@ public class Prueba extends JFrame {
 		lowerSplit.setDividerLocation(.5);
 	}
 
-	
-	private void addBars(){
-		SimulatorAction salir = new SimulatorAction(
-			"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));
-		
-		SimulatorAction guardar = new SimulatorAction(
-			"Guardar", "save.png", "Guardar cosas", KeyEvent.VK_S, "control S", ()->System.err.println("guardando... "));
-				
-		SimulatorAction loadEventsFile = new SimulatorAction(
-				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", 
-				()->System.err.println("abriendo archivo..."));
-		
-		SimulatorAction borrar = new SimulatorAction(
-				"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
-				VK_C, "control C", ()->System.err.println("Borrando cola de eventos..."));
-		
-		SimulatorAction events = new SimulatorAction(
-				"Eventos", "events.png", "???", KeyEvent.
-				VK_E, "control E", ()->System.err.println("???..."));
-		
-		SimulatorAction play = new SimulatorAction(
-				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
-				VK_P, "control P", ()->System.err.println("Ejecutando..."));
-		
-		SimulatorAction reset = new SimulatorAction(
-				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
-				VK_R, "control R", ()->System.err.println("Reseteando..."));
-		
-		SimulatorAction generateReport = new SimulatorAction(
-				"Generar Reporte", "report.png", "Generar el reporte de la simulación", KeyEvent.
-				VK_G, "control G", ()->System.err.println("Generando..."));
-		
-		SimulatorAction deleteReport = new SimulatorAction(
-				"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación", KeyEvent.
-				VK_B, "control B", ()->System.err.println("Borrando..."));
-		
-		SimulatorAction saveReport = new SimulatorAction(
-				"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
-				VK_G, "control shift G", ()->System.err.println("Guardando..."));
-		
-		JToolBar bar = new JToolBar();
-		bar.add(loadEventsFile);
-		bar.add(guardar);
-		bar.add(borrar);
-		bar.add(events);
-		bar.add(play);
-		bar.add(reset);
-		
-		
-		bar.add(generateReport);
-		bar.add(deleteReport);
-		bar.add(saveReport);
-		bar.add(salir);
-		
-		
-		add(bar, BorderLayout.NORTH);
-	
-		JMenu file = new JMenu("File");
-		file.add(loadEventsFile);
-		file.add(guardar);
-		file.add(saveReport);
-		file.add(salir);
-		
-		JMenu simulator = new JMenu("Simulator");
-		simulator.add(play);
-		simulator.add(reset);
-				
-		//file.add(borrar);
-		//file.add(events);
-		
-		JMenu generate = new JMenu("Generate");
-		generate.add(generateReport);
-		generate.add(deleteReport);
-		
-		
-		
-		JMenuBar menu = new JMenuBar();
-		menu.add(file);
-		menu.add(simulator);
-		menu.add(generate);
-		setJMenuBar(menu);
-	}
-	
 	private JScrollPane createTablePanel(String title, JTable table, Dimension d){
 		Border b = BorderFactory.createLineBorder(Color.black, 2);
 		JScrollPane p = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -173,8 +91,106 @@ public class Prueba extends JFrame {
 		return p;
 	}
 	
+	private void addBars(){
+		SimulatorAction salir = new SimulatorAction(
+			"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));
+		
+		JMenu file = new JMenu("File");
+		JMenu simulator = new JMenu("Simulator");
+		JMenu generate = new JMenu("Generate");
+		
+		JToolBar bar = new JToolBar();
+		
+		bar.add(createComponents1(file));
+		bar.add(createComponents2(simulator));
+		bar.add(createComponents5(file, generate));
+		
+		bar.add(salir);
+		file.add(salir);
+		
+		JMenuBar menu = new JMenuBar();
+		menu.add(file);
+		menu.add(simulator);
+		menu.add(generate);
+		setJMenuBar(menu);
+		add(bar, BorderLayout.NORTH);
+	}
+	
+	private JToolBar createComponents1(JMenu file) {
+		SimulatorAction guardar = new SimulatorAction(
+				"Guardar", "save.png", "Guardar cosas", KeyEvent.VK_S, "control S", ()->System.err.println("guardando... "));
+					
+		SimulatorAction loadEventsFile = new SimulatorAction(
+				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", 
+				()->System.err.println("abriendo archivo..."));
+			
+		SimulatorAction borrar = new SimulatorAction(
+				"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
+				VK_C, "control C", ()->System.err.println("Borrando cola de eventos..."));
+		
+		//Agregamos las acciones a la barra
+		JToolBar bar = new JToolBar();
+		bar.add(loadEventsFile);
+		bar.add(guardar);
+		bar.add(borrar);
+		
+		//Y al menú
+		file.add(loadEventsFile);
+		file.add(guardar);
+		return bar;
+	}
+	
+	private JToolBar createComponents2(JMenu simulator) {
+		SimulatorAction events = new SimulatorAction(
+				"Eventos", "events.png", "???", KeyEvent.
+				VK_E, "control E", ()->System.err.println("???..."));
+		
+		SimulatorAction play = new SimulatorAction(
+				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
+				VK_P, "control P", ()->System.err.println("Ejecutando..."));
+		
+		SimulatorAction reset = new SimulatorAction(
+				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
+				VK_R, "control R", ()->System.err.println("Reseteando..."));
+		
+		//Añadimos las funcionalidades a las barras
+		JToolBar bar = new JToolBar();
+		bar.add(events);
+		bar.add(play);
+		bar.add(reset);
+		
+		//Y al menú
+		simulator.add(play);
+		simulator.add(reset);
+		return bar;
+	}
+	
+	private JToolBar createComponents5(JMenu file, JMenu generate) {
+		SimulatorAction generateReport = new SimulatorAction(
+				"Generar Reporte", "report.png", "Generar el reporte de la simulación", KeyEvent.
+				VK_G, "control G", ()->System.err.println("Generando..."));
+		
+		SimulatorAction deleteReport = new SimulatorAction(
+				"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación", KeyEvent.
+				VK_B, "control B", ()->System.err.println("Borrando..."));
+		
+		SimulatorAction saveReport = new SimulatorAction(
+				"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
+				VK_G, "control shift G", ()->System.err.println("Guardando..."));
+		
+		JToolBar bar = new JToolBar();
+		bar.add(generateReport);
+		bar.add(deleteReport);
+		bar.add(saveReport);
+		
+		generate.add(generateReport);
+		generate.add(deleteReport);
+		file.add(saveReport);
+		return bar;
+	}
+	
 	public static void main(String ... args) {
-		SwingUtilities.invokeLater(()-> new Prueba());
+		SwingUtilities.invokeLater(()-> new SimulatorLayout());
 	}
 }
 
