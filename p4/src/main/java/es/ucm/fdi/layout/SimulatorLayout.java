@@ -2,19 +2,36 @@ package es.ucm.fdi.layout;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
 
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.util.MultiTreeMap;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimulatorLayout extends JFrame {
 	public SimulatorLayout() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		addBars();		
+		//Creación de uno de los paneles que tiene las tablas dentro
+		JTextArea fichero = new JTextArea();
+		fichero.setEditable(true);
+		JTextArea reports = new JTextArea();
+		reports.setEditable(true);
+		
+		addBars(fichero, reports);		
 			
 		String[] columnNames = {"Nombre", "Apellido1", "Apellido2"};
 		Object[][] data = {
@@ -36,12 +53,9 @@ public class SimulatorLayout extends JFrame {
 		JTable table6 = new JTable(data, columnNames);
 		table6.setSize(100,100);
 		
-		//Creación de uno de los paneles que tiene las tablas dentro
-		JTextArea fichero = new JTextArea();
-		fichero.setEditable(true);
 		
-		JTextArea reports = new JTextArea();
-		reports.setEditable(true);
+		
+		
 		
 		JPanel upperPanel = new JPanel();
 		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
@@ -91,7 +105,7 @@ public class SimulatorLayout extends JFrame {
 		return p;
 	}
 	
-	private void addBars(){
+	private void addBars(JTextArea fichero, JTextArea reports){
 		SimulatorAction salir = new SimulatorAction(
 			"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));
 		
@@ -101,9 +115,9 @@ public class SimulatorLayout extends JFrame {
 		
 		JToolBar bar = new JToolBar();
 		
-		bar.add(createComponents1(file));
+		bar.add(createComponents1(file, fichero));
 		bar.add(createComponents2(simulator));
-		bar.add(createComponents5(file, generate));
+		bar.add(createComponents5(file, generate, reports));
 		
 		bar.add(salir);
 		file.add(salir);
@@ -116,17 +130,21 @@ public class SimulatorLayout extends JFrame {
 		add(bar, BorderLayout.NORTH);
 	}
 	
-	private JToolBar createComponents1(JMenu file) {
+	private JToolBar createComponents1(JMenu file, JTextArea fichero) {
 		SimulatorAction guardar = new SimulatorAction(
 				"Guardar", "save.png", "Guardar cosas", KeyEvent.VK_S, "control S", ()->System.err.println("guardando... "));
-					
+		
+		JFileChooser fileChooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		        ".ini Files", "ini");
+		    fileChooser.setFileFilter(filter);
+		
 		SimulatorAction loadEventsFile = new SimulatorAction(
-				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", 
-				()->System.err.println("abriendo archivo..."));
+				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", ()->loadFile(fichero));
 			
 		SimulatorAction borrar = new SimulatorAction(
 				"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
-				VK_C, "control C", ()->System.err.println("Borrando cola de eventos..."));
+				VK_C, "control C", ()->fichero.setText(""));
 		
 		//Agregamos las acciones a la barra
 		JToolBar bar = new JToolBar();
@@ -138,6 +156,28 @@ public class SimulatorLayout extends JFrame {
 		file.add(loadEventsFile);
 		file.add(guardar);
 		return bar;
+	}
+	
+	@SuppressWarnings("unused")
+	private void loadFile(JTextArea fichero) {
+		JFileChooser chooser = new JFileChooser();
+		int returnVal = chooser.showOpenDialog(fichero);
+		File file = null;
+		if (returnVal == JFileChooser.APPROVE_OPTION) { 
+		  file = chooser.getSelectedFile();    
+		}
+		try {
+			@SuppressWarnings("resource")
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			String line;
+			line = in.readLine();
+			while(line != null) {
+				  fichero.append(line + "\n");
+				  line = in.readLine();
+				}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 	
 	private JToolBar createComponents2(JMenu simulator) {
@@ -165,18 +205,18 @@ public class SimulatorLayout extends JFrame {
 		return bar;
 	}
 	
-	private JToolBar createComponents5(JMenu file, JMenu generate) {
+	private JToolBar createComponents5(JMenu file, JMenu generate, JTextArea reports) {
 		SimulatorAction generateReport = new SimulatorAction(
 				"Generar Reporte", "report.png", "Generar el reporte de la simulación", KeyEvent.
 				VK_G, "control G", ()->System.err.println("Generando..."));
 		
 		SimulatorAction deleteReport = new SimulatorAction(
 				"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación", KeyEvent.
-				VK_B, "control B", ()->System.err.println("Borrando..."));
+				VK_B, "control B", ()->reports.setText(""));
 		
 		SimulatorAction saveReport = new SimulatorAction(
 				"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
-				VK_G, "control shift G", ()->System.err.println("Guardando..."));
+				VK_G, "control shift G", ()->saveSimulationReport(reports));
 		
 		JToolBar bar = new JToolBar();
 		bar.add(generateReport);
@@ -188,6 +228,56 @@ public class SimulatorLayout extends JFrame {
 		file.add(saveReport);
 		return bar;
 	}
+	
+	private void saveSimulationReport(JTextArea reports) {
+		 String filename = JOptionPane.showInputDialog("Guardar como...");
+	        JFileChooser savefile = new JFileChooser();
+	        savefile.setSelectedFile(new File(filename));
+	        BufferedWriter writer;
+	        int sf = savefile.showSaveDialog(null);
+	        if(sf == JFileChooser.APPROVE_OPTION){
+	            try {
+	            	writer = new BufferedWriter(new FileWriter(savefile.getSelectedFile()));
+	            	writer.write(reports.getText());
+	                writer.close();
+	                JOptionPane.showMessageDialog(null, "File has been saved","File Saved",JOptionPane.INFORMATION_MESSAGE);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	}
+	
+	public interface Describable {
+		/**
+		* @param out - a map to fill in with key- value pairs
+		* @return the passed- in map, with all fields filled out.
+		*/
+		void describe(Map<String, String> out);
+	}
+	
+	/*private class ListOfMapsTableModel extends AbstractTableModel {
+		private String[] fieldNames;
+		private MultiTreeMap<String, String> elements = new MultiTreeMap<>();
+		
+		@Override
+		public String getColumnName(int columnIndex) {
+			return fieldNames[columnIndex];
+		}
+		@Override
+		public int getRowCount() {
+			return elements.size();
+		}
+		@Override
+		public int getColumnCount() {
+			return fieldNames.length;
+		}
+		@Override // ineficiente: ¿puedes mejorarlo?
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			return elements.get(rowIndex)
+					.describe(new HashMap<String, String>())
+						.get(fieldNames[columnIndex]);
+		}
+	}*/
 	
 	public static void main(String ... args) {
 		SwingUtilities.invokeLater(()-> new SimulatorLayout());

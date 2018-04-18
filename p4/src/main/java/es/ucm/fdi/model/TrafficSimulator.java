@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.swing.SwingUtilities;
+
 public class TrafficSimulator {
 
 	private int indiceActualEventos;
@@ -135,6 +137,9 @@ public class TrafficSimulator {
 	
 	public void addSimulatorListener(Listener l) {
 		listeners.add(l);
+		UpdateEvent ue = new UpdateEvent(EventType.REGISTERED);
+		// evita pseudo-recursividad
+		SwingUtilities.invokeLater(()->l.registered(ue));
 	}
 	
 	public void removeListener(Listener l) {
@@ -145,7 +150,7 @@ public class TrafficSimulator {
 	private void fireUpdateEvent(EventType type, String error) {
 		UpdateEvent ue = new UpdateEvent(type);
 		for(Listener l: listeners) {
-			l.notify();
+			l.notify(); //No habría que hacer un l.loquesea según type? No se usa ue
 		}
 	}
 	
@@ -154,7 +159,7 @@ public class TrafficSimulator {
 		RESET,
 		NEW_EVENT,
 		ADVANCED,
-		ERROR,
+		ERROR
 	}
 	
 	public class UpdateEvent {
@@ -180,4 +185,6 @@ public class TrafficSimulator {
 			return tick;
 		}
 	}
+	
+	
 }
