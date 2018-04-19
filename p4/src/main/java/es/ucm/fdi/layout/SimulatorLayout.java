@@ -3,11 +3,9 @@ package es.ucm.fdi.layout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.AbstractTableModel;
-
 import es.ucm.fdi.control.SimulatorAction;
-import es.ucm.fdi.util.MultiTreeMap;
-
+import es.ucm.fdi.model.TrafficSimulator.Listener;
+import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -16,11 +14,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-public class SimulatorLayout extends JFrame {
+@SuppressWarnings("serial")
+public class SimulatorLayout extends JFrame implements Listener {
 	public SimulatorLayout() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -166,6 +163,7 @@ public class SimulatorLayout extends JFrame {
 		if (returnVal == JFileChooser.APPROVE_OPTION) { 
 		  file = chooser.getSelectedFile();    
 		}
+		// Crear la lista de eventos con el controller (JOptionPane para error)
 		try {
 			@SuppressWarnings("resource")
 			BufferedReader in = new BufferedReader(new FileReader(file));
@@ -278,6 +276,14 @@ public class SimulatorLayout extends JFrame {
 						.get(fieldNames[columnIndex]);
 		}
 	}*/
+	
+	//TODO: cosas
+	public void registered(UpdateEvent ue) {}
+	public void reset(UpdateEvent ue) {}
+	public void newEvent(UpdateEvent ue) {}
+	public void advanced(UpdateEvent ue) {}
+	public void error(UpdateEvent ue, String error) {}
+	
 	
 	public static void main(String ... args) {
 		SwingUtilities.invokeLater(()-> new SimulatorLayout());
