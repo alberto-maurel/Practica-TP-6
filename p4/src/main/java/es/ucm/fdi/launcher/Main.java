@@ -20,6 +20,7 @@ import org.apache.commons.cli.ParseException;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.ini.Ini;
+import es.ucm.fdi.layout.SimulatorLayout;
 
 public class Main {
 	private final static Integer _timeLimitDefaultValue = 10;
@@ -163,7 +164,8 @@ public class Main {
 			out = System.out;
 		}
 		Controller controlador = new Controller(_timeLimit, in, out);
-		controlador.run();
+		SimulatorLayout ventana = new SimulatorLayout(controlador);
+		//controlador.run();
 	}
 
 	private static void start(String[] args) throws IOException {

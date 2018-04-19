@@ -3,6 +3,8 @@ package es.ucm.fdi.layout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
@@ -11,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,8 +21,11 @@ import java.util.Map;
 
 @SuppressWarnings("serial")
 public class SimulatorLayout extends JFrame implements Listener {
-	public SimulatorLayout() {
+	Controller controlador;
+	
+	public SimulatorLayout(Controller ctrl) {
 		super("Traffic Simulator");
+		controlador = ctrl;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Creación de uno de los paneles que tiene las tablas dentro
@@ -38,7 +44,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JTable table1 = new JTable(data, columnNames);
 		table1.setSize(100,100);
-		//JTable#setFillsViewportHeight(true);
 		JTable table2 = new JTable(data, columnNames);
 		table2.setSize(100,100);
 		JTable table3 = new JTable(data, columnNames);
@@ -49,10 +54,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		table5.setSize(100,100);
 		JTable table6 = new JTable(data, columnNames);
 		table6.setSize(100,100);
-		
-		
-		
-		
 		
 		JPanel upperPanel = new JPanel();
 		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
@@ -113,7 +114,27 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JToolBar bar = new JToolBar();
 		
 		bar.add(createComponents1(file, fichero));
-		bar.add(createComponents2(simulator));
+		
+		JLabel label = new JLabel("Steps: ");
+		JSpinner selector = new JSpinner();
+		selector.setPreferredSize(new Dimension(50,50));
+		JToolBar bar2 = new JToolBar();
+		
+		bar2.add(label);
+		bar2.add(selector);
+		
+		JLabel label2 = new JLabel("Time: ");
+		JTextArea text = new JTextArea();
+		text.setPreferredSize(new Dimension(50,50));
+		
+		bar2.add(label2);
+		bar2.add(text);
+		
+		bar2.setPreferredSize(new Dimension(8,8));
+		bar2.setFloatable(false);
+		
+		bar.add(createComponents2(simulator, selector));
+		bar.add(bar2);
 		bar.add(createComponents5(file, generate, reports));
 		
 		bar.add(salir);
@@ -148,6 +169,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		bar.add(loadEventsFile);
 		bar.add(guardar);
 		bar.add(borrar);
+		bar.setFloatable(false);
 		
 		//Y al menú
 		file.add(loadEventsFile);
@@ -163,6 +185,14 @@ public class SimulatorLayout extends JFrame implements Listener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) { 
 		  file = chooser.getSelectedFile();    
 		}
+		try {
+			controlador.modifyInputStream(new FileInputStream(file));
+		}
+		catch (Exception e){
+			
+		}
+		controlador.cargarEventos();
+		
 		// Crear la lista de eventos con el controller (JOptionPane para error)
 		try {
 			@SuppressWarnings("resource")
@@ -175,17 +205,18 @@ public class SimulatorLayout extends JFrame implements Listener {
 				}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}	
+		
 	}
 	
-	private JToolBar createComponents2(JMenu simulator) {
+	private JToolBar createComponents2(JMenu simulator, JSpinner spinner) {
 		SimulatorAction events = new SimulatorAction(
 				"Eventos", "events.png", "???", KeyEvent.
 				VK_E, "control E", ()->System.err.println("???..."));
 		
 		SimulatorAction play = new SimulatorAction(
 				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
-				VK_P, "control P", ()->System.err.println("Ejecutando..."));
+				VK_P, "control P", ()-> controlador.run((int) spinner.getValue()));
 		
 		SimulatorAction reset = new SimulatorAction(
 				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
@@ -196,6 +227,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		bar.add(events);
 		bar.add(play);
 		bar.add(reset);
+		bar.setFloatable(false);
 		
 		//Y al menú
 		simulator.add(play);
@@ -203,6 +235,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		return bar;
 	}
 	
+
 	private JToolBar createComponents5(JMenu file, JMenu generate, JTextArea reports) {
 		SimulatorAction generateReport = new SimulatorAction(
 				"Generar Reporte", "report.png", "Generar el reporte de la simulación", KeyEvent.
@@ -220,6 +253,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		bar.add(generateReport);
 		bar.add(deleteReport);
 		bar.add(saveReport);
+		bar.setFloatable(false);
 		
 		generate.add(generateReport);
 		generate.add(deleteReport);
@@ -284,10 +318,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 	public void advanced(UpdateEvent ue) {}
 	public void error(UpdateEvent ue, String error) {}
 	
-	
+	/*
 	public static void main(String ... args) {
 		SwingUtilities.invokeLater(()-> new SimulatorLayout());
 	}
+	*/
 }
 
 

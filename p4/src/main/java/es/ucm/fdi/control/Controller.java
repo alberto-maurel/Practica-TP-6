@@ -18,23 +18,37 @@ public class Controller {
 		new NewBike.Builder(), new NewHighway.Builder(), new NewPath.Builder(), 
 			new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
 	
-	private SimulatorLayout ventana = new SimulatorLayout();
-	
-	
 	public Controller(int nPasos, InputStream input, OutputStream output) {
 		this.nPasos = nPasos;
-		simulador = new TrafficSimulator(output);
 		this.input = input;
+		simulador = new TrafficSimulator(output);
 		this.output = output;
 	}
 	
+	public void modifyInputStream(InputStream is) {
+		input = is;
+	}
+	
 	public void run() {
+		cargarEventos();
+		try {
+			simulador.run(nPasos);
+		} catch (SimulationException e) {
+			e.printMessage();
+			e.printStackTrace();
+		}
+	}
+	
+	public void cargarEventos() {
 		Ini eventosPorProcesar = input();
 		for(IniSection is: eventosPorProcesar.getSections()) {
 			this.parseEvent(is);
 		}
+	}
+	
+	public void run(int nPaso) {
 		try {
-			simulador.run(nPasos);
+			simulador.run(nPaso);
 		} catch (SimulationException e) {
 			e.printMessage();
 			e.printStackTrace();
