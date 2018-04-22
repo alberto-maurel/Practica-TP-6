@@ -22,6 +22,19 @@ public class Road extends SimulatedObject {
 		dest.nuevaCarreteraEntrante(this);
 	}
 
+	//Getters para representar el grafo
+	public String idSourceJunction() {
+		return cruceIni.identificador;
+	}
+	
+	public String idTargetJunction() {
+		return cruceFin.identificador;
+	}
+	
+	public int getLength() {
+		return longitud;
+	}
+	
 	
 	/**
 	 * Introduce al vehículo en la carretera

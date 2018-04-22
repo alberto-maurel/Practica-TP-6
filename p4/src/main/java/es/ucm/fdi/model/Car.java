@@ -19,7 +19,6 @@ public class Car extends Vehicle {
 		this(id, velMaxima, itinerario, resistance, fault_probability, max_fault_duration, System.currentTimeMillis());
 	}
 	
-	
 	//Constructor con semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration, long seed) {
 		super(id, velMaxima, itinerario);

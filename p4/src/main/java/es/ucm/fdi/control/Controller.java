@@ -7,6 +7,7 @@ import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.layout.SimulatorLayout;
 import es.ucm.fdi.model.*;
+import es.ucm.fdi.model.TrafficSimulator.Listener;
 
 public class Controller {
 	private int nPasos;
@@ -110,6 +111,10 @@ public class Controller {
 	public void reset() {
 		nPasos = 0;
 		simulador.reset();
+	}
+	
+	public void addSimulatorListener(Listener l) {
+		simulador.addSimulatorListener(l);
 	}
   
 }

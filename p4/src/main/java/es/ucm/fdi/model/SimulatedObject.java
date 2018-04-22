@@ -16,6 +16,9 @@ public abstract class SimulatedObject {
 		identificador = id;
 	}
 	
+	public String getId() {
+		return identificador;
+	}
 	
 	void avanza() {}
 	

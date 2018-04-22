@@ -58,7 +58,7 @@ public class TrafficSimulator {
 				}
 				
 				//Y por último escribimos los informes en el orden indicado
-				
+				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");
 				++tick;
 				
 				generarInformes(out);
@@ -164,7 +164,21 @@ public class TrafficSimulator {
 	private void fireUpdateEvent(EventType type, String error) {
 		UpdateEvent ue = new UpdateEvent(type);
 		for(Listener l: listeners) {
-			l.notify(); //No habría que hacer un l.loquesea según type? No se usa ue
+			if(type == EventType.REGISTERED) {
+				l.registered(ue);
+			}
+			else if (type == EventType.RESET) {
+				l.reset(ue);
+			}
+			else if (type == EventType.NEW_EVENT) {
+				l.newEvent(ue);
+			}
+			else if (type == EventType.ADVANCED) {
+				l.advanced(ue);
+			}
+			else if (type == EventType.ERROR) {
+				l.error(ue, error);
+			}
 		}
 	}
 	
@@ -189,6 +203,14 @@ public class TrafficSimulator {
 		
 		public List<Vehicle> getVehicles(){
 			return mapaTrafico.getConstantVehicles();
+		}
+		
+		public List<Junction> getJunctions(){
+			return mapaTrafico.getConstantJunctions();
+		}
+		
+		public List<Road> getRoads(){
+			return mapaTrafico.getConstantRoads();
 		}
 		
 		public List<Event> getEventQueue() {

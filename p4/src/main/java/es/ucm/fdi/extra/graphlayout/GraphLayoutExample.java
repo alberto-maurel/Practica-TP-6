@@ -70,8 +70,7 @@ public class GraphLayoutExample extends JFrame  {
 			g.addEdge(e);
 		}
 		
-		_graphComp.setGraph(g);
-
+ 		_graphComp.setGraph(g);
 	}
 
 	public static void main(String[] args) {

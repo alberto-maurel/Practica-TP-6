@@ -6,6 +6,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.extra.graphlayout.GraphComponent;
+import es.ucm.fdi.extra.graphlayout.GraphLayoutExample;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.util.TextStream;
@@ -27,7 +28,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 	Controller controlador;
 	
 	public SimulatorLayout(Controller ctrl) {
-		
 		super("Traffic Simulator");
 		controlador = ctrl;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,9 +70,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JPanel rightLowerPanel = new JPanel();
 		rightLowerPanel.setSize(100, 100);
+		GraphLayoutClass grafo = new GraphLayoutClass();
+		rightLowerPanel.add(grafo);	
 		rightLowerPanel.setBackground(Color.WHITE);
-		GraphComponent grafo = new GraphComponent();
-		rightLowerPanel.add(grafo);		
+		//Y añadimos el grafo a los listeners
+		controlador.addSimulatorListener(grafo);
 	
 		JSplitPane lowerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftLowerPanel, rightLowerPanel);
 		JSplitPane middleSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upperPanel, lowerSplit);		
@@ -122,6 +124,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JLabel label2 = new JLabel("Time: ");
 		JTextArea text = new JTextArea();
 		//TODO: arreglar esto para que no salga tan grande
+		//TODO: Joder las cosas que nos enseña el novio xDDDDDDDDDD
 		text.setPreferredSize(new Dimension(50,50));
 		text.setEditable(false);
 		

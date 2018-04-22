@@ -30,6 +30,13 @@ public class Vehicle extends SimulatedObject {
 		kilometrage = 0;
 	}
 	
+	public int getPosicionActual() {
+		return localizacionCarretera;
+	}
+	
+	public String getIdCarreteraAct() {
+		return carreteraActual.identificador;
+	}
 	
 	/**
 	 * Avanza el estado actual del coche
