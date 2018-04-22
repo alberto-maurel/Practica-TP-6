@@ -1,7 +1,6 @@
 package es.ucm.fdi.model;
 
 import java.util.List;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class TrafficSimulator {
 		this.out = out;
 	}
 	
-	public class SortbyTime implements Comparator<Event>{
+	public class SortbyTime implements Comparator<Event> {
 	    public int compare(Event a, Event b) {
 	        return a.time - b.time;
 	    }
@@ -43,7 +42,7 @@ public class TrafficSimulator {
 		try {
 			while (tick < time) {
 				//En primer lugar carga los eventos correspondientes a dicho tick
-				while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tick){
+				while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tick) {
 					listaEventos.get(indiceActualEventos).execute(mapaTrafico);
 					++indiceActualEventos;
 				}
@@ -62,28 +61,32 @@ public class TrafficSimulator {
 				
 				++tick;
 				
-				//Hacer refactoring de estas 3 cosas
-				for(Junction j: mapaTrafico.getConstantJunctions()) {
-					LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-					j.generarInforme(tick, reporte);
-					writeReport(reporte, out);
-				}
+				generarInformes(out);
 				
-				for(Road j:mapaTrafico.getConstantRoads()) {
-					LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-					j.generarInforme(tick, reporte);
-					writeReport(reporte, out);
-				}
-				
-				for(Vehicle j:mapaTrafico.getConstantVehicles()) {
-					LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-					j.generarInforme(tick, reporte);
-					writeReport(reporte, out);
-				}
 			}		
 		} catch (Exception e) {
 			throw new SimulationException(e.getMessage());
 		}		
+	}
+	
+	public void generarInformes(OutputStream out) throws IOException {
+		for(Junction j: mapaTrafico.getConstantJunctions()) {
+			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+			j.generarInforme(tick, reporte);
+			writeReport(reporte, out);
+		}
+		
+		for(Road j:mapaTrafico.getConstantRoads()) {
+			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+			j.generarInforme(tick, reporte);
+			writeReport(reporte, out);
+		}
+		
+		for(Vehicle j:mapaTrafico.getConstantVehicles()) {
+			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+			j.generarInforme(tick, reporte);
+			writeReport(reporte, out);
+		}
 	}
 	
 	public void writeReport(Map<String, String> report, OutputStream out) throws IOException {
@@ -123,6 +126,17 @@ public class TrafficSimulator {
 		else {
 			throw new SimulationException("Se ha añadido un evento en un momento posterior a su ejecución");
 		}
+	}
+	
+	public void modifyOutputStream(OutputStream os) {
+		out = os;
+	}
+	
+	public void reset() {
+		indiceActualEventos = 0;
+		this.listaEventos = new ArrayList<>();
+		tick = 0;
+		mapaTrafico = new RoadMap();
 	}
 	
 	public interface Listener {

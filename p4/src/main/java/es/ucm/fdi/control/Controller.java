@@ -29,6 +29,11 @@ public class Controller {
 		input = is;
 	}
 	
+	public void modifyOutputStream(OutputStream os) {
+		output = os;
+		simulador.modifyOutputStream(os);
+	}
+	
 	public void run() {
 		cargarEventos();
 		try {
@@ -92,6 +97,19 @@ public class Controller {
 		catch (IOException io){
 			System.out.println("Ha ocurrido un error durante la operación de escritura");
 		}
+	}
+	
+	public void generarInformes(OutputStream out) {
+		try {
+			simulador.generarInformes(out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void reset() {
+		nPasos = 0;
+		simulador.reset();
 	}
   
 }
