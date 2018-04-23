@@ -202,15 +202,15 @@ public class TrafficSimulator {
 		}
 		
 		public List<Vehicle> getVehicles(){
-			return mapaTrafico.getConstantVehicles();
+			return mapaTrafico.getVehicles();
 		}
 		
 		public List<Junction> getJunctions(){
-			return mapaTrafico.getConstantJunctions();
+			return mapaTrafico.getJunctions();
 		}
 		
 		public List<Road> getRoads(){
-			return mapaTrafico.getConstantRoads();
+			return mapaTrafico.getRoads();
 		}
 		
 		public List<Event> getEventQueue() {
