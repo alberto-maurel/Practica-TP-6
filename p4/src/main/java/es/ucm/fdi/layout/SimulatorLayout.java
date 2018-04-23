@@ -79,11 +79,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JPanel rightLowerPanel = new JPanel();
 		rightLowerPanel.setSize(100, 100);
-		//GraphLayoutClass grafo = new GraphLayoutClass();
-		//rightLowerPanel.add(grafo);	
+		GraphLayoutClass grafo = new GraphLayoutClass();
+		rightLowerPanel.add(grafo);	
 		rightLowerPanel.setBackground(Color.WHITE);
 		//Y añadimos el grafo a los listeners
-		//controlador.addSimulatorListener(grafo);
+		controlador.addSimulatorListener(grafo);
 	
 		JSplitPane lowerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftLowerPanel, rightLowerPanel);
 		JSplitPane middleSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upperPanel, lowerSplit);		
