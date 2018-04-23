@@ -27,6 +27,7 @@ public class Main {
 	private static Integer _timeLimit = null;
 	private static String _inFile = null;
 	private static String _outFile = null;
+	private static String _mode = null;
 
 	private static void parseArgs(String[] args) {
 
@@ -43,6 +44,7 @@ public class Main {
 			parseInFileOption(line);
 			parseOutFileOption(line);
 			parseStepsOption(line);
+			parseModeOption(line);
 
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
@@ -72,6 +74,9 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("t").longOpt("ticks").hasArg()
 				.desc("Ticks to execute the simulator's main loop (default value is " + _timeLimitDefaultValue + ").")
 				.build());
+		cmdLineOptions.addOption(
+				Option.builder("m").longOpt("mode").hasArg().
+				desc("'batch' for batch mode and 'gui' for GUI mode (default value is 'batch')").build());
 
 		return cmdLineOptions;
 	}
@@ -86,7 +91,7 @@ public class Main {
 
 	private static void parseInFileOption(CommandLine line) throws ParseException {
 		_inFile = line.getOptionValue("i");
-		if (_inFile == null) {
+		if (_inFile == null && line.getOptionValue("m").equals("batch")) {
 			throw new ParseException("An events file is missing");
 		}
 	}
@@ -102,6 +107,14 @@ public class Main {
 			assert (_timeLimit < 0);
 		} catch (Exception e) {
 			throw new ParseException("Invalid value for time limit: " + t);
+		}
+	}
+
+	private static void parseModeOption(CommandLine line) {
+		if (line.hasOption("m") && line.getOptionValue("m").equals("gui")) {
+			_mode = "gui";
+		} else {
+			_mode = "batch";
 		}
 	}
 
@@ -164,13 +177,35 @@ public class Main {
 			out = System.out;
 		}
 		Controller controlador = new Controller(_timeLimit, in, out);
+		controlador.run();
+	}
+	
+	/**
+	 * Run the simulator in GUI mode
+	 * 
+	 * @throws IOException
+	 */
+	private static void startGUIMode() throws IOException {
+		
+		InputStream in = new FileInputStream(_inFile);
+		OutputStream out = null;
+		if(_outFile != null) {
+			out = new FileOutputStream(_outFile);
+		}/* else {
+			out = System.out;
+		}*/
+		Controller controlador = new Controller(_timeLimit, in, out);
 		SimulatorLayout ventana = new SimulatorLayout(controlador);
 		//controlador.run();
 	}
 
 	private static void start(String[] args) throws IOException {
 		parseArgs(args);
-		startBatchMode();
+		if (_mode.equals("batch")) {
+			startBatchMode();
+		} else {
+			startGUIMode();
+		}
 	}
 
 	public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {

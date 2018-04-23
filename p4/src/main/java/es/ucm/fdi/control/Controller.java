@@ -30,9 +30,17 @@ public class Controller {
 		input = is;
 	}
 	
+	public InputStream getInput() {
+		return input;
+	}
+	
 	public void modifyOutputStream(OutputStream os) {
 		output = os;
 		simulador.modifyOutputStream(os);
+	}
+	
+	public int getPasos() {
+		return nPasos;
 	}
 	
 	public void run() {

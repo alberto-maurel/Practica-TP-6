@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -133,6 +134,19 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JScrollPane p = new JScrollPane(tArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		p.setPreferredSize(d);
 		p.setBorder(BorderFactory.createTitledBorder(b, title));
+		
+		/* En caso de que se haya añadido un -i archivo.txt 
+		 * a los argumentos de main, lo mostramos por defecto.
+		 * Tenemos en cuenta más adelante que -o es ignorado
+		 */
+		if (controlador.getInput() != null) {
+			BufferedReader in = new BufferedReader(new InputStreamReader(controlador.getInput()));
+			try {
+				tArea.read(in, null);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return p;
 		
 	}
@@ -149,6 +163,12 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JLabel label = new JLabel("Steps: ");
 		JSpinner selector = new JSpinner();
 		selector.setPreferredSize(new Dimension(50,50));
+		
+		/* Tenemos en cuenta el argumento -t
+		 * para inicializar el valor del JSpinner.
+		 * Por defecto, el valor es 10.
+		 */		
+		selector.setValue(controlador.getPasos());
 		
 		JLabel label2 = new JLabel("Time: ");
 		JTextArea text = new JTextArea();
