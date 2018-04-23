@@ -3,7 +3,7 @@ package es.ucm.fdi.model;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Vehicle extends SimulatedObject {
+public class Vehicle extends SimulatedObject implements Describable {
 	
 	protected final int arrived = -1;	
 	protected int velMaxima;
@@ -150,5 +150,15 @@ public class Vehicle extends SimulatedObject {
 		} else {
 			out.put("location", "(" + carreteraActual.identificador + "," + localizacionCarretera + ")");
 		}
+	}	
+	
+	public void describe(Map<String,String> out){
+		out.put("ID", identificador);
+		out.put("Road", carreteraActual.identificador);
+		out.put("Location", "" + localizacionCarretera);
+		out.put("Speed", "" + velActual);
+		out.put("Km", "" + kilometrage);
+		out.put("Faulty units", "" + tiempoAveria);
+		//out.put(key, value)
 	}	
 }

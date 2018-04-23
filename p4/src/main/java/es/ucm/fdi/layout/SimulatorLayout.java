@@ -3,12 +3,16 @@ package es.ucm.fdi.layout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
+
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.extra.graphlayout.GraphComponent;
 import es.ucm.fdi.extra.graphlayout.GraphLayoutExample;
+import es.ucm.fdi.model.Describable;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
+import es.ucm.fdi.model.Vehicle;
 import es.ucm.fdi.util.TextStream;
 
 import java.awt.*;
@@ -20,12 +24,14 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 @SuppressWarnings("serial")
 public class SimulatorLayout extends JFrame implements Listener {
 	
 	Controller controlador;
+	SimulatorTable vehiclesTable;
 	
 	public SimulatorLayout(Controller ctrl) {
 		super("Traffic Simulator");
@@ -47,8 +53,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JTable eventsQueueTable = new JTable(data, columnNamesQueue);
 		eventsQueueTable.setSize(100,100);		
-		JTable vehiclesTable = new JTable(data, columnNamesVehicle);
-		vehiclesTable.setSize(100,100);
+		//JTable vehiclesTable = new JTable(data, columnNamesVehicle);
+		//vehiclesTable.setSize(100,100);
+		ArrayList<Vehicle> vehiclesArray = new ArrayList<>();
 		JTable roadsTable = new JTable(data, columnNamesRoad);
 		roadsTable.setSize(100,100);
 		JTable junctionsTable = new JTable(data, columnNamesJunction);
@@ -62,7 +69,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JPanel leftLowerPanel = new JPanel();
 		leftLowerPanel.setLayout(new BoxLayout(leftLowerPanel, BoxLayout.Y_AXIS));
-		leftLowerPanel.add(createTablePanel("Vehicles", vehiclesTable, new Dimension(200,200)));
+		//leftLowerPanel.add(createTablePanel("Vehicles", vehiclesTable, new Dimension(200,200)));
+		vehiclesTable = createSimulatorTablePanel("Vehicles", columnNamesVehicle , vehiclesArray, new Dimension(200,200));
+		leftLowerPanel.add(vehiclesTable);
 		leftLowerPanel.add(createTablePanel("Roads", roadsTable, new Dimension(200,200)));
 		leftLowerPanel.add(createTablePanel("Junctions", junctionsTable, new Dimension(200,200)));
 		leftLowerPanel.setSize(100, 100);
@@ -70,11 +79,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JPanel rightLowerPanel = new JPanel();
 		rightLowerPanel.setSize(100, 100);
-		GraphLayoutClass grafo = new GraphLayoutClass();
-		rightLowerPanel.add(grafo);	
+		//GraphLayoutClass grafo = new GraphLayoutClass();
+		//rightLowerPanel.add(grafo);	
 		rightLowerPanel.setBackground(Color.WHITE);
 		//Y añadimos el grafo a los listeners
-		controlador.addSimulatorListener(grafo);
+		//controlador.addSimulatorListener(grafo);
 	
 		JSplitPane lowerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftLowerPanel, rightLowerPanel);
 		JSplitPane middleSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upperPanel, lowerSplit);		
@@ -85,7 +94,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		middleSplit.setDividerLocation(.35);
 		lowerSplit.setDividerLocation(.5);
-		
+		controlador.addSimulatorListener(this);
 	}
 
 	private JScrollPane createTablePanel(String title, JTable table, Dimension d) {
@@ -96,6 +105,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 		p.setBorder(BorderFactory.createTitledBorder(b, title));
 		return p;
 		
+	}
+	
+	private SimulatorTable createSimulatorTablePanel(String title, String[] columnNames, ArrayList<? extends Describable> objectList , Dimension d) {
+		return new SimulatorTable(title, columnNames, objectList);
 	}
 	
 	private JScrollPane createTextAreaPanel(String title, JTextArea tArea, Dimension d) {
@@ -124,7 +137,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JLabel label2 = new JLabel("Time: ");
 		JTextArea text = new JTextArea();
 		//TODO: arreglar esto para que no salga tan grande
-		//TODO: Joder las cosas que nos enseña el novio xDDDDDDDDDD
 		text.setPreferredSize(new Dimension(50,50));
 		text.setEditable(false);
 		
@@ -304,50 +316,16 @@ public class SimulatorLayout extends JFrame implements Listener {
 	        }
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	public interface Describable {
-		/**
-		* @param out - a map to fill in with key- value pairs
-		* @return the passed- in map, with all fields filled out.
-		*/
-		void describe(Map<String, String> out);
-	}
-	
-	/*private class ListOfMapsTableModel extends AbstractTableModel {
-		private String[] fieldNames;
-		private MultiTreeMap<String, String> elements = new MultiTreeMap<>();
-		
-		@Override
-		public String getColumnName(int columnIndex) {
-			return fieldNames[columnIndex];
-		}
-		@Override
-		public int getRowCount() {
-			return elements.size();
-		}
-		@Override
-		public int getColumnCount() {
-			return fieldNames.length;
-		}
-		@Override // ineficiente: ¿puedes mejorarlo?
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			return elements.get(rowIndex)
-					.describe(new HashMap<String, String>())
-						.get(fieldNames[columnIndex]);
-		}
-	}*/
-	
 	//TODO: cosas
-	public void registered(UpdateEvent ue) {}
+	public void registered(UpdateEvent ue) {
+		vehiclesTable.actualizar((ArrayList<? extends Describable>) ue.getVehicles());		
+	}
 	public void reset(UpdateEvent ue) {}
 	public void newEvent(UpdateEvent ue) {}
-	public void advanced(UpdateEvent ue) {}
+	public void advanced(UpdateEvent ue) {
+		vehiclesTable.actualizar((ArrayList<? extends Describable>) ue.getVehicles());		
+		repaint();
+	}
 	public void error(UpdateEvent ue, String error) {}
 	
 	/*
