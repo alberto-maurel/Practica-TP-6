@@ -3,7 +3,7 @@ package es.ucm.fdi.model;
 import es.ucm.fdi.util.MultiTreeMap;
 import java.util.Map;
 
-public class Road extends SimulatedObject {
+public class Road extends SimulatedObject implements Describable{
 	
 	protected int longitud;
 	protected int maxVel;
@@ -110,4 +110,13 @@ public class Road extends SimulatedObject {
 		}
 		out.put("state", aux);
 	}
+	
+	public void describe(Map<String,String> out){
+		out.put("ID", identificador);
+		out.put("Source", cruceIni.identificador);
+		out.put("Target", cruceFin.identificador);
+		out.put("Speed", "" + longitud);
+		out.put("Km", "" + maxVel);
+		//TODO: vehicles
+	}	
 }

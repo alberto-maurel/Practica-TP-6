@@ -159,6 +159,6 @@ public class Vehicle extends SimulatedObject implements Describable {
 		out.put("Speed", "" + velActual);
 		out.put("Km", "" + kilometrage);
 		out.put("Faulty units", "" + tiempoAveria);
-		//out.put(key, value)
+		//TODO: //out.put(key, value)
 	}	
 }

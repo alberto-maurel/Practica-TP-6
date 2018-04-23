@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
-public class Junction extends SimulatedObject {
+public class Junction extends SimulatedObject implements Describable{
 	
 	protected int semaforoVerde; //Indica el número del semáforo que se encuentra en verde
-	protected HashMap<String, Queue<Vehicle>> colasCoches; //Array con pares de id de las carreteras y colas de vehículos que proceden de dicha carretera
+	//Array con pares de id de las carreteras y colas de vehículos que proceden de dicha carretera
+	protected HashMap<String, Queue<Vehicle>> colasCoches; 
 	protected HashMap<String, Road> carreterasSalientes;
 	protected ArrayList<String> carreterasEntrantesOrdenadas;
 	
@@ -28,7 +29,6 @@ public class Junction extends SimulatedObject {
 		this.carreterasSalientes = new HashMap<>(); 
 		this.carreterasEntrantesOrdenadas = new ArrayList<>();
 	}
-	
 		
 	/**
 	 * Entra un vehículo en el cruce
@@ -42,7 +42,8 @@ public class Junction extends SimulatedObject {
 	 * Avanzamos un tick ell cruce
 	 */
 	public void avanza() {
-		if (semaforoVerde != -1) { //Vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
+		if (semaforoVerde != -1) { 
+			//Vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
 			if (colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null &&
 					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
 				//En dicho caso sacamos el coche
@@ -110,5 +111,9 @@ public class Junction extends SimulatedObject {
 		out.put("queues", sb.toString());
 	}
 	
-	
+	public void describe(Map<String,String> out){
+		out.put("ID", identificador);
+		//TODO : green
+		//TODO : red
+	}		
 }

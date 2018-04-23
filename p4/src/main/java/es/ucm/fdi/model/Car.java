@@ -15,12 +15,15 @@ public class Car extends Vehicle {
 	
 
 	//Constructor sin semilla
-	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration) {
-		this(id, velMaxima, itinerario, resistance, fault_probability, max_fault_duration, System.currentTimeMillis());
+	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, 
+			double fault_probability, int max_fault_duration) {
+		this(id, velMaxima, itinerario, resistance, fault_probability, 
+				max_fault_duration, System.currentTimeMillis());
 	}
 	
 	//Constructor con semilla
-	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, double fault_probability, int max_fault_duration, long seed) {
+	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance,
+			double fault_probability, int max_fault_duration, long seed) {
 		super(id, velMaxima, itinerario);
 		this.resistance = resistance;
 		this.fault_probability = fault_probability;
@@ -43,14 +46,16 @@ public class Car extends Vehicle {
 					velActual = 0;
 				}
 			}
-			
 			if(isCarOk) { // Si el coche está bien, se mueve
-				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this); //Sacamos el coche de la carretera		 		
+				//Sacamos el coche de la carretera
+				carreteraActual.situacionCarretera.removeValue(localizacionCarretera, this); 		 		
 				//Procesamos el vehículo				
-				if(localizacionCarretera + velActual < carreteraActual.longitud) { //Si el vehículo no llega en este tick al final de la carretera
+				if(localizacionCarretera + velActual < carreteraActual.longitud) { 
+					//Si el vehículo no llega en este tick al final de la carretera
 					avanzarCocheSinLlegarAlFinal();
 					kmSinceLastFailure += velActual;
-				} else if (localizacionCarretera != carreteraActual.longitud) { //El coche entra en la intersección (pero aún no estaba)
+				} else if (localizacionCarretera != carreteraActual.longitud) { 
+					//El coche entra en la intersección (pero aún no estaba)
 					avanzarCocheLlegandoAlFinal();
 					carreteraActual.cruceFin.entraVehiculo(this);	
 				} else { //El coche ya estaba en la intersección
