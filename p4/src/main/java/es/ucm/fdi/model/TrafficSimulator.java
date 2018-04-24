@@ -15,14 +15,14 @@ public class TrafficSimulator {
 
 	private int indiceActualEventos;
 	private ArrayList<Event> listaEventos;
-	private int tick;
+	private int tickActual;
 	private RoadMap mapaTrafico;
 	private OutputStream out;
 	
 	public TrafficSimulator(OutputStream out) {
 		indiceActualEventos = 0;
 		this.listaEventos = new ArrayList<>();
-		tick = 0;
+		tickActual = 0;
 		mapaTrafico = new RoadMap();
 		this.out = out;
 	}
@@ -35,14 +35,14 @@ public class TrafficSimulator {
 		
 	//Métodos
 	public void run(int time) throws SimulationException {
-		
+		int tick = 0;
 		//Before running the simulation we ensure that all the events are sorted by it's starting time		
 		Collections.sort(listaEventos, new SortbyTime());
 		
 		try {
 			while (tick < time) {
 				//En primer lugar carga los eventos correspondientes a dicho tick
-				while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tick) {
+				while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tickActual) {
 					listaEventos.get(indiceActualEventos).execute(mapaTrafico);
 					++indiceActualEventos;
 				}
@@ -60,6 +60,7 @@ public class TrafficSimulator {
 				//Y por último escribimos los informes en el orden indicado
 				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");
 				++tick;
+				++tickActual;
 				
 				generarInformes(out);
 				
@@ -72,19 +73,19 @@ public class TrafficSimulator {
 	public void generarInformes(OutputStream out) throws IOException {
 		for(Junction j: mapaTrafico.getConstantJunctions()) {
 			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-			j.generarInforme(tick, reporte);
+			j.generarInforme(tickActual, reporte);
 			writeReport(reporte, out);
 		}
 		
 		for(Road j:mapaTrafico.getConstantRoads()) {
 			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-			j.generarInforme(tick, reporte);
+			j.generarInforme(tickActual, reporte);
 			writeReport(reporte, out);
 		}
 		
 		for(Vehicle j:mapaTrafico.getConstantVehicles()) {
 			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-			j.generarInforme(tick, reporte);
+			j.generarInforme(tickActual, reporte);
 			writeReport(reporte, out);
 		}
 	}
@@ -115,7 +116,7 @@ public class TrafficSimulator {
 	 */
 	public void insertaEvento(Event evento) throws SimulationException {
 		//Comprobamos si el evento se ejecuta en un ciclo que no haya ocurrido ya
-		if(evento.time >= tick) {
+		if(evento.time >= tickActual) {
 			//Recorremos el array buscando donde insertarlo y hacemos lo propio
 			int posInsertar = 0;
 			while(posInsertar < listaEventos.size() && listaEventos.get(posInsertar).time <= evento.time) {
@@ -134,9 +135,9 @@ public class TrafficSimulator {
 	
 	public void reset() {
 		indiceActualEventos = 0;
-		this.listaEventos = new ArrayList<>();
-		tick = 0;
+		tickActual = 0;
 		mapaTrafico = new RoadMap();
+		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la ejecución del reset");
 	}
 	
 	public interface Listener {
@@ -160,7 +161,7 @@ public class TrafficSimulator {
 		listeners.remove(l);
 	}
 	
-	// uso interno, evita tener que escribir el mismo bucle muchas veces
+	//Uso interno, evita tener que escribir el mismo bucle muchas veces
 	private void fireUpdateEvent(EventType type, String error) {
 		UpdateEvent ue = new UpdateEvent(type);
 		for(Listener l: listeners) {
@@ -218,9 +219,11 @@ public class TrafficSimulator {
 		}
 		
 		public int getCurrentTime() {
-			return tick;
+			return tickActual;
 		}
 	}
 	
-	
+	public int getTime() {
+		return tickActual;
+	}
 }

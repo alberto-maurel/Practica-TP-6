@@ -37,6 +37,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	SimulatorTable vehiclesTable;
 	SimulatorTable roadsTable;
 	SimulatorTable junctionsTable;
+	JTextArea tiempoAct;
 	
 	public SimulatorLayout(Controller ctrl) {
 		super("Traffic Simulator");
@@ -57,18 +58,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		Object[][] data = {};
 		
 		JTable eventsQueueTable = new JTable(data, columnNamesQueue);
-		eventsQueueTable.setSize(100,100);		
-		
-		//JTable vehiclesTable = new JTable(data, columnNamesVehicle);
-		//vehiclesTable.setSize(100,100);
+		eventsQueueTable.setSize(100,100);
 		
 		ArrayList<Vehicle> vehiclesArray = new ArrayList<>();
 		ArrayList<Road> roadsArray = new ArrayList<>();
 		ArrayList<Junction> junctionsArray = new ArrayList<>();
-		//JTable roadsTable = new JTable(data, columnNamesRoad);
-		//roadsTable.setSize(100,100);
-		//JTable junctionsTable = new JTable(data, columnNamesJunction);
-		//junctionsTable.setSize(100,100);
 		
 		JPanel upperPanel = new JPanel();
 		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
@@ -78,7 +72,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JPanel leftLowerPanel = new JPanel();
 		leftLowerPanel.setLayout(new BoxLayout(leftLowerPanel, BoxLayout.Y_AXIS));
-		//leftLowerPanel.add(createTablePanel("Vehicles", vehiclesTable, new Dimension(200,200)));
 		vehiclesTable = createSimulatorTablePanel("Vehicles", columnNamesVehicle , vehiclesArray, new Dimension(200,200));
 		leftLowerPanel.add(vehiclesTable);
 		roadsTable = createSimulatorTablePanel("Roads", columnNamesRoad , roadsArray, new Dimension(200,200));
@@ -86,11 +79,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		junctionsTable = createSimulatorTablePanel("Junctions", columnNamesJunction , junctionsArray, new Dimension(200,200));
 		leftLowerPanel.add(junctionsTable);
 		
-		
-		
-		
-		//leftLowerPanel.add(createTablePanel("Roads", roadsTable, new Dimension(200,200)));
-		//leftLowerPanel.add(createTablePanel("Junctions", junctionsTable, new Dimension(200,200)));
 		leftLowerPanel.setSize(100, 100);
 		leftLowerPanel.setBackground(Color.WHITE);
 		
@@ -162,7 +150,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		JLabel label = new JLabel("Steps: ");
 		JSpinner selector = new JSpinner();
-		selector.setPreferredSize(new Dimension(50,50));
+		selector.setMaximumSize(new Dimension(50,50));
 		
 		/* Tenemos en cuenta el argumento -t
 		 * para inicializar el valor del JSpinner.
@@ -170,17 +158,16 @@ public class SimulatorLayout extends JFrame implements Listener {
 		 */		
 		selector.setValue(controlador.getPasos());
 		
-		JLabel label2 = new JLabel("Time: ");
-		JTextArea text = new JTextArea();
-		//TODO: arreglar esto para que no salga tan grande
-		text.setPreferredSize(new Dimension(50,50));
-		text.setEditable(false);
+		JLabel timeLabel = new JLabel("Time: ");
+		tiempoAct = new JTextArea();
+		tiempoAct.setMaximumSize(new Dimension(50,50));
+		tiempoAct.setEditable(false);
 		
 		JToolBar bar2 = new JToolBar();
 		bar2.add(label);
 		bar2.add(selector);
-		bar2.add(label2);
-		bar2.add(text);
+		bar2.add(timeLabel);
+		bar2.add(tiempoAct);
 		bar2.setPreferredSize(new Dimension(8,8));
 		bar2.setFloatable(false);
 		
@@ -354,19 +341,27 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	//TODO: cosas
 	public void registered(UpdateEvent ue) {
-		vehiclesTable.actualizar((ArrayList<? extends Describable>) ue.getVehicles());	
-		junctionsTable.actualizar((ArrayList<? extends Describable>) ue.getJunctions());
-		roadsTable.actualizar((ArrayList<? extends Describable>) ue.getRoads());
+		actualizarLayout(ue);
 	}
-	public void reset(UpdateEvent ue) {}
+	public void reset(UpdateEvent ue) {
+		actualizarLayout(ue);
+	}
 	public void newEvent(UpdateEvent ue) {}
 	public void advanced(UpdateEvent ue) {
-		vehiclesTable.actualizar((ArrayList<? extends Describable>) ue.getVehicles());	
-		junctionsTable.actualizar((ArrayList<? extends Describable>) ue.getJunctions());
-		roadsTable.actualizar((ArrayList<? extends Describable>) ue.getRoads());		
-		repaint();
+		actualizarLayout(ue);
 	}
 	public void error(UpdateEvent ue, String error) {}
+	
+	
+	private void actualizarLayout(UpdateEvent ue) {
+		vehiclesTable.actualizar((ArrayList<? extends Describable>) ue.getVehicles());	
+		junctionsTable.actualizar((ArrayList<? extends Describable>) ue.getJunctions());
+		roadsTable.actualizar((ArrayList<? extends Describable>) ue.getRoads());	
+		repaint();
+	}
+	
+	
+	
 	
 	/*
 	public static void main(String ... args) {

@@ -159,6 +159,18 @@ public class Vehicle extends SimulatedObject implements Describable {
 		out.put("Speed", "" + velActual);
 		out.put("Km", "" + kilometrage);
 		out.put("Faulty units", "" + tiempoAveria);
-		//TODO: //out.put(key, value)
+		out.put("Itinerary", toStringItinerary());
 	}	
+	
+	public String toStringItinerary() {
+		String s = "[";
+		for(int i = 0; i < itinerario.size(); ++i) {
+			if(i == itinerario.size() - 1) {
+				s += itinerario.get(i).identificador + "]";
+			} else {
+				s += itinerario.get(i).identificador + ", ";
+			}
+		}
+		return s;
+	}
 }

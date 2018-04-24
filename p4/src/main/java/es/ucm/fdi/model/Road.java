@@ -115,8 +115,22 @@ public class Road extends SimulatedObject implements Describable{
 		out.put("ID", identificador);
 		out.put("Source", cruceIni.identificador);
 		out.put("Target", cruceFin.identificador);
-		out.put("Speed", "" + longitud);
-		out.put("Km", "" + maxVel);
-		//TODO: vehicles
+		out.put("Length", "" + longitud);
+		out.put("Max Speed", "" + maxVel);
+		out.put("Vehicles", toStringVehicles());
 	}	
+	
+	public String toStringVehicles() {
+		String s = "[";
+		for(Vehicle v: situacionCarretera.innerValues()) {
+			s += v.identificador + ", ";
+		}
+		//En caso de que nuestra carretera tuviese algún vehículo, tenemos que quitar los últimos
+		//espacio en blanco y coma que añadimos
+		if(s.length() > 1) {
+			s = s.substring(0, s.length() - 2);
+		}
+		s += "]";
+		return s;
+	}
 }

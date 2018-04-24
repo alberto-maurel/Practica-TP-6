@@ -32,12 +32,9 @@ public class GraphLayoutClass extends JPanel implements Listener {
 		
 		JPanel mainPanel = new JPanel(new BorderLayout() );
 		_graphComp = new GraphComponent();
-		mainPanel.add(_graphComp, BorderLayout.CENTER);
-		
+
+		mainPanel.add(_graphComp);
 		this.add(mainPanel);
-		//_graphComp = new GraphComponent();
-		//setSize(100,100);
-		//setVisible(true);
 	}
 	
 	
@@ -66,7 +63,6 @@ public class GraphLayoutClass extends JPanel implements Listener {
 			String idSrcNode = auxRoad.get(i).idSourceJunction();
 			String idTargetNode = auxRoad.get(i).idTargetJunction();
 			
-			
 			Edge aristaAct = new Edge(idAristaAct, vertices.get(idSrcNode), 
 					vertices.get(idTargetNode),auxRoad.get(i).getLength());
 			aristas.put(idAristaAct, aristaAct);
@@ -76,13 +72,15 @@ public class GraphLayoutClass extends JPanel implements Listener {
 		//Y cogemos los vehículos para crear los puntos y los metemos en las aristas pertinentes
 		List<Vehicle> auxVeh = ue.getVehicles();
 		for(int i = 0; i < auxVeh.size(); ++i) {
-			String idVehicle = auxVeh.get(i).getId();
-			int vehicleLocation = auxVeh.get(i).getPosicionActual();
+			if(auxVeh.get(i).getPosicionActual() != -1) {
+				String idVehicle = auxVeh.get(i).getId();
+				int vehicleLocation = auxVeh.get(i).getPosicionActual();
 			
-			Dot puntoAct = new Dot(idVehicle, vehicleLocation);
-			//Y ahora introducimos los puntos en el Edge adecuado
-			String idArista = auxVeh.get(i).getIdCarreteraAct();
-			aristas.get(idArista).addDot(puntoAct);
+				Dot puntoAct = new Dot(idVehicle, vehicleLocation);
+				//Y ahora introducimos los puntos en el Edge adecuado
+				String idArista = auxVeh.get(i).getIdCarreteraAct();
+				aristas.get(idArista).addDot(puntoAct);
+			}
 		}
 		_graphComp.setGraph(g);
 	}

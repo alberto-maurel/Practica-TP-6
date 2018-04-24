@@ -7,7 +7,9 @@ import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.layout.SimulatorLayout;
 import es.ucm.fdi.model.*;
+import es.ucm.fdi.model.TrafficSimulator.EventType;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
+import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 
 public class Controller {
 	private int nPasos;
@@ -125,4 +127,8 @@ public class Controller {
 		simulador.addSimulatorListener(l);
 	}
   
+	public int tiempoActual() {
+		return simulador.getTime();
+	}
+	
 }
