@@ -3,6 +3,8 @@ package es.ucm.fdi.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.layout.SimulatorLayout;
@@ -21,10 +23,15 @@ public class Controller {
 		new NewBike.Builder(), new NewHighway.Builder(), new NewPath.Builder(), 
 			new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
 	
+	private ArrayList<Event> eventosIntroducidos;
+	
+	
+	
 	public Controller(int nPasos, InputStream input, OutputStream output) {
 		this.nPasos = nPasos;
 		this.input = input;
 		simulador = new TrafficSimulator(output);
+		eventosIntroducidos = new ArrayList<>();
 		this.output = output;
 	}
 	
@@ -55,6 +62,7 @@ public class Controller {
 		}
 	}
 	
+	
 	public void cargarEventos() {
 		Ini eventosPorProcesar = input();
 		for(IniSection is: eventosPorProcesar.getSections()) {
@@ -80,7 +88,7 @@ public class Controller {
 					break;
 				}
 			}
-			simulador.insertaEvento(eventoActual);
+			eventosIntroducidos.add(eventoActual);
 		}
 		catch(SimulationException e){
 			System.out.println("Se ha producido un error durante la creación de los eventos");
@@ -131,4 +139,11 @@ public class Controller {
 		return simulador.getTime();
 	}
 	
+	public void cargarEventosEnElSimulador(int nTicksASimular) {
+		simulador.cargarEventos(nTicksASimular, eventosIntroducidos);
+	}
+	
+	public Boolean hayEventosCargados() {
+		return simulador.hayEventosCargados() ? true : false;
+	}
 }

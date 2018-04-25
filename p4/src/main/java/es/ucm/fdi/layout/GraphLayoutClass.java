@@ -10,6 +10,7 @@ import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -29,12 +30,9 @@ public class GraphLayoutClass extends JPanel implements Listener {
     private Map<String, Node> vertices; //Clave - identificador del nodo (el mismo que el del vértice), Valor - nodo al que corresponde
    
 	public GraphLayoutClass() {
-		
-		JPanel mainPanel = new JPanel(new BorderLayout() );
 		_graphComp = new GraphComponent();
-
-		mainPanel.add(_graphComp);
-		this.add(mainPanel);
+		this.add(_graphComp);
+		this.setBackground(Color.WHITE);
 	}
 	
 	

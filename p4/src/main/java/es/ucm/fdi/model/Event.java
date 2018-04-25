@@ -1,6 +1,8 @@
 package es.ucm.fdi.model;
 
-public abstract class Event {
+import java.util.Map;
+
+public abstract class Event implements Describable{
 	
 	protected int time;
 	protected String id;
@@ -19,4 +21,10 @@ public abstract class Event {
 	}
 	
 	public abstract void execute(RoadMap roadMap) throws Exception;
+
+	public void describe(Map<String,String> out){
+		out.put("#", id);
+		out.put("Time", "" + time);
+		out.put("Type", "Not implemented yet");
+	}
 }

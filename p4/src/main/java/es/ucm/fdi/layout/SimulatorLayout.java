@@ -1,9 +1,14 @@
 package es.ucm.fdi.layout;
 
+import javax.swing.text.Style;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
@@ -21,6 +26,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -37,60 +43,101 @@ public class SimulatorLayout extends JFrame implements Listener {
 	SimulatorTable vehiclesTable;
 	SimulatorTable roadsTable;
 	SimulatorTable junctionsTable;
-	JTextArea tiempoAct;
+	SimulatorTable eventsTable;
+	JSpinner spinner;
+	JTextPane tiempoAct;
+	JTextArea fichero;
 	
+	
+	GraphLayoutClass grafo;
+	Boolean eventosCargados;
+	
+	//Botones
+	private SimulatorAction loadEventsFile;
+	private SimulatorAction guardar;
+	private SimulatorAction borrar;
+	private SimulatorAction events;
+	private SimulatorAction play;
+	private SimulatorAction reset;
+	private SimulatorAction redirectOutput;
+	private SimulatorAction generateReport;
+	private SimulatorAction deleteReport;
+	private SimulatorAction saveReport;
+	private SimulatorAction salir;
+	
+	
+	/**
+	 * Creación del Layout principal
+	 * @param ctrl - Controlador de la aplicación
+	 */
 	public SimulatorLayout(Controller ctrl) {
 		super("Traffic Simulator");
 		controlador = ctrl;
+		eventosCargados = false;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JTextArea fichero = new JTextArea();
+		//Creación del panel superior
+		//
+		//
+		String[] columnNamesQueue = {"#", "Time", "Type", "Involves"};
+		ArrayList<Vehicle> eventsArray = new ArrayList<>();
+		
+		JPanel upperPanel = new JPanel();
+		//Por un lado los JTextArea
+		fichero = new JTextArea();
 		fichero.setEditable(true);
 		JTextArea reports = new JTextArea();
 		reports.setEditable(false);
+		//Y por otro la tabla de eventos
+		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, eventsArray);
 		
+		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
+		upperPanel.add(createTextAreaPanel("Fichero", fichero, new Dimension(200,200)));
+		upperPanel.add(eventsTable);
+		upperPanel.add(createTextAreaPanel("Reports", reports, new Dimension(200,200)));	
+		
+		
+		//Creación de la barra superior
+		//
+		//
+		spinner = new JSpinner();
+		tiempoAct = new JTextPane();
 		addBars(fichero, reports);
-			
-		String[] columnNamesQueue = {"#", "Time", "Type", "Involves"};
+		
+		
+		//Creación del panel inferior izquierdo
+		//
+		//
 		String[] columnNamesVehicle = {"ID", "Road", "Location", "Speed", "Km", "Faulty units", "Itinerary"};
 		String[] columnNamesRoad = {"ID", "Source", "Target", "Length", "Max Speed", "Vehicles"};
 		String[] columnNamesJunction = {"ID", "Green", "Red"};
-		Object[][] data = {};
-		
-		JTable eventsQueueTable = new JTable(data, columnNamesQueue);
-		eventsQueueTable.setSize(100,100);
-		
 		ArrayList<Vehicle> vehiclesArray = new ArrayList<>();
 		ArrayList<Road> roadsArray = new ArrayList<>();
 		ArrayList<Junction> junctionsArray = new ArrayList<>();
 		
-		JPanel upperPanel = new JPanel();
-		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
-		upperPanel.add(createTextAreaPanel("Fichero", fichero, new Dimension(200,200)));
-		upperPanel.add(createTablePanel("Events Queue", eventsQueueTable, new Dimension(200,200)));
-		upperPanel.add(createTextAreaPanel("Reports", reports, new Dimension(200,200)));	
-		
 		JPanel leftLowerPanel = new JPanel();
 		leftLowerPanel.setLayout(new BoxLayout(leftLowerPanel, BoxLayout.Y_AXIS));
-		vehiclesTable = createSimulatorTablePanel("Vehicles", columnNamesVehicle , vehiclesArray, new Dimension(200,200));
+		vehiclesTable = new SimulatorTable("Vehicles", columnNamesVehicle , vehiclesArray);
 		leftLowerPanel.add(vehiclesTable);
-		roadsTable = createSimulatorTablePanel("Roads", columnNamesRoad , roadsArray, new Dimension(200,200));
+		roadsTable = new SimulatorTable("Roads", columnNamesRoad , roadsArray);
 		leftLowerPanel.add(roadsTable);
-		junctionsTable = createSimulatorTablePanel("Junctions", columnNamesJunction , junctionsArray, new Dimension(200,200));
+		junctionsTable = new SimulatorTable("Junctions", columnNamesJunction , junctionsArray);
 		leftLowerPanel.add(junctionsTable);
 		
 		leftLowerPanel.setSize(100, 100);
 		leftLowerPanel.setBackground(Color.WHITE);
 		
-		JPanel rightLowerPanel = new JPanel();
-		rightLowerPanel.setSize(100, 100);
-		GraphLayoutClass grafo = new GraphLayoutClass();
-		rightLowerPanel.add(grafo);	
-		rightLowerPanel.setBackground(Color.WHITE);
-		//Y añadimos el grafo a los listeners
-		controlador.addSimulatorListener(grafo);
-	
-		JSplitPane lowerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftLowerPanel, rightLowerPanel);
+		
+		//Creación del grafo
+		//
+		//
+		grafo = new GraphLayoutClass();
+		
+		
+		//Montamos todo el layout junto
+		//
+		//
+		JSplitPane lowerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftLowerPanel, grafo);
 		JSplitPane middleSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upperPanel, lowerSplit);		
 		add(middleSplit, BorderLayout.CENTER);
 		
@@ -100,24 +147,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 		middleSplit.setDividerLocation(.35);
 		lowerSplit.setDividerLocation(.5);
 		controlador.addSimulatorListener(this);
-	}
-
-	private JScrollPane createTablePanel(String title, JTable table, Dimension d) {
-		
-		Border b = BorderFactory.createLineBorder(Color.black, 2);
-		JScrollPane p = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		p.setPreferredSize(d);
-		p.setBorder(BorderFactory.createTitledBorder(b, title));
-		return p;
-		
-	}
-	
-	private SimulatorTable createSimulatorTablePanel(String title, String[] columnNames, ArrayList<? extends Describable> objectList , Dimension d) {
-		return new SimulatorTable(title, columnNames, objectList);
+		controlador.modifyInputStream(new ByteArrayInputStream(fichero.getText().getBytes()));
 	}
 	
 	private JScrollPane createTextAreaPanel(String title, JTextArea tArea, Dimension d) {
-		
 		Border b = BorderFactory.createLineBorder(Color.black, 2);
 		JScrollPane p = new JScrollPane(tArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		p.setPreferredSize(d);
@@ -139,44 +172,57 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 	}
 	
+	/**
+	 * Crea la barra de botones y la añade al layout principal
+	 * @param fichero - JTextÁrea en el que se muestran los eventos cargados
+	 * @param reports - JTextÁrea en el que se muestran los reportes generados
+	 */
 	private void addBars(JTextArea fichero, JTextArea reports) {
-		
+		//Creamos los menús
 		JMenu file = new JMenu("File");
 		JMenu simulator = new JMenu("Simulator");
 		JMenu generate = new JMenu("Generate");
 		
+		//Creación de los 3 primeros botones
+		//
 		JToolBar bar = new JToolBar();
 		bar.add(createComponents1(file, fichero));		
 		
+		
+		//Creación de los 3 siguientes botones, spinner y textArea para mostrar el tick actual
+		//
 		JLabel label = new JLabel("Steps: ");
-		JSpinner selector = new JSpinner();
-		selector.setMaximumSize(new Dimension(50,50));
+		spinner.setValue(controlador.getPasos());
+		spinner.setMaximumSize(new Dimension(50,50));
 		
 		/* Tenemos en cuenta el argumento -t
 		 * para inicializar el valor del JSpinner.
 		 * Por defecto, el valor es 10.
 		 */		
-		selector.setValue(controlador.getPasos());
 		
 		JLabel timeLabel = new JLabel("Time: ");
-		tiempoAct = new JTextArea();
+		tiempoAct = new JTextPane();
 		tiempoAct.setMaximumSize(new Dimension(50,50));
 		tiempoAct.setEditable(false);
+		tiempoAct.setText("" + 0);
 		
 		JToolBar bar2 = new JToolBar();
 		bar2.add(label);
-		bar2.add(selector);
+		bar2.add(spinner);
 		bar2.add(timeLabel);
 		bar2.add(tiempoAct);
 		bar2.setPreferredSize(new Dimension(8,8));
 		bar2.setFloatable(false);
-		
-	
-		bar.add(createComponents2(simulator, selector, reports));
+		bar.add(createComponents2(simulator, reports));
 		bar.add(bar2);
+		
+		//Creación de los últimos botones
+		//
 		bar.add(createComponents3(file, generate, reports));
 		
 		
+		//Creación de la barra completa
+		//
 		JMenuBar menu = new JMenuBar();
 		menu.add(file);
 		menu.add(simulator);
@@ -186,16 +232,22 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 	}
 	
+	/**
+	 * Función que crea los tres primeros botones y los añade a las barras de tareas y menú
+	 * @param file - Menú file, en el que se insertarán las funcionalidades
+	 * @param fichero - JTextÁrea en el que se muestran los eventos cargados
+	 * @return JToolBar con los botones creados
+	 */
 	private JToolBar createComponents1(JMenu file, JTextArea fichero) {
 		
-		SimulatorAction guardar = new SimulatorAction(
+		guardar = new SimulatorAction(
 				"Guardar fichero de eventos", "save.png", "Guardar fichero de texto",
 				KeyEvent.VK_S, "control S", ()->saveFile(fichero, "Guardar eventos como..."));
 			
-		SimulatorAction loadEventsFile = new SimulatorAction(
+		loadEventsFile = new SimulatorAction(
 				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", ()->loadFile(fichero));
 			
-		SimulatorAction borrar = new SimulatorAction(
+		borrar = new SimulatorAction(
 				"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
 				VK_C, "control C", ()->fichero.setText(""));
 		
@@ -212,8 +264,97 @@ public class SimulatorLayout extends JFrame implements Listener {
 		return bar;
 	}
 	
-	private void loadFile(JTextArea fichero) {
+	/**
+	 * Función que crea los tres segundos botones y los añade a las barras de tareas y menú
+	 * @param simulator - Menú simulator, en el que se insertarán los botones
+	 * @param spinner - JSpinner que indica los ticks a ejecutar
+	 * @param reports - JTextÁrea en el que se muestran los reports de la simulación
+	 * @return
+	 */
+	private JToolBar createComponents2(JMenu simulator, JTextArea reports) {
+		events = new SimulatorAction(
+				"Eventos", "events.png", "Añadir eventos a la cola hasta el tick deseado", KeyEvent.
+				VK_E, "control E", ()->cargarEventos());
 		
+		play = new SimulatorAction(
+				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
+				VK_P, "control P", ()-> controlador.run((int) spinner.getValue()));
+		
+		//TODO: el reset es un poco cutre
+		reset = new SimulatorAction(
+				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
+				VK_R, "control R", ()->controlador.reset());
+		
+		redirectOutput = new SimulatorAction(
+				"Ejecutar y generar reporte", "report.png", "Corre la simulación generando el reporte automáticamente",
+				KeyEvent.VK_B, "control B", ()->{
+					TextStream ts = new TextStream(reports);
+					controlador.modifyOutputStream(ts);
+					controlador.run((int) spinner.getValue());					
+		});
+		
+		//Añadimos las funcionalidades a las barras
+		JToolBar bar = new JToolBar();
+		bar.add(events);
+		bar.add(play);
+		bar.add(reset);
+		bar.setFloatable(false);
+		
+		//Y al menú
+		simulator.add(play);
+		simulator.add(reset);
+		simulator.add(redirectOutput);
+		return bar;
+	}
+	
+	/**
+	 * Función que crea los últimos botones, y los añade a las barras de tareas y menú
+	 * @param file - Menú file, en el que se insertarán las funcionalidades
+	 * @param generate - Menú generate, en el que se insertarán las funcionalidades
+	 * @param reports - JTextÁrea en el que se muestran los reports de la simulación
+	 * @return
+	 */
+	private JToolBar createComponents3(JMenu file, JMenu generate, JTextArea reports) {
+		
+		generateReport = new SimulatorAction(
+				"Generar Reporte", "report.png", "Generar el reporte de la simulación", KeyEvent.
+				VK_G, "control G", ()-> {
+					reports.setText("");
+					controlador.generarInformes(new TextStream(reports));
+					});
+		
+		deleteReport = new SimulatorAction(
+				"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación", KeyEvent.
+				VK_B, "control B", ()->reports.setText(""));
+		
+	    saveReport = new SimulatorAction(
+				"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
+				VK_G, "control shift G", ()->saveFile(reports, "Guardar reportes como..."));
+		
+		salir = new SimulatorAction(
+				"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));
+		
+		JToolBar bar = new JToolBar();
+		bar.add(generateReport);
+		bar.add(deleteReport);
+		bar.add(saveReport);
+		bar.setFloatable(false);
+		bar.add(salir);
+			
+		generate.add(generateReport);
+		generate.add(deleteReport);
+		
+		file.add(saveReport);
+		file.add(salir);
+		
+		return bar;
+	}
+	
+	/**
+	 * Carga los eventos de un fichero
+	 * @param fichero - Fichero del cual cargamos los eventos
+	 */
+	private void loadFile(JTextArea fichero) {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 		        ".ini Files", "ini");
@@ -246,80 +387,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 	}
 	
-	private JToolBar createComponents2(JMenu simulator, JSpinner spinner, JTextArea reports) {
-		
-		//TODO: añadir eventos a la tabla pero solo hasta el tick que es
-		SimulatorAction events = new SimulatorAction(
-				"Eventos", "events.png", "Añadir eventos a la cola hasta el tick deseado", KeyEvent.
-				VK_E, "control E", ()->controlador.cargarEventos());
-		
-		SimulatorAction play = new SimulatorAction(
-				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
-				VK_P, "control P", ()-> controlador.run((int) spinner.getValue()));
-		
-		//TODO: el reset es un poco cutre
-		SimulatorAction reset = new SimulatorAction(
-				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
-				VK_R, "control R", ()->controlador.reset());
-		
-		SimulatorAction redirectOutput = new SimulatorAction(
-				"Ejecutar y generar reporte", "report.png", "Corre la simulación generando el reporte automáticamente",
-				KeyEvent.VK_B, "control B", ()->{
-					TextStream ts = new TextStream(reports);
-					controlador.modifyOutputStream(ts);
-					controlador.run((int) spinner.getValue());					
-		});
-		
-		//Añadimos las funcionalidades a las barras
-		JToolBar bar = new JToolBar();
-		bar.add(events);
-		bar.add(play);
-		bar.add(reset);
-		bar.setFloatable(false);
-		
-		//Y al menú
-		simulator.add(play);
-		simulator.add(reset);
-		simulator.add(redirectOutput);
-		return bar;
-	}
-	
-	private JToolBar createComponents3(JMenu file, JMenu generate, JTextArea reports) {
-		
-		SimulatorAction generateReport = new SimulatorAction(
-				"Generar Reporte", "report.png", "Generar el reporte de la simulación", KeyEvent.
-				VK_G, "control G", ()-> {
-					reports.setText("");
-					controlador.generarInformes(new TextStream(reports));
-					});
-		
-		SimulatorAction deleteReport = new SimulatorAction(
-				"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación", KeyEvent.
-				VK_B, "control B", ()->reports.setText(""));
-		
-		SimulatorAction saveReport = new SimulatorAction(
-				"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
-				VK_G, "control shift G", ()->saveFile(reports, "Guardar reportes como..."));
-		
-		SimulatorAction salir = new SimulatorAction(
-				"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));
-		
-		JToolBar bar = new JToolBar();
-		bar.add(generateReport);
-		bar.add(deleteReport);
-		bar.add(saveReport);
-		bar.setFloatable(false);
-		bar.add(salir);
-			
-		generate.add(generateReport);
-		generate.add(deleteReport);
-		
-		file.add(saveReport);
-		file.add(salir);
-		
-		return bar;
-	}
-	
+	/**
+	 * Guarda los reportes en un fichero
+	 * @param reports - JTextÁrea en el que se muestran los reports de la simulación
+	 * @param inputDialog
+	 */
 	private void saveFile(JTextArea reports, String inputDialog) {
 		
 		 String filename = JOptionPane.showInputDialog(inputDialog);
@@ -339,29 +411,75 @@ public class SimulatorLayout extends JFrame implements Listener {
 	        }
 	}
 	
+	private void cargarEventos() {
+		controlador.cargarEventos();
+		//Y a continuación los cargamos en el simulador
+		controlador.cargarEventosEnElSimulador((int) spinner.getValue()); // (int) spinner.getValue()
+	}
+	
 	//TODO: cosas
+	//Implementación listeners
 	public void registered(UpdateEvent ue) {
 		actualizarLayout(ue);
+		grafo.registered(ue);
 	}
+	
 	public void reset(UpdateEvent ue) {
 		actualizarLayout(ue);
+		grafo.reset(ue);
 	}
-	public void newEvent(UpdateEvent ue) {}
+	
+	public void newEvent(UpdateEvent ue) {
+		actualizarLayout(ue);
+		grafo.registered(ue);		
+	}
+	
 	public void advanced(UpdateEvent ue) {
 		actualizarLayout(ue);
+		grafo.advanced(ue);
 	}
-	public void error(UpdateEvent ue, String error) {}
 	
+	public void error(UpdateEvent ue, String error) {
+		
+		
+	}
 	
+	/**
+	 * Función que agrupa la funcionalidad de refrescar el layout
+	 * @param ue - UpdateEvent con la información del listener
+	 */
 	private void actualizarLayout(UpdateEvent ue) {
 		vehiclesTable.actualizar((ArrayList<? extends Describable>) ue.getVehicles());	
 		junctionsTable.actualizar((ArrayList<? extends Describable>) ue.getJunctions());
 		roadsTable.actualizar((ArrayList<? extends Describable>) ue.getRoads());	
+		eventsTable.actualizar((ArrayList<? extends Describable>) ue.getEventQueue());	
+		tiempoAct.setText("" + controlador.getPasos());
+		habilitarBotones();
 		repaint();
 	}
 	
-	
-	
+	private void habilitarBotones() {
+		if(controlador.hayEventosCargados()) {
+			guardar.setEnabled(true);
+			borrar.setEnabled(true);
+			play.setEnabled(true);
+			reset.setEnabled(true);
+			redirectOutput.setEnabled(true);
+			generateReport.setEnabled(true);
+			deleteReport.setEnabled(true);
+			saveReport.setEnabled(true);
+		}
+		else {
+			guardar.setEnabled(false);
+			borrar.setEnabled(false);
+			play.setEnabled(false);
+			reset.setEnabled(false);
+			redirectOutput.setEnabled(false);
+			generateReport.setEnabled(false);
+			deleteReport.setEnabled(false);
+			saveReport.setEnabled(false);
+		}
+	}
 	
 	/*
 	public static void main(String ... args) {

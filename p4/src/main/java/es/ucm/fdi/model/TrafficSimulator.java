@@ -14,7 +14,9 @@ import javax.swing.SwingUtilities;
 public class TrafficSimulator {
 
 	private int indiceActualEventos;
-	private ArrayList<Event> listaEventos;
+	//La lista de eventos solo contendrá los eventos que se hayan cargado y que estén dentro de los ticks de la simulación
+	//que se van a ejecutar
+	private ArrayList<Event> listaEventos; 
 	private int tickActual;
 	private RoadMap mapaTrafico;
 	private OutputStream out;
@@ -226,4 +228,39 @@ public class TrafficSimulator {
 	public int getTime() {
 		return tickActual;
 	}
+	
+	/**
+	 * Función que carga los eventos en el simulador antes de ejecutarlos
+	 * @param nTicksAEjecutar - Número de ticks a partir del actual de los que se cargarán eventos
+	 * @param eventosCargados - Array con los eventos que había introducido el usuario
+	 */
+	public void cargarEventos(int nTicksAEjecutar, ArrayList<Event> eventosCargados) {
+		//En primer lugar limpiamos la lista de eventos
+		listaEventos = new ArrayList<>();
+		indiceActualEventos = 0;
+		//Ahora añadimos los eventos del fichero que deberían ocurrir en los ticks que pensamos simular
+		//(los ticks que marca el spinner en este momento)
+		//Como no tenemos garantizado que los eventos estén ordenados, hacemos un sort del array de eventos,
+		//puesto que posteriormente necesitaremos tenerlos ordenados para usarlos en el run
+		
+		eventosCargados.sort((Event e1, Event e2) -> e1.time - e2.time);
+		
+		for(Event e: eventosCargados) {
+			if(e.time >= tickActual && e.time < tickActual + nTicksAEjecutar) {
+				listaEventos.add(e);
+			} else if (e.time > tickActual + nTicksAEjecutar) {
+				//Como están ordenados, si el tick de dicho elemento es mayor a el último tick que vamos 
+				//a ejecutar nos podemos salir
+				break;
+			}
+			
+			//TODO: revisar si está bien usado aquí el listener
+			fireUpdateEvent(EventType.NEW_EVENT, "Ha ocurrido un error al insertar un evento");
+		}
+	}
+	
+	public Boolean hayEventosCargados() {
+		return listaEventos.size() > 0 ? true : false;
+	}
+	
 }

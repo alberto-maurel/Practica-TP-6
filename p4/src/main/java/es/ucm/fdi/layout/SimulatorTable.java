@@ -2,6 +2,7 @@ package es.ucm.fdi.layout;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,33 +47,9 @@ public class SimulatorTable extends JPanel {// implements TableModelListener {
 		table = new JTable(new MyTableModel(fn, e));
 		
 		add(new JScrollPane(table), BorderLayout.CENTER);
-		
-		/*
-		super(new BorderLayout());
-		setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.black, 2),
-				title));
-		
-		JPanel main = new JPanel(new BorderLayout() );
-		title = t;
-		fieldNames = fn;
-		table = new JTable(new MyTableModel(fn, e));
-		main.add(new JScrollPane(table), BorderLayout.CENTER);
-		
-		this.add(main);
-		*/
+		setPreferredSize(new Dimension(100,100));
 	}
 	
-	/*
-	public void tableChanged(TableModelEvent e) {
-		repaint();
-	}
-	*/
-	/*
-	public void tableChanged(TableModelEvent t) {
-		repaint();
-	}
-	*/
 	/*public static void main(String ... args) {
 		JFrame jf = new JFrame();
 		jf.setSize(400, 400);
