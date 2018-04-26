@@ -31,14 +31,12 @@ public class GraphLayoutClass extends JPanel implements Listener {
    
 	public GraphLayoutClass() {
 		_graphComp = new GraphComponent();
-		this.add(_graphComp);
-		this.setBackground(Color.WHITE);
+		add(_graphComp);
+		setBackground(Color.WHITE);
 	}
-	
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		_graphComp.paint(g);
 	}
 	
 	protected void generateGraph(UpdateEvent ue) {

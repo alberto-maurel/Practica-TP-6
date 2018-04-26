@@ -155,7 +155,8 @@ public class Vehicle extends SimulatedObject implements Describable {
 	public void describe(Map<String,String> out){
 		out.put("ID", identificador);
 		out.put("Road", carreteraActual.identificador);
-		out.put("Location", "" + localizacionCarretera);
+		if(localizacionCarretera == arrived) out.put("Location", "Llegado");
+		else out.put("Location", "" + localizacionCarretera);
 		out.put("Speed", "" + velActual);
 		out.put("Km", "" + kilometrage);
 		out.put("Faulty units", "" + tiempoAveria);

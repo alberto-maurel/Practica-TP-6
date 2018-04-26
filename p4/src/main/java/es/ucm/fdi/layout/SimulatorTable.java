@@ -27,7 +27,7 @@ import es.ucm.fdi.model.Describable;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 
-public class SimulatorTable extends JPanel {// implements TableModelListener {
+public class SimulatorTable extends JPanel {
 	
 	private JTable table;
 	private String title;
@@ -46,8 +46,9 @@ public class SimulatorTable extends JPanel {// implements TableModelListener {
 		fieldNames = fn;
 		table = new JTable(new MyTableModel(fn, e));
 		
-		add(new JScrollPane(table), BorderLayout.CENTER);
-		setPreferredSize(new Dimension(100,100));
+		add(new JScrollPane(table));
+		setPreferredSize(new Dimension(200,200));
+		setBackground(Color.WHITE);
 	}
 	
 	/*public static void main(String ... args) {
@@ -66,6 +67,7 @@ public class SimulatorTable extends JPanel {// implements TableModelListener {
 		public MyTableModel(String[] fn, ArrayList<? extends Describable> e) {
 			fieldNames = fn;
 			elements = e;
+			setBackground(Color.WHITE);
 		}
 		
 		@Override // fieldNames es un String[] con nombrs de col.
