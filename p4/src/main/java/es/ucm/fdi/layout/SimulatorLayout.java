@@ -17,6 +17,7 @@ import es.ucm.fdi.extra.graphlayout.GraphLayoutExample;
 import es.ucm.fdi.model.Describable;
 import es.ucm.fdi.model.Junction;
 import es.ucm.fdi.model.Road;
+import es.ucm.fdi.model.SimulationException;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
@@ -80,7 +81,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//
 		//
 		String[] columnNamesQueue = {"#", "Time", "Type", "Involves"};
-		ArrayList<Vehicle> eventsArray = new ArrayList<>();
+		ArrayList<Event> eventsArray = new ArrayList<>();
 		
 		JPanel upperPanel = new JPanel();
 		//Por un lado los JTextArea
@@ -89,7 +90,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JTextArea reports = new JTextArea();
 		reports.setEditable(false);
 		//Y por otro la tabla de eventos
-		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, eventsArray);
+		//TODO: Da error si no se hace el cast??
+		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, (ArrayList<? extends Describable>) eventsArray);
 		
 		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
 		upperPanel.add(createTextAreaPanel("Fichero", fichero, new Dimension(200,200)));
@@ -278,7 +280,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		play = new SimulatorAction(
 				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
-				VK_P, "control P", ()-> controlador.run((int) spinner.getValue()));
+				VK_P, "control P", ()-> runSimulation());
 		
 		//TODO: el reset es un poco cutre
 		reset = new SimulatorAction(
@@ -305,6 +307,17 @@ public class SimulatorLayout extends JFrame implements Listener {
 		simulator.add(reset);
 		simulator.add(redirectOutput);
 		return bar;
+	}
+	
+	/** 
+	 * Función que corre la simulación y controla las excepciones 
+	 */
+	private void runSimulation() {
+		try {
+			controlador.run((int) spinner.getValue());
+		} catch (SimulationException e) {
+			System.out.println("Error en la simulación");
+		}
 	}
 	
 	/**
@@ -440,8 +453,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	}
 	
 	public void error(UpdateEvent ue, String error) {
-		
-		
+			
 	}
 	
 	/**

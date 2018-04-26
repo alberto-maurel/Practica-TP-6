@@ -2,6 +2,8 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+
 import es.ucm.fdi.ini.IniSection;
 
 public class NewVehicle extends Event {
@@ -72,6 +74,13 @@ public class NewVehicle extends Event {
 			itinerarioVehiculoJunctions.add((Junction) roadMap.getSimObjects().get(idJunction));	
 		}
 		return itinerarioVehiculoJunctions;
+	}
+	
+	public void describe(Map<String,String> out) {
+		out.put("#", id);
+		out.put("Time", "" + time);
+		out.put("Type", "New Vehicle");
+		out.put("Involves", id);
 	}
 }
 

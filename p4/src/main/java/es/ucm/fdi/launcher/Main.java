@@ -186,8 +186,8 @@ public class Main {
 	 * @throws IOException
 	 */
 	private static void startGUIMode() throws IOException {
-		
-		InputStream in = new FileInputStream(_inFile);
+		InputStream in = null;
+		if (_inFile != null) in = new FileInputStream(_inFile);
 		OutputStream out = null;
 		if(_outFile != null) {
 			out = new FileOutputStream(_outFile);

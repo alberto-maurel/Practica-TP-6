@@ -70,12 +70,11 @@ public class Controller {
 		}
 	}
 	
-	public void run(int nPaso) {
+	public void run(int nPaso) throws SimulationException {
 		try {
 			simulador.run(nPaso);
 		} catch (SimulationException e) {
-			e.printMessage();
-			e.printStackTrace();
+			throw e;
 		}
 	}
 	

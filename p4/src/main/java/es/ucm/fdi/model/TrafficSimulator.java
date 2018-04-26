@@ -62,13 +62,13 @@ public class TrafficSimulator {
 				//Y por último escribimos los informes en el orden indicado
 				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");
 				++tick;
-				++tickActual;
-				
+				++tickActual;				
 				generarInformes(out);
 				
 			}		
 		} catch (Exception e) {
-			throw new SimulationException(e.getMessage());
+			throw new SimulationException(/*e.getMessage()*/);
+			//System.out.println("Error producido en traffic simulator");
 		}		
 	}
 	
@@ -216,8 +216,13 @@ public class TrafficSimulator {
 			return mapaTrafico.getRoads();
 		}
 		
+		// Actualizamos la tabla eliminando los eventos ya procesados
 		public List<Event> getEventQueue() {
-			return listaEventos;
+			ArrayList<Event> listaEventosPorProcesar = new ArrayList<Event>();
+			for (int i = indiceActualEventos; i < listaEventos.size(); ++i) {
+				listaEventosPorProcesar.add(listaEventos.get(i));
+			}
+			return listaEventosPorProcesar;
 		}
 		
 		public int getCurrentTime() {
