@@ -27,6 +27,7 @@ public class TrafficSimulator {
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
 		this.out = out;
+		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la construcción del simulador");
 	}
 	
 	public class SortbyTime implements Comparator<Event> {

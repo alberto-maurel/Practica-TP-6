@@ -49,7 +49,7 @@ public class Controller {
 	}
 	
 	public int getPasos() {
-		return nPasos;
+		return simulador.getTime();
 	}
 	
 	public void run() {

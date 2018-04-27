@@ -1,6 +1,9 @@
 package es.ucm.fdi.extra.dialog;
 
 import javax.swing.*;
+
+import es.ucm.fdi.layout.ErrorDialog;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class DialogWindowExample extends JFrame  {
 
-	private DialogWindow _dialog;
+	private ErrorDialog _dialog;
 	
 	List<String> _names;
 	List<Integer> _ages;
@@ -31,8 +34,8 @@ public class DialogWindowExample extends JFrame  {
 		JPanel mainPanel = new JPanel();
 		mainPanel.add(new JLabel("If you click "));
 		
-		_dialog = new DialogWindow(this);
-		_dialog.setData(_names, _ages);
+		_dialog = new ErrorDialog("TEST");
+		//_dialog.setData(_names, _ages);
 		
 		JButton here = new JButton("here");
 		here.addActionListener( new ActionListener() {
@@ -42,14 +45,7 @@ public class DialogWindowExample extends JFrame  {
 				if ( status == 0) {
 					System.out.println("Canceled");
 				} else {
-					System.out.println("The following items where selected:");
-					for(String s : _dialog.getSelectedItems()) {
-						System.out.println(s);
-					}
-					System.out.println("The following numbers where selected:");
-					for(Integer s : _dialog.getSelectedNums()) {
-						System.out.println(s);
-					}
+					System.out.println("OK");
 				}
 			}
 		});

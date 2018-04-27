@@ -46,7 +46,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	SimulatorTable junctionsTable;
 	SimulatorTable eventsTable;
 	JSpinner spinner;
-	JTextPane tiempoAct;
+	JTextField tiempoAct;
 	JTextArea fichero;
 	
 	
@@ -93,7 +93,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//TODO: Da error si no se hace el cast??
 		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, (ArrayList<? extends Describable>) eventsArray);
 		
-		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
+		upperPanel.setLayout(new GridLayout(1, 3));
 		upperPanel.add(createTextAreaPanel("Fichero", fichero, new Dimension(200,200)));
 		upperPanel.add(eventsTable);
 		upperPanel.add(createTextAreaPanel("Reports", reports, new Dimension(200,200)));	
@@ -103,7 +103,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//
 		//
 		spinner = new JSpinner();
-		tiempoAct = new JTextPane();
 		addBars(fichero, reports);
 		
 		
@@ -203,7 +202,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 		 */		
 		
 		JLabel timeLabel = new JLabel("Time: ");
-		tiempoAct = new JTextPane();
+		tiempoAct = new JTextField();
+		tiempoAct.setBackground(Color.WHITE);
 		tiempoAct.setMaximumSize(new Dimension(50,50));
 		tiempoAct.setEditable(false);
 		tiempoAct.setText("" + 0);
