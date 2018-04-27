@@ -1,5 +1,7 @@
 package es.ucm.fdi.model;
 
+import java.util.Map;
+
 import es.ucm.fdi.ini.IniSection;
 
 public class NewJunction extends Event {
@@ -41,6 +43,12 @@ public class NewJunction extends Event {
 		} else {
 			throw new SimulationException("Ya existe un cruce con el mismo identificador");
 		}
+	}
+	
+	public void describe(Map<String,String> out) {
+		out.put("#", id);
+		out.put("Time", "" + time);
+		out.put("Type", "New Junction");
 	}
 	
 	

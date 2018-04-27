@@ -80,7 +80,6 @@ public class NewVehicle extends Event {
 		out.put("#", id);
 		out.put("Time", "" + time);
 		out.put("Type", "New Vehicle");
-		out.put("Involves", id);
 	}
 }
 

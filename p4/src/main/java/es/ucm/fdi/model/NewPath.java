@@ -1,5 +1,7 @@
 package es.ucm.fdi.model;
 
+import java.util.Map;
+
 import es.ucm.fdi.ini.IniSection;
 
 public class NewPath extends NewRoad {
@@ -50,6 +52,12 @@ public class NewPath extends NewRoad {
 		} else {
 			throw new SimulationException("El identificador está duplicado");
 		}
+	}
+	
+	public void describe(Map<String,String> out) {
+		out.put("#", id);
+		out.put("Time", "" + time);
+		out.put("Type", "New Dirt Road");
 	}
 
   

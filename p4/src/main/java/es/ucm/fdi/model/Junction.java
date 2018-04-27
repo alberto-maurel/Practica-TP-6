@@ -111,9 +111,32 @@ public class Junction extends SimulatedObject implements Describable{
 		out.put("queues", sb.toString());
 	}
 	
-	public void describe(Map<String,String> out){
+	//TODO: hacer bien
+	public void describe(Map<String,String> out) {
 		out.put("ID", identificador);
-		//TODO : green
-		//TODO : red
+		String greenOutput = "[";
+		String redOutput = "[";
+		if (semaforoVerde != -1) {
+			StringBuilder involvedVehicles = new StringBuilder();
+			if (colasCoches.size() > 0) {
+				for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde))) {
+					involvedVehicles.append(v.identificador + ',');
+				}
+				if(colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {			
+					involvedVehicles.setLength(involvedVehicles.length()-1);
+				}
+			}
+			if (carreterasEntrantesOrdenadas.size() > 0) {
+				greenOutput += "(" + carreterasEntrantesOrdenadas.get(semaforoVerde)
+						+ ",green,[" + involvedVehicles.toString() + "])";
+			}
+		}
+		greenOutput += "]";	
+		
+		
+		
+		redOutput += "]";
+		out.put("Green", greenOutput);
+		out.put("Red", redOutput);
 	}		
 }

@@ -80,7 +80,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//Creación del panel superior
 		//
 		//
-		String[] columnNamesQueue = {"#", "Time", "Type", "Involves"};
+		String[] columnNamesQueue = {"#", "Time", "Type"};
 		ArrayList<Event> eventsArray = new ArrayList<>();
 		
 		JPanel upperPanel = new JPanel();

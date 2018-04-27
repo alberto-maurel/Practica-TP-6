@@ -1,5 +1,7 @@
 package es.ucm.fdi.model;
 
+import java.util.Map;
+
 import es.ucm.fdi.ini.IniSection;
 
 public class NewRoundRobin extends NewJunction {
@@ -47,5 +49,9 @@ public class NewRoundRobin extends NewJunction {
 		}
 	}
 
-	
+	public void describe(Map<String,String> out) {
+		out.put("#", id);
+		out.put("Time", "" + time);
+		out.put("Type", "New RR Junction");
+	}
 }

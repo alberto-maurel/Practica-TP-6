@@ -1,6 +1,8 @@
 package es.ucm.fdi.model;
 
 import java.util.ArrayList;
+import java.util.Map;
+
 import es.ucm.fdi.ini.IniSection;
 
 public class NewCar extends NewVehicle {
@@ -65,5 +67,11 @@ public class NewCar extends NewVehicle {
 		} else {
 			throw new SimulationException("Identificador de objeto duplicado");
 		}
-	}	
+	}
+	
+	public void describe(Map<String,String> out) {
+		out.put("#", id);
+		out.put("Time", "" + time);
+		out.put("Type", "New Car");
+	}
 }

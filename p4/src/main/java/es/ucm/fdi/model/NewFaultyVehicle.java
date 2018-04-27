@@ -2,6 +2,7 @@ package es.ucm.fdi.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
 
@@ -49,5 +50,10 @@ public class NewFaultyVehicle extends Event {
 		}
 	}
 	
+	public void describe(Map<String,String> out) {
+		out.put("#", id);
+		out.put("Time", "" + time);
+		out.put("Type", "New Faulty Vehicle");
+	}	
 	
 }
