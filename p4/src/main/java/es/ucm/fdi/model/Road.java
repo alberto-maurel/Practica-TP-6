@@ -35,6 +35,14 @@ public class Road extends SimulatedObject implements Describable{
 		return longitud;
 	}
 	
+	/**
+	 * Para poder pintar a carretera
+	 * @return true si el semáforo del final de la carretera está en verde y false si no
+	 */
+	public boolean estaEnVerde() {
+		if(cruceFin.carreterasEntrantesOrdenadas.get(cruceFin.semaforoVerde).equals(this.identificador)) return true;
+		else return false;
+	}
 	
 	/**
 	 * Introduce al vehículo en la carretera

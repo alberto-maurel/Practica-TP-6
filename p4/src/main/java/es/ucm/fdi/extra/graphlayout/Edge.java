@@ -9,13 +9,15 @@ public class Edge {
 	private Node _target;
 	private int _length;
 	private List<Dot> _dots;
+	boolean semaforoEnVerde;
 	
-	public Edge(String id, Node source, Node target, int length) {
+	public Edge(String id, Node source, Node target, int length, boolean verde) {
 		_source = source;
 		_target = target;
 		_id = id;
 		_length = length;
 		_dots = new ArrayList<>();
+		semaforoEnVerde = verde;
 	}
 	
 	public void addDot(Dot e) {

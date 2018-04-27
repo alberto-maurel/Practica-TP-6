@@ -103,6 +103,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//
 		//
 		spinner = new JSpinner();
+		spinner.setValue(controlador.getPasos());
 		addBars(fichero, reports);
 		
 		
@@ -427,7 +428,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private void cargarEventos() {
 		controlador.cargarEventos();
 		//Y a continuación los cargamos en el simulador
-		controlador.cargarEventosEnElSimulador((int) spinner.getValue()); // (int) spinner.getValue()
+		controlador.cargarEventosEnElSimulador((int) spinner.getValue());
 	}
 	
 	//TODO: cosas
@@ -452,8 +453,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 		grafo.advanced(ue);
 	}
 	
+	//TODO: testear
 	public void error(UpdateEvent ue, String error) {
-			
+		add(new ErrorDialog(error));
 	}
 	
 	/**

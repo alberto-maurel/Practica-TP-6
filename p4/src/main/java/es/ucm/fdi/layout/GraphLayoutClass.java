@@ -57,10 +57,10 @@ public class GraphLayoutClass extends JPanel implements Listener {
 		for(int i = 0; i < auxRoad.size(); ++i) {
 			String idAristaAct = auxRoad.get(i).getId();
 			String idSrcNode = auxRoad.get(i).idSourceJunction();
-			String idTargetNode = auxRoad.get(i).idTargetJunction();
+			String idTargetNode = auxRoad.get(i).idTargetJunction();			
 			
 			Edge aristaAct = new Edge(idAristaAct, vertices.get(idSrcNode), 
-					vertices.get(idTargetNode),auxRoad.get(i).getLength());
+					vertices.get(idTargetNode),auxRoad.get(i).getLength(), auxRoad.get(i).estaEnVerde());
 			aristas.put(idAristaAct, aristaAct);
 			g.addEdge(aristaAct);
 		}
