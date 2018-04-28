@@ -16,9 +16,9 @@ public class MainTests {
 	public void basicTest() {
 		Main mainBasico = new Main();
 		try {
-			assertTrue("Tests basicos pasan", mainBasico.test("examples/basic"));
-			assertTrue( "Tests avanzados pasan", mainBasico.test("examples/advanced"));
-			mainBasico.test("examples/err");
+			assertTrue("Tests basicos pasan", mainBasico.test("src/test/resources/basic"));
+			assertTrue( "Tests avanzados pasan", mainBasico.test("src/test/resources/advanced"));
+			mainBasico.test("src/test/resources/err");
 			fail("no da error con una entrada mala");
 		}
 		catch(Exception e) {
