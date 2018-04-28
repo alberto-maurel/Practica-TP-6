@@ -1,8 +1,10 @@
 .idea/
-*.iml
-target/
+ *.iml
+ target/
 .project
 .classpath
 .settings/
 .metadata/.metadata/
+.metadata/
 /bin/
+/target/
