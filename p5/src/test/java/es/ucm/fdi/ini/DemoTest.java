@@ -1,4 +1,4 @@
-/*package es.ucm.fdi.ini;
+package es.ucm.fdi.ini;
 
 import static org.junit.Assert.assertTrue;
 
@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class Demo {
+public class DemoTest {
 
 	private static final String INPUT = "input1.ini";
 	private static final String INPUT_PREFIX = "input";
@@ -118,4 +118,4 @@ public class Demo {
 		}
 		
 	}
-}*/
+}
