@@ -89,20 +89,5 @@ public class Demo {
 		compare();
 		write();
 	}
-
-	/*
-	@Test
-	//Para testear que no hay errores de ejecución en entrada/salida, pero no comprueba que esta sea correcta 
-	public void TestInputOutput() {
-		try {
-			main(new String[1]);
-			assertTrue(true);
-		}
-		catch (Exception e){
-			System.out.println("Se ha producido una excepción");
-			e.printStackTrace();
-		}
-		
-	}
-	*/
+	
 }

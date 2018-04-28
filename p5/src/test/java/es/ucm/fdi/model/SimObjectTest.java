@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class SimObjectTest {
 	@Test
-	public void test1() {
+	public void testSimObject() {
 		Junction cruce1 = new Junction("J1");
 		Junction cruce2 = new Junction("J2");
 		ArrayList<Junction> itinerario = new ArrayList<>();

@@ -191,12 +191,10 @@ public class Main {
 		OutputStream out = null;
 		if(_outFile != null) {
 			out = new FileOutputStream(_outFile);
-		}/* else {
-			out = System.out;
-		}*/
+		}
 		Controller controlador = new Controller(_timeLimit, in, out);
+		@SuppressWarnings("unused")
 		SimulatorLayout ventana = new SimulatorLayout(controlador);
-		//controlador.run();
 	}
 
 	private static void start(String[] args) throws IOException {

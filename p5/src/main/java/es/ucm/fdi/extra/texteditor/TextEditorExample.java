@@ -161,6 +161,7 @@ public class TextEditorExample extends JFrame implements ActionListener {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public static String readFile(File file) {
 		String s = "";
 		try {

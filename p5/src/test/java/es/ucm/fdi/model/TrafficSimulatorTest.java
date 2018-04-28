@@ -9,7 +9,7 @@ import org.junit.Test;
 public class TrafficSimulatorTest {
 	
 	@Test
-	public void test1() {
+	public void testTrafficSimulator() {
 		ArrayList<Event> listaEventosAux = new ArrayList<Event>();  
 		Event cruce1 = new NewJunction(0,"j1");
 		Event cruce2 = new NewJunction(0,"j2");
@@ -23,10 +23,7 @@ public class TrafficSimulatorTest {
 		listaEventosAux.add(cruce2);
 		listaEventosAux.add(carretera1);
 		listaEventosAux.add(coche1);
-			
-		//TrafficSimulator mock = new TrafficSimulator(listaEventosAux);
 		
-		//mock.run(2);
 		assertTrue(true);
 	}	
 }
