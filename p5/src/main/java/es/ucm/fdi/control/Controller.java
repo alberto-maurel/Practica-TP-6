@@ -50,7 +50,7 @@ public class Controller {
 	
 	public void run() {
 		cargarEventos();
-		cargarEventosEnElSimulador(nPasos);
+		cargarEventosEnElSimulador(/*nPasos*/);
 		try {
 			simulador.run(nPasos);
 		} catch (SimulationException e) {
@@ -135,8 +135,8 @@ public class Controller {
 		return simulador.getTime();
 	}
 	
-	public void cargarEventosEnElSimulador(int nTicksASimular) {
-		simulador.cargarEventos(nTicksASimular, eventosIntroducidos);
+	public void cargarEventosEnElSimulador(/*int nTicksASimular*/) {
+		simulador.cargarEventos(/*nTicksASimular,*/ eventosIntroducidos);
 	}
 	
 	public Boolean hayEventosCargados() {

@@ -266,7 +266,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 */
 	private JToolBar createComponents2(JMenu simulator, JTextArea reports) {
 		events = new SimulatorAction(
-				"Eventos", "events.png", "Añadir eventos a la cola hasta el tick deseado", KeyEvent.
+				"Eventos", "events.png", "Añadir eventos a la cola", KeyEvent.
 				VK_E, "control E", ()->cargarEventos());
 		
 		play = new SimulatorAction(
@@ -418,7 +418,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private void cargarEventos() {
 		controlador.cargarEventos();
 		//Y a continuación los cargamos en el simulador
-		controlador.cargarEventosEnElSimulador((int) spinner.getValue());
+		controlador.cargarEventosEnElSimulador(/*(int) spinner.getValue()*/);
 	}
 	
 	//TODO: cosas
@@ -485,20 +485,5 @@ public class SimulatorLayout extends JFrame implements Listener {
 		}
 	}
 	
-	/*
-	public static void main(String ... args) {
-		SwingUtilities.invokeLater(()-> new SimulatorLayout());
-	}
-	*/
 }
-
-
-
-/*
- * String t = new String(Files.readAllBytes(f.toPath()). "UTF-8"); // "ISO-8859-1"
- * 
- *  Files.write(f.toPath(), t.getBytes("UTF-8"));* 
- * 
- * 
- * */
  

@@ -240,7 +240,7 @@ public class TrafficSimulator {
 	 * @param nTicksAEjecutar - Número de ticks a partir del actual de los que se cargarán eventos
 	 * @param eventosCargados - Array con los eventos que había introducido el usuario
 	 */
-	public void cargarEventos(int nTicksAEjecutar, ArrayList<Event> eventosCargados) {
+	public void cargarEventos(/*int nTicksAEjecutar, */ArrayList<Event> eventosCargados) {
 		//En primer lugar limpiamos la lista de eventos
 		listaEventos = new ArrayList<>();
 		indiceActualEventos = 0;
@@ -252,13 +252,16 @@ public class TrafficSimulator {
 		eventosCargados.sort((Event e1, Event e2) -> e1.time - e2.time);
 		
 		for(Event e: eventosCargados) {
-			if(e.time >= tickActual && e.time < tickActual + nTicksAEjecutar) {
+			
+			listaEventos.add(e);
+			
+			/*if(e.time >= tickActual && e.time < tickActual + nTicksAEjecutar) {
 				listaEventos.add(e);
-			} else if (e.time > tickActual + nTicksAEjecutar) {
+			} else if (e.time > tickActual + nTicksAEjecuta) {
 				//Como están ordenados, si el tick de dicho elemento es mayor a el último tick que vamos 
 				//a ejecutar nos podemos salir
 				break;
-			}
+			}*/
 			
 			//TODO: revisar si está bien usado aquí el listener
 			fireUpdateEvent(EventType.NEW_EVENT, "Ha ocurrido un error al insertar un evento");
