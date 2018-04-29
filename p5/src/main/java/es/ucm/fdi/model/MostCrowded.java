@@ -2,7 +2,7 @@ package es.ucm.fdi.model;
 
 import java.util.Map;
 
-public class MostCrowded extends Junction {
+public class MostCrowded extends Junction implements Describable{
 	private int intervaloDeTiempo;
 	private int unidadesDeTiempoUsadas;
 	private boolean cambioDeSemaforoEsteTurno = false;
@@ -14,7 +14,7 @@ public class MostCrowded extends Junction {
 		unidadesDeTiempoUsadas = 0;
 	}
 	
-private String buscarCarreteraAtascada(String id) {
+	private String buscarCarreteraAtascada(String id){
 		int maxActual = -1;
 		String idAct = "";
 		
@@ -33,24 +33,24 @@ private String buscarCarreteraAtascada(String id) {
 		return idAct;
 	}
 
-private String buscarCarreteraAtascadaIni() {
-	int maxActual = -1;
-	String idAct = "";
+	private String buscarCarreteraAtascadaIni() {
+		int maxActual = -1;
+		String idAct = "";
 	
-	for (String carreteraAct: carreterasEntrantesOrdenadas) {
-		if(!colasCoches.get(carreteraAct).isEmpty() &&
+		for (String carreteraAct: carreterasEntrantesOrdenadas) {
+			if(!colasCoches.get(carreteraAct).isEmpty() &&
 					colasCoches.get(carreteraAct).size() > maxActual) {
-			idAct = carreteraAct;
-			maxActual = colasCoches.get(carreteraAct).size();
+				idAct = carreteraAct;
+				maxActual = colasCoches.get(carreteraAct).size();
+			}
+			else if(colasCoches.get(carreteraAct).isEmpty() &&
+						colasCoches.get(carreteraAct).size() > maxActual) {
+				idAct = carreteraAct;
+				maxActual = 0;
+			}
 		}
-		else if(colasCoches.get(carreteraAct).isEmpty() &&
-					colasCoches.get(carreteraAct).size() > maxActual) {
-			idAct = carreteraAct;
-			maxActual = 0;
-		}
+		return idAct;
 	}
-	return idAct;
-}
 	
 	public void actualizarSemaforo() {
 		String carreteraAtascada;		
@@ -98,31 +98,65 @@ private String buscarCarreteraAtascadaIni() {
 	}
 	
 	protected void fillReportDetails(Map<String, String> out) {
-		String aux = "";
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
-			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
-			if(semaforoVerde == i) {
-				aux += "green:"+ Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas) +",";	
-			} else {
-				aux += "red,";
-			}
-			
-			aux += '[';
-			//And now we add all the cars
-			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {
-				aux += v.identificador + ',';
-			}
-			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() > 0) {			
-				aux = aux.substring(0, aux.length() - 1);
-			}
-			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() != 0) {
-				carreterasEntrantesOrdenadas.get(i);
-			}
-			aux += ']';
-			aux += ')';
-			if(i != carreterasEntrantesOrdenadas.size() - 1) aux += ',';
+			sb.append(toStringRoad(i));
+			sb.append(',');
 		}
-		out.put("queues", aux);
+		if(sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
+		out.put("queues", sb.toString());
 		out.put("type", "mc");
-	}	
+	}
+	
+	protected String toStringRoad(int index) {
+		StringBuilder sb = new StringBuilder();
+		if(index < carreterasEntrantesOrdenadas.size()) {
+			sb.append('(');
+			//En primer lugar añadimos el identificador de la carretera
+			sb.append(carreterasEntrantesOrdenadas.get(index));
+			sb.append(',');
+			//Ahora chequeamos de qué color está el semáforo
+			if (index == semaforoVerde) {
+				sb.append("green:"+ Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas));
+			} else {
+				sb.append("red");
+			}
+			sb.append(",[");
+			//And now we add all the cars
+			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(index))) {
+				sb.append(v.identificador + ',');
+			}
+			if(colasCoches.get(carreterasEntrantesOrdenadas.get(index)).size() > 0) {			
+				sb.setLength(sb.length()-1);
+			}
+			if(colasCoches.get(carreterasEntrantesOrdenadas.get(index)).size() != 0) {
+				carreterasEntrantesOrdenadas.get(index);
+			}
+			sb.append("])");
+		}
+		return sb.toString();
+	}
+	
+	//TODO: preguntar a Freire como podríamos eliminar esto
+	public void describe(Map<String,String> out) {
+		out.put("ID", identificador);
+		
+		StringBuilder greenOutput = new StringBuilder();
+		greenOutput.append('[');
+		greenOutput.append(toStringRoad(semaforoVerde));
+		greenOutput.append(']');
+		out.put("Green", greenOutput.toString());
+		
+		StringBuilder redOutput = new StringBuilder();
+		redOutput.append('[');
+		for(int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
+			if(i != semaforoVerde) {
+				redOutput.append(toStringRoad(i));
+				redOutput.append(',');
+			}
+		}
+		redOutput.deleteCharAt(redOutput.length() - 1);
+		redOutput.append(']');
+		out.put("Red", redOutput.toString());
+	}
 }

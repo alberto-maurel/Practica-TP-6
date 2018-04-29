@@ -14,6 +14,8 @@ import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
 import es.ucm.fdi.util.TextStream;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -49,12 +51,12 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private SimulatorAction events;
 	private SimulatorAction play;
 	private SimulatorAction reset;
-	private SimulatorAction redirectOutput;
+	private SimulatorAction getOutput;
 	private SimulatorAction generateReport;
 	private SimulatorAction deleteReport;
 	private SimulatorAction saveReport;
 	private SimulatorAction salir;
-	
+	private JCheckBoxMenuItem redirectOutput;
 	
 	/**
 	 * Creación del Layout principal
@@ -276,15 +278,28 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//TODO: el reset es un poco cutre
 		reset = new SimulatorAction(
 				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
-				VK_R, "control R", ()->controlador.reset());
+				VK_R, "control R", ()-> { controlador.reset(); reports.setText("");});
 		
-		redirectOutput = new SimulatorAction(
+		getOutput = new SimulatorAction(
 				"Ejecutar y generar reporte", "report.png", "Corre la simulación generando el reporte automáticamente",
 				KeyEvent.VK_B, "control B", ()->{
 					TextStream ts = new TextStream(reports);
 					controlador.modifyOutputStream(ts);
 					controlador.run((int) spinner.getValue());					
 		});
+		
+		redirectOutput = new JCheckBoxMenuItem("Redirigir salida", false);
+		
+		redirectOutput.addItemListener(new ItemListener() {
+		    public void itemStateChanged(ItemEvent e) {   
+		       if(redirectOutput.getState()){
+		           controlador.modifyOutputStream(new TextStream(reports));
+		       } else {
+		    	   controlador.modifyOutputStream(System.out);
+		       }
+		    }
+		});
+		
 		
 		//Añadimos las funcionalidades a las barras
 		JToolBar bar = new JToolBar();
@@ -388,7 +403,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-		
 	}
 	
 	/**
@@ -457,7 +471,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		junctionsTable.actualizar((ArrayList<? extends Describable>) ue.getJunctions());
 		roadsTable.actualizar((ArrayList<? extends Describable>) ue.getRoads());	
 		eventsTable.actualizar((ArrayList<? extends Describable>) ue.getEventQueue());	
-		tiempoAct.setText("" + controlador.getPasos());
+		tiempoAct.setText("" + (controlador.getPasos() + 1));
 		habilitarBotones();
 		repaint();
 	}
@@ -468,20 +482,22 @@ public class SimulatorLayout extends JFrame implements Listener {
 			borrar.setEnabled(true);
 			play.setEnabled(true);
 			reset.setEnabled(true);
-			redirectOutput.setEnabled(true);
+			getOutput.setEnabled(true);
 			generateReport.setEnabled(true);
 			deleteReport.setEnabled(true);
 			saveReport.setEnabled(true);
+			redirectOutput.setEnabled(true);
 		}
 		else {
 			guardar.setEnabled(false);
 			borrar.setEnabled(false);
 			play.setEnabled(false);
 			reset.setEnabled(false);
-			redirectOutput.setEnabled(false);
+			getOutput.setEnabled(false);
 			generateReport.setEnabled(false);
 			deleteReport.setEnabled(false);
 			saveReport.setEnabled(false);
+			redirectOutput.setEnabled(false);
 		}
 	}
 	

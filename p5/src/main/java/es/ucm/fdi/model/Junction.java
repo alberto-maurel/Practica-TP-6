@@ -87,56 +87,65 @@ public class Junction extends SimulatedObject implements Describable{
 	protected void fillReportDetails(Map<String, String> out) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
-			sb.append("(" + carreterasEntrantesOrdenadas.get(i) + ",");
-			if (i == semaforoVerde) {
-				sb.append("green,");
-			} else {
-				sb.append("red,");
-			}
-			
-			sb.append("[");
-			//And now we add all the cars
-			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {
-				sb.append(v.identificador + ',');
-			}
-			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() > 0) {			
-				sb.setLength(sb.length()-1);
-			}
-			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() != 0) {
-				carreterasEntrantesOrdenadas.get(i);
-			}
-			sb.append("])");
-			if(i != carreterasEntrantesOrdenadas.size() - 1) sb.append(",");
+			sb.append(toStringRoad(i));
+			sb.append(',');
 		}
+		if(sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
 		out.put("queues", sb.toString());
 	}
 	
-	//TODO: hacer bien
+	/**
+	 *  
+	 * @return String que contiene la descripción de la carretera con semáforo verde en ese cruce (en caso de haberla)
+	 */
+	private String toStringRoad(int index) {
+		StringBuilder sb = new StringBuilder();
+		if(index < carreterasEntrantesOrdenadas.size()) {
+			sb.append('(');
+			//En primer lugar añadimos el identificador de la carretera
+			sb.append(carreterasEntrantesOrdenadas.get(index));
+			sb.append(',');
+			//Ahora chequeamos de qué color está el semáforo
+			if (index == semaforoVerde) {
+				sb.append("green");
+			} else {
+				sb.append("red");
+			}
+			sb.append(",[");
+			//And now we add all the cars
+			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(index))) {
+				sb.append(v.identificador + ',');
+			}
+			if(colasCoches.get(carreterasEntrantesOrdenadas.get(index)).size() > 0) {			
+				sb.setLength(sb.length()-1);
+			}
+			if(colasCoches.get(carreterasEntrantesOrdenadas.get(index)).size() != 0) {
+				carreterasEntrantesOrdenadas.get(index);
+			}
+			sb.append("])");
+		}
+		return sb.toString();
+	}
+	
 	public void describe(Map<String,String> out) {
 		out.put("ID", identificador);
-		String greenOutput = "[";
-		String redOutput = "[";
-		if (semaforoVerde != -1) {
-			StringBuilder involvedVehicles = new StringBuilder();
-			if (colasCoches.size() > 0) {
-				for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde))) {
-					involvedVehicles.append(v.identificador + ',');
-				}
-				if(colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {			
-					involvedVehicles.setLength(involvedVehicles.length()-1);
-				}
-			}
-			if (carreterasEntrantesOrdenadas.size() > 0) {
-				greenOutput += "(" + carreterasEntrantesOrdenadas.get(semaforoVerde)
-						+ ",green,[" + involvedVehicles.toString() + "])";
+		
+		StringBuilder greenOutput = new StringBuilder();
+		greenOutput.append('[');
+		greenOutput.append(toStringRoad(semaforoVerde));
+		greenOutput.append(']');
+		out.put("Green", greenOutput.toString());
+		
+		StringBuilder redOutput = new StringBuilder();
+		redOutput.append('[');
+		for(int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
+			if(i != semaforoVerde) {
+				redOutput.append(toStringRoad(i));
+				redOutput.append(',');
 			}
 		}
-		greenOutput += "]";	
-		
-		
-		
-		redOutput += "]";
-		out.put("Green", greenOutput);
-		out.put("Red", redOutput);
+		redOutput.deleteCharAt(redOutput.length() - 1);
+		redOutput.append(']');
+		out.put("Red", redOutput.toString());
 	}		
 }
