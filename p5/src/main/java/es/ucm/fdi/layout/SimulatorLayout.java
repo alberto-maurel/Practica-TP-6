@@ -39,7 +39,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	JSpinner spinner;
 	JTextField tiempoAct;
 	JTextArea fichero;
-	
+	JLabel lowerBarMessage;
 	
 	GraphLayoutClass grafo;
 	Boolean eventosCargados;
@@ -97,6 +97,16 @@ public class SimulatorLayout extends JFrame implements Listener {
 		spinner = new JSpinner();
 		spinner.setValue(controlador.getPasos());
 		addBars(fichero, reports);
+		
+		
+		//Creación de la barra inferior
+		//
+		//
+		JToolBar lowerBar = new JToolBar();
+		lowerBar.setFloatable(false);
+		lowerBarMessage = new JLabel(" ");
+		lowerBar.add(lowerBarMessage);
+		add(lowerBar, BorderLayout.SOUTH);
 		
 		
 		//Creación del panel inferior izquierdo
@@ -224,7 +234,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		menu.add(generate);
 		setJMenuBar(menu);
 		add(bar, BorderLayout.NORTH);
-		
 	}
 	
 	/**
@@ -315,17 +324,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		return bar;
 	}
 	
-	/** 
-	 * Función que corre la simulación y controla las excepciones 
-	 */
-	private void runSimulation() {
-		try {
-			controlador.run((int) spinner.getValue());
-		} catch (SimulationException e) {
-			System.out.println("Error en la simulación");
-		}
-	}
-	
 	/**
 	 * Función que crea los últimos botones, y los añade a las barras de tareas y menú
 	 * @param file - Menú file, en el que se insertarán las funcionalidades
@@ -369,6 +367,17 @@ public class SimulatorLayout extends JFrame implements Listener {
 		return bar;
 	}
 	
+	/** 
+	 * Función que corre la simulación y controla las excepciones 
+	 */
+	private void runSimulation() {
+		try {
+			controlador.run((int) spinner.getValue());
+		} catch (SimulationException e) {
+			System.out.println("Error en la simulación");
+		}
+	}
+	
 	/**
 	 * Carga los eventos de un fichero
 	 * @param fichero - Fichero del cual cargamos los eventos
@@ -410,23 +419,24 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 * @param reports - JTextÁrea en el que se muestran los reports de la simulación
 	 * @param inputDialog
 	 */
-	private void saveFile(JTextArea reports, String inputDialog) {
-		
-		 String filename = JOptionPane.showInputDialog(inputDialog);
-	        JFileChooser savefile = new JFileChooser();
-	        savefile.setSelectedFile(new File(filename));
-	        BufferedWriter writer;
-	        int sf = savefile.showSaveDialog(null);
-	        if(sf == JFileChooser.APPROVE_OPTION) {
-	            try {
-	            	writer = new BufferedWriter(new FileWriter(savefile.getSelectedFile()));
-	            	writer.write(reports.getText());
-	                writer.close();
-	                JOptionPane.showMessageDialog(null, "File has been saved","File Saved",JOptionPane.INFORMATION_MESSAGE);
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
+	private void saveFile(JTextArea reports, String inputDialog) {	
+		 //String filename = JOptionPane.showInputDialog(inputDialog);
+		 JFileChooser savefile = new JFileChooser();
+	     savefile.setSelectedFile(new File("reports" + ".ini"));
+	     BufferedWriter writer;
+	     int sf = savefile.showSaveDialog(null);
+	     if(sf == JFileChooser.APPROVE_OPTION) {
+	         try {
+	        	writer = new BufferedWriter(new FileWriter(savefile.getSelectedFile()));
+	           	writer.write(reports.getText());
+	            writer.close();
+	            JOptionPane.showMessageDialog(null, "File has been saved","File Saved", 
+	            		JOptionPane.INFORMATION_MESSAGE);
+	            lowerBarMessage.setText("El reporte ha sido guardado correctamente =D");
+	         } catch (IOException e) {
+	            e.printStackTrace();
+	         }
+	     }
 	}
 	
 	private void cargarEventos() {
@@ -445,20 +455,24 @@ public class SimulatorLayout extends JFrame implements Listener {
 	public void reset(UpdateEvent ue) {
 		actualizarLayout(ue);
 		grafo.reset(ue);
+		lowerBarMessage.setText("El simulador se ha reseteado correctamente =D");
 	}
 	
 	public void newEvent(UpdateEvent ue) {
 		actualizarLayout(ue);
 		grafo.registered(ue);		
+		lowerBarMessage.setText("Los eventos se han añadido correctamente =D");
 	}
 	
 	public void advanced(UpdateEvent ue) {
 		actualizarLayout(ue);
 		grafo.advanced(ue);
+		lowerBarMessage.setText("La simulación se ha ejecutado correctamente =D");
 	}
 	
 	//TODO: testear
 	public void error(UpdateEvent ue, String error) {
+		lowerBarMessage.setText("Ha ocurrido un error D=");
 		add(new ErrorDialog(error));
 	}
 	
@@ -500,6 +514,5 @@ public class SimulatorLayout extends JFrame implements Listener {
 			redirectOutput.setEnabled(false);
 		}
 	}
-	
 }
  
