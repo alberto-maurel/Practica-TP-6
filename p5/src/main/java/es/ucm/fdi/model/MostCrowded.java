@@ -155,7 +155,7 @@ public class MostCrowded extends Junction implements Describable{
 				redOutput.append(',');
 			}
 		}
-		redOutput.deleteCharAt(redOutput.length() - 1);
+		if (redOutput.length() > 1) redOutput.deleteCharAt(redOutput.length() - 1);
 		redOutput.append(']');
 		out.put("Red", redOutput.toString());
 	}

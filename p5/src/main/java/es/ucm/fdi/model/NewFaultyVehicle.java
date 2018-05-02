@@ -51,7 +51,10 @@ public class NewFaultyVehicle extends Event {
 	}
 	
 	public void describe(Map<String,String> out) {
-		out.put("#", id);
+		StringBuilder sb = new StringBuilder();
+		for (String s: idVehiclesInvolved) sb.append(s + ",");
+		sb.delete(sb.length() - 1, sb.length());
+		out.put("#", sb.toString());
 		out.put("Time", "" + time);
 		out.put("Type", "New Faulty Vehicle");
 	}	

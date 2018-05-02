@@ -50,12 +50,12 @@ public class ErrorDialog extends JDialog {
 		mainPanel.add(infoPanel, BorderLayout.PAGE_START);
 
 		setContentPane(mainPanel);
-		setMinimumSize(new Dimension(100, 100));
+		setMinimumSize(new Dimension(200, 200));
 		setVisible(false);
 	}
 
 	public int open() {
-		setLocation(getParent().getLocation().x + 50, getParent().getLocation().y + 50);
+		setLocation(getParent().getLocation().x + 400, getParent().getLocation().y + 400);
 		pack();
 		setVisible(true);
 		return _status;

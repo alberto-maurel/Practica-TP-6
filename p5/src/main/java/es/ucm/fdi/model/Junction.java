@@ -39,7 +39,7 @@ public class Junction extends SimulatedObject implements Describable{
 	}
 	
 	/**
-	 * Avanzamos un tick ell cruce
+	 * Avanzamos un tick el cruce
 	 */
 	public void avanza() {
 		if (semaforoVerde != -1) { 
@@ -95,7 +95,6 @@ public class Junction extends SimulatedObject implements Describable{
 	}
 	
 	/**
-	 *  
 	 * @return String que contiene la descripción de la carretera con semáforo verde en ese cruce (en caso de haberla)
 	 */
 	private String toStringRoad(int index) {
@@ -144,7 +143,7 @@ public class Junction extends SimulatedObject implements Describable{
 				redOutput.append(',');
 			}
 		}
-		redOutput.deleteCharAt(redOutput.length() - 1);
+		if (redOutput.length() > 1) redOutput.deleteCharAt(redOutput.length() - 1);
 		redOutput.append(']');
 		out.put("Red", redOutput.toString());
 	}		

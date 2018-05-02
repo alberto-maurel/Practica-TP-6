@@ -8,7 +8,6 @@ import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.model.Describable;
 import es.ucm.fdi.model.Junction;
 import es.ucm.fdi.model.Road;
-import es.ucm.fdi.model.SimulationException;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
@@ -82,7 +81,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JTextArea reports = new JTextArea();
 		reports.setEditable(false);
 		//Y por otro la tabla de eventos
-		//TODO: Da error si no se hace el cast??
 		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, (ArrayList<? extends Describable>) eventsArray);
 		
 		upperPanel.setLayout(new GridLayout(1, 3));
@@ -178,8 +176,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	/**
 	 * Crea la barra de botones y la añade al layout principal
-	 * @param fichero - JTextÁrea en el que se muestran los eventos cargados
-	 * @param reports - JTextÁrea en el que se muestran los reportes generados
+	 * @param fichero - JTextArea en el que se muestran los eventos cargados
+	 * @param reports - JTextArea en el que se muestran los reportes generados
 	 */
 	private void addBars(JTextArea fichero, JTextArea reports) {
 		//Creamos los menús
@@ -246,7 +244,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		guardar = new SimulatorAction(
 				"Guardar fichero de eventos", "save.png", "Guardar fichero de texto",
-				KeyEvent.VK_S, "control S", ()->saveFile(fichero, "Guardar eventos como..."));
+				KeyEvent.VK_S, "control S", ()->saveFile(fichero, "Guardar eventos como...", "Eventos guardados con éxito", "events.ini"));
 			
 		loadEventsFile = new SimulatorAction(
 				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", ()->loadFile(fichero));
@@ -284,7 +282,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
 				VK_P, "control P", ()-> runSimulation());
 		
-		//TODO: el reset es un poco cutre
 		reset = new SimulatorAction(
 				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
 				VK_R, "control R", ()-> { controlador.reset(); reports.setText("");});
@@ -346,7 +343,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 	    saveReport = new SimulatorAction(
 				"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
-				VK_G, "control shift G", ()->saveFile(reports, "Guardar reportes como..."));
+				VK_G, "control shift G", ()->saveFile(reports, "Guardar reportes como...", "Informe guardado con éxito", "reports.out"));
 		
 		salir = new SimulatorAction(
 				"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));
@@ -371,11 +368,14 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 * Función que corre la simulación y controla las excepciones 
 	 */
 	private void runSimulation() {
-		try {
-			controlador.run((int) spinner.getValue());
-		} catch (SimulationException e) {
-			System.out.println("Error en la simulación");
-		}
+		controlador.run((int) spinner.getValue());
+		/*try {
+			
+		} catch (SimulationException e) { //Ya no serviría, ya tenemos el error de listener
+			ErrorDialog error = new ErrorDialog(e.getMessage());
+			error.open();
+			//System.out.println("Error en la simulación");
+		}*/
 	}
 	
 	/**
@@ -414,25 +414,25 @@ public class SimulatorLayout extends JFrame implements Listener {
 		}	
 	}
 	
+	
 	/**
-	 * Guarda los reportes en un fichero
-	 * @param reports - JTextÁrea en el que se muestran los reports de la simulación
+	 * Guarda JTextArea en un fichero
+	 * @param text - JTextArea en el que se muestran el archivo a guardar
 	 * @param inputDialog
 	 */
-	private void saveFile(JTextArea reports, String inputDialog) {	
-		 //String filename = JOptionPane.showInputDialog(inputDialog);
+	private void saveFile(JTextArea text, String inputDialog, String lowerBarText, String selected) {	
 		 JFileChooser savefile = new JFileChooser();
-	     savefile.setSelectedFile(new File("reports" + ".ini"));
+	     savefile.setSelectedFile(new File(selected));
 	     BufferedWriter writer;
 	     int sf = savefile.showSaveDialog(null);
 	     if(sf == JFileChooser.APPROVE_OPTION) {
 	         try {
 	        	writer = new BufferedWriter(new FileWriter(savefile.getSelectedFile()));
-	           	writer.write(reports.getText());
+	           	writer.write(text.getText());
 	            writer.close();
 	            JOptionPane.showMessageDialog(null, "File has been saved","File Saved", 
 	            		JOptionPane.INFORMATION_MESSAGE);
-	            lowerBarMessage.setText("El reporte ha sido guardado correctamente =D");
+	            lowerBarMessage.setText(lowerBarText);
 	         } catch (IOException e) {
 	            e.printStackTrace();
 	         }
@@ -445,11 +445,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		controlador.cargarEventosEnElSimulador(/*(int) spinner.getValue()*/);
 	}
 	
-	//TODO: cosas
 	//Implementación listeners
 	public void registered(UpdateEvent ue) {
 		actualizarLayout(ue);
 		grafo.registered(ue);
+		lowerBarMessage.setText("Nuevo listener registrado");
 	}
 	
 	public void reset(UpdateEvent ue) {
@@ -472,8 +472,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	//TODO: testear
 	public void error(UpdateEvent ue, String error) {
-		lowerBarMessage.setText("Ha ocurrido un error D=");
-		add(new ErrorDialog(error));
+		lowerBarMessage.setText(error);
+		ErrorDialog err = new ErrorDialog(error);
+		err.open();
 	}
 	
 	/**
