@@ -242,15 +242,17 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 */
 	private JToolBar createComponents1(JMenu file, JTextArea fichero) {
 		
-		guardar = new SimulatorAction(
-				"Guardar fichero de eventos", "save.png", "Guardar fichero de texto",
-				KeyEvent.VK_S, "control S", ()->saveFile(fichero, "Guardar eventos como...", "Eventos guardados con éxito", "events.ini"));
-			
 		loadEventsFile = new SimulatorAction(
-				"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos", KeyEvent.VK_A, "control A", ()->loadFile(fichero));
+					"Cargar fichero de eventos", "open.png", "Carga un fichero de eventos",
+				KeyEvent.VK_A, "control A", ()->loadFile(fichero));
+		
+		guardar = new SimulatorAction(
+					"Guardar fichero de eventos", "save.png", "Guardar fichero de texto",
+				KeyEvent.VK_S, "control S", ()->saveFile(fichero, "Guardar eventos como...",
+					"Eventos guardados con éxito", "events.ini"));
 			
 		borrar = new SimulatorAction(
-				"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
+					"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
 				VK_C, "control C", ()->fichero.setText(""));
 		
 		//Agregamos las acciones a la barra
@@ -331,18 +333,18 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private JToolBar createComponents3(JMenu file, JMenu generate, JTextArea reports) {
 		
 		generateReport = new SimulatorAction(
-				"Generar Reporte", "report.png", "Generar el reporte de la simulación", KeyEvent.
-				VK_G, "control G", ()-> {
+					"Generar Reporte", "report.png", "Generar el reporte de la simulación", 
+				KeyEvent.VK_G, "control G", ()-> {
 					reports.setText("");
 					controlador.generarInformes(new TextStream(reports));
 					});
 		
 		deleteReport = new SimulatorAction(
-				"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación", KeyEvent.
-				VK_B, "control B", ()->reports.setText(""));
+					"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación",
+				KeyEvent.VK_B, "control B", ()->reports.setText(""));
 		
 	    saveReport = new SimulatorAction(
-				"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
+					"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
 				VK_G, "control shift G", ()->saveFile(reports, "Guardar reportes como...", "Informe guardado con éxito", "reports.out"));
 		
 		salir = new SimulatorAction(
@@ -405,6 +407,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 			BufferedReader in = new BufferedReader(new FileReader(file));
 			String line;
 			line = in.readLine();
+			fichero.setText("");
 			while(line != null) {
 				  fichero.append(line + "\n");
 				  line = in.readLine();
@@ -442,7 +445,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private void cargarEventos() {
 		controlador.cargarEventos();
 		//Y a continuación los cargamos en el simulador
-		controlador.cargarEventosEnElSimulador(/*(int) spinner.getValue()*/);
+		controlador.cargarEventosEnElSimulador();
+		//Reiniciamos el flujo para poder volver a coger los datos
+		controlador.modifyInputStream(new ByteArrayInputStream(fichero.getText().getBytes()));
+		
 	}
 	
 	//Implementación listeners

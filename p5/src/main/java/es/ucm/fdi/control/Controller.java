@@ -123,6 +123,7 @@ public class Controller {
 	}
 	
 	public void reset() {
+		eventosIntroducidos = new ArrayList<>();
 		nPasos = 0;
 		simulador.reset();
 	}

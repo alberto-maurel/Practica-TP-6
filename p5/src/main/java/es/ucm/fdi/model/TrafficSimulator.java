@@ -138,6 +138,7 @@ public class TrafficSimulator {
 	
 	public void reset() {
 		indiceActualEventos = 0;
+		listaEventos = new ArrayList<>();
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
 		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la ejecución del reset");
