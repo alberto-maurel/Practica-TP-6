@@ -95,7 +95,8 @@ public class Junction extends SimulatedObject implements Describable {
 	}
 	
 	/**
-	 * @return String que contiene la descripción de la carretera con semáforo verde en ese cruce (en caso de haberla)
+	 * @return String que contiene la descripción de la carretera con semáforo verde 
+	 * en ese cruce (en caso de haberla)
 	 */
 	private String toStringRoad(int index) {
 		StringBuilder sb = new StringBuilder();

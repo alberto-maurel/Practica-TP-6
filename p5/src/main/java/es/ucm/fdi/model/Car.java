@@ -57,7 +57,6 @@ public class Car extends Vehicle {
 				} else if (localizacionCarretera != carreteraActual.longitud) { 
 					//El coche entra en la intersección (pero aún no estaba)
 					avanzarCocheLlegandoAlFinal();
-					carreteraActual.cruceFin.entraVehiculo(this);	
 				} else { //El coche ya estaba en la intersección
 					velActual = 0;					
 				}
