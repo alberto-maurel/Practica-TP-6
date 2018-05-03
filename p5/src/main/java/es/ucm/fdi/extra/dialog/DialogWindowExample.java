@@ -1,9 +1,6 @@
 package es.ucm.fdi.extra.dialog;
 
 import javax.swing.*;
-
-import es.ucm.fdi.layout.ErrorDialog;
-
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +8,11 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class DialogWindowExample extends JFrame  {
 
-	private ErrorDialog _dialog;
+	private DialogWindow _dialog;
 	
-	List<String> _names;
-	List<Integer> _ages;
+	List<String> _vehicles;
+	List<String> _roads;
+	List<String> _junctions;
 	
 	public DialogWindowExample() {
 		super("Dialog Example");
@@ -24,18 +22,20 @@ public class DialogWindowExample extends JFrame  {
 	private void initGUI() {
 
 		// initialize lists;
-		_names  = new ArrayList<>();
-		_ages  = new ArrayList<>();
+		_vehicles  = new ArrayList<>();
+		_roads  = new ArrayList<>();
+		_junctions  = new ArrayList<>();
 		for(int i=0;i<10; i++) {
-			_names.add("Item "+i);
-			_ages.add(i+30);			
+			_vehicles.add("v"+i);
+			_roads.add("r"+i);	
+			_junctions.add("j" + i);
 		}
 		
 		JPanel mainPanel = new JPanel();
 		mainPanel.add(new JLabel("If you click "));
 		
-		_dialog = new ErrorDialog("TEST");
-		//_dialog.setData(_names, _ages);
+		_dialog = new DialogWindow(this);
+		_dialog.setData(_vehicles, _roads, _junctions);
 		
 		JButton here = new JButton("here");
 		here.addActionListener( new ActionListener() {
@@ -45,7 +45,18 @@ public class DialogWindowExample extends JFrame  {
 				if ( status == 0) {
 					System.out.println("Canceled");
 				} else {
-					System.out.println("OK");
+					System.out.println("The following vehicles where selected:");
+					for(String s : _dialog.getSelectedVehicles()) {
+						System.out.println(s);
+					}
+					System.out.println("The following roads where selected:");
+					for(String s : _dialog.getSelectedRoads()) {
+						System.out.println(s);
+					}
+					System.out.println("The following junctions where selected:");
+					for(String s : _dialog.getSelectedJunctions()) {
+						System.out.println(s);
+					}
 				}
 			}
 		});

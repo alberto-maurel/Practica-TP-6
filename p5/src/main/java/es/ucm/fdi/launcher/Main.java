@@ -22,6 +22,12 @@ import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.layout.SimulatorLayout;
 
+
+//TODO: meter la descripción de los eventos de una vez
+//TODO: cambiar para que en los describables cojamos los inmutables
+//TODO: poner el tiempo bien
+
+
 public class Main {
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static Integer _timeLimit = null;

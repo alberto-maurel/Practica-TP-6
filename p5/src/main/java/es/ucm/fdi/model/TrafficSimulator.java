@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
@@ -89,6 +90,33 @@ public class TrafficSimulator {
 			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 			j.generarInforme(tickActual, reporte);
 			writeReport(reporte, out);
+		}
+	}
+	
+	public void generarInformes(OutputStream out, Set<String> junctions, 
+			Set<String> roads, Set<String> vehicles) throws IOException {
+		for(Junction j: mapaTrafico.getConstantJunctions()) {
+			if(junctions.contains(j.identificador)) {
+				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+				j.generarInforme(tickActual, reporte);
+				writeReport(reporte, out);
+			}
+		}
+		
+		for(Road j: mapaTrafico.getConstantRoads()) {
+			if(roads.contains(j.identificador)) {
+				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+				j.generarInforme(tickActual, reporte);
+				writeReport(reporte, out);
+			}
+		}
+		
+		for(Vehicle j:mapaTrafico.getConstantVehicles()) {
+			if(vehicles.contains(j.identificador)) {		
+				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
+				j.generarInforme(tickActual, reporte);
+				writeReport(reporte, out);
+			}
 		}
 	}
 	

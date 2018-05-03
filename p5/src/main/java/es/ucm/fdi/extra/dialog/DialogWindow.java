@@ -16,18 +16,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class DialogWindow extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private MyListModel<String> _itemsListModel;
-	private MyListModel<Integer> _numsListModel;
+	private MyListModel<String> _vehiclesListModel;
+	private MyListModel<String> _roadsListModel;
+	private MyListModel<String> _junctionsListModel;
 
 	private int _status;
-	private JList<String> _itemsList;
-	private JList<Integer> _numsList;
+	private JList<String> _vehiclesList;
+	private JList<String> _roadsList;
+	private JList<String> _junctionsList;
 
 	static final private char _clearSelectionKey = 'c';
 	private Border _defaultBorder = BorderFactory.createLineBorder(Color.black, 2);
@@ -48,33 +52,47 @@ class DialogWindow extends JDialog {
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.X_AXIS));
 		mainPanel.add(contentPanel, BorderLayout.CENTER);
 
-		JPanel itemsPanel = new JPanel(new BorderLayout());
-		JPanel numsPanel = new JPanel(new BorderLayout());
+		JPanel vehiclesPanel = new JPanel(new BorderLayout());
+		JPanel roadsPanel = new JPanel(new BorderLayout());
+		JPanel junctionsPanel = new JPanel(new BorderLayout());
+		
+		
+		contentPanel.add(vehiclesPanel);
+		contentPanel.add(roadsPanel);
+		contentPanel.add(junctionsPanel);
 
-		contentPanel.add(itemsPanel);
-		contentPanel.add(numsPanel);
+		vehiclesPanel.setBorder(
+				BorderFactory.createTitledBorder(_defaultBorder, "Vehicles", TitledBorder.LEFT, TitledBorder.TOP));
+		roadsPanel.setBorder(
+				BorderFactory.createTitledBorder(_defaultBorder, "Roads", TitledBorder.LEFT, TitledBorder.TOP));
+		junctionsPanel.setBorder(
+				BorderFactory.createTitledBorder(_defaultBorder, "Roads", TitledBorder.LEFT, TitledBorder.TOP));
+		
+		
+		vehiclesPanel.setMinimumSize(new Dimension(100, 100));
+		roadsPanel.setMinimumSize(new Dimension(100, 100));
+		junctionsPanel.setMinimumSize(new Dimension(100, 100));
+		
+		
+		_vehiclesListModel = new MyListModel<>();
+		_roadsListModel = new MyListModel<>();
+		_junctionsListModel = new MyListModel<>();
 
-		itemsPanel.setBorder(
-				BorderFactory.createTitledBorder(_defaultBorder, "Items", TitledBorder.LEFT, TitledBorder.TOP));
-		numsPanel.setBorder(
-				BorderFactory.createTitledBorder(_defaultBorder, "Numbers", TitledBorder.LEFT, TitledBorder.TOP));
+		_vehiclesList = new JList<>(_vehiclesListModel);
+		_roadsList = new JList<>(_roadsListModel);
+		_junctionsList = new JList<>(_junctionsListModel);
 
-		itemsPanel.setMinimumSize(new Dimension(100, 100));
-		numsPanel.setMinimumSize(new Dimension(100, 100));
+		addCleanSelectionListner(_vehiclesList);
+		addCleanSelectionListner(_roadsList);
+		addCleanSelectionListner(_junctionsList);
 
-		_itemsListModel = new MyListModel<>();
-		_numsListModel = new MyListModel<>();
-
-		_itemsList = new JList<>(_itemsListModel);
-		_numsList = new JList<>(_numsListModel);
-
-		addCleanSelectionListner(_itemsList);
-		addCleanSelectionListner(_numsList);
-
-		itemsPanel.add(new JScrollPane(_itemsList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		vehiclesPanel.add(new JScrollPane(_vehiclesList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
-		numsPanel.add(new JScrollPane(_numsList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		roadsPanel.add(new JScrollPane(_roadsList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+		
+		junctionsPanel.add(new JScrollPane(_junctionsList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
 
@@ -140,29 +158,38 @@ class DialogWindow extends JDialog {
 
 	}
 
-	public void setData(List<String> items, List<Integer> nums) {
-		_itemsListModel.setList(items);
-		_numsListModel.setList(nums);
+	public void setData(List<String> vehicles, List<String> roads, List<String> junctions) {
+		_vehiclesListModel.setList(vehicles);
+		_roadsListModel.setList(roads);
+		_junctionsListModel.setList(junctions);
 	}
 
-	public String[] getSelectedItems() {
-		int[] indices = _itemsList.getSelectedIndices();
-		String[] items = new String[indices.length];
-		for(int i=0; i<items.length; i++) {
-			items[i] = _itemsListModel.getElementAt(indices[i]);
+	public Set<String> getSelectedVehicles() {
+		int[] indices = _vehiclesList.getSelectedIndices();
+		Set<String> vehicles = new HashSet<>();
+		for(int i = 0; i < indices.length; ++i) {
+			vehicles.add(_vehiclesListModel.getElementAt(indices[i]));
 		}
-		return items;
+		return vehicles;
 	}
 
-	public Integer[] getSelectedNums() {
-		int[] indices = _numsList.getSelectedIndices();
-		Integer[] nums = new Integer[indices.length];
-		for(int i=0; i<nums.length; i++) {
-			nums[i] = _numsListModel.getElementAt(indices[i]);
+	public Set<String> getSelectedRoads() {
+		int[] indices = _roadsList.getSelectedIndices();
+		Set<String> roads = new HashSet<>();
+		for(int i = 0; i < indices.length; ++i) { //Que manía con poner el i++ en vez de ++i
+			roads.add(_roadsListModel.getElementAt(indices[i]));
 		}
-		return nums;
+		return roads;
 	}
 
+	public Set<String> getSelectedJunctions() {
+		int[] indices = _junctionsList.getSelectedIndices();
+		Set<String> junctions = new HashSet<>();
+		for(int i = 0; i < indices.length; ++i) { //Que manía con poner el i++ en vez de ++i
+			junctions.add(_junctionsListModel.getElementAt(indices[i]));
+		}
+		return junctions;
+	}
 
 	public int open() {
 		setLocation(getParent().getLocation().x + 50, getParent().getLocation().y + 50);
