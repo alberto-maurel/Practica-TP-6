@@ -93,6 +93,7 @@ public class TrafficSimulator {
 		}
 	}
 	
+	//Idéntico al generarInformes pero modificado para el nuevo output
 	public void generarInformes(OutputStream out, Set<String> junctions, 
 			Set<String> roads, Set<String> vehicles) throws IOException {
 		for(Junction j: mapaTrafico.getConstantJunctions()) {
