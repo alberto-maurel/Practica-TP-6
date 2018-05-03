@@ -68,8 +68,7 @@ public class TrafficSimulator {
 				
 			}		
 		} catch (Exception e) {
-			fireUpdateEvent(EventType.ERROR, "Ha ocurrido un error al ejecutar la simulación");
-			//throw new SimulationException(/*e.getMessage()*/);
+			fireUpdateEvent(EventType.ERROR, "Ha ocurrido un error al ejecutar la simulación: " + e.getMessage());
 		}		
 	}
 	

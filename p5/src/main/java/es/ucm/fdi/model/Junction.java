@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
-public class Junction extends SimulatedObject implements Describable{
+public class Junction extends SimulatedObject implements Describable {
 	
 	protected int semaforoVerde; //Indica el número del semáforo que se encuentra en verde
 	//Array con pares de id de las carreteras y colas de vehículos que proceden de dicha carretera
