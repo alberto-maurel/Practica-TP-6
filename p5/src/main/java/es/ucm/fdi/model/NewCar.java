@@ -69,9 +69,9 @@ public class NewCar extends NewVehicle {
 		}
 	}
 	
-	public void describe(Map<String,String> out) {
-		out.put("#", id);
+	public void describe(Map<String,String> out, String rowIndex) {
+		out.put("#", rowIndex);
 		out.put("Time", "" + time);
-		out.put("Type", "New Car");
+		out.put("Type", "New Car " + id);
 	}
 }

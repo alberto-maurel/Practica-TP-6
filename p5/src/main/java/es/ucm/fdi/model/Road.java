@@ -119,7 +119,7 @@ public class Road extends SimulatedObject implements Describable{
 		out.put("state", aux);
 	}
 	
-	public void describe(Map<String,String> out){
+	public void describe(Map<String,String> out, String rowIndex) {
 		out.put("ID", identificador);
 		out.put("Source", cruceIni.identificador);
 		out.put("Target", cruceFin.identificador);

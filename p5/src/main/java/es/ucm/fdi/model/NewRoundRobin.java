@@ -49,9 +49,9 @@ public class NewRoundRobin extends NewJunction {
 		}
 	}
 
-	public void describe(Map<String,String> out) {
-		out.put("#", id);
+	public void describe(Map<String,String> out, String rowIndex) {
+		out.put("#", rowIndex);
 		out.put("Time", "" + time);
-		out.put("Type", "New RR Junction");
+		out.put("Type", "New RR " + id);
 	}
 }

@@ -69,10 +69,10 @@ public class NewRoad extends Event{
 		return J1;
 	}
 	
-	public void describe(Map<String,String> out) {
-		out.put("#", id);
+	public void describe(Map<String,String> out, String rowIndex) {
+		out.put("#", rowIndex);
 		out.put("Time", "" + time);
-		out.put("Type", "New Road");
+		out.put("Type", "New Road " + id);
 	}
 	
 }

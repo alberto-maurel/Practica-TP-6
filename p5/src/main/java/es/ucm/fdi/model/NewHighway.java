@@ -55,10 +55,10 @@ public class NewHighway extends NewRoad {
 		}
 	}
 	
-	public void describe(Map<String,String> out) {
-		out.put("#", id);
+	public void describe(Map<String,String> out, String rowIndex) {
+		out.put("#", rowIndex);
 		out.put("Time", "" + time);
-		out.put("Type", "New Lanes Road");
+		out.put("Type", "New Lanes Road " + id);
 	}
 
   

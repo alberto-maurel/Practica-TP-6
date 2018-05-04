@@ -50,13 +50,13 @@ public class NewFaultyVehicle extends Event {
 		}
 	}
 	
-	public void describe(Map<String,String> out) {
+	public void describe(Map<String,String> out, String rowIndex) {
 		StringBuilder sb = new StringBuilder();
 		for (String s: idVehiclesInvolved) sb.append(s + ",");
 		sb.delete(sb.length() - 1, sb.length());
-		out.put("#", sb.toString());
+		out.put("#", rowIndex);
 		out.put("Time", "" + time);
-		out.put("Type", "New Faulty Vehicle");
-	}	
+		out.put("Type", "Break Vehicles " + sb.toString());
+	}
 	
 }

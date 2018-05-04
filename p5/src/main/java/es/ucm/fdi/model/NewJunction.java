@@ -45,10 +45,10 @@ public class NewJunction extends Event {
 		}
 	}
 	
-	public void describe(Map<String,String> out) {
-		out.put("#", id);
+	public void describe(Map<String,String> out, String rowIndex) {
+		out.put("#", rowIndex);
 		out.put("Time", "" + time);
-		out.put("Type", "New Junction");
+		out.put("Type", "New Junction " + id);
 	}
 	
 	

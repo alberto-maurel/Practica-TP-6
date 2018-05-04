@@ -394,29 +394,28 @@ public class SimulatorLayout extends JFrame implements Listener {
 		int returnVal = chooser.showOpenDialog(fichero);
 		File file = null;
 		if (returnVal == JFileChooser.APPROVE_OPTION) { 
-		  file = chooser.getSelectedFile();    
-		}
-		try {
-			controlador.modifyInputStream(new FileInputStream(file));
-		}
-		catch (Exception e){
-			
-		}
-		controlador.cargarEventos();
-		// Cargar eventos en la cola de eventos (tabla central)
-		try {
-			@SuppressWarnings("resource")
-			BufferedReader in = new BufferedReader(new FileReader(file));
-			String line;
-			line = in.readLine();
-			fichero.setText("");
-			while(line != null) {
-				  fichero.append(line + "\n");
-				  line = in.readLine();
-				}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
+		  file = chooser.getSelectedFile();  
+		  try {
+				controlador.modifyInputStream(new FileInputStream(file));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		  controlador.cargarEventos();
+			try {
+				@SuppressWarnings("resource")
+				BufferedReader in = new BufferedReader(new FileReader(file));
+				String line;
+				line = in.readLine();
+				fichero.setText("");
+				while(line != null) {
+					  fichero.append(line + "\n");
+					  line = in.readLine();
+					}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}		
 	}
 	
 	
@@ -480,7 +479,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	//TODO: testear
 	public void error(UpdateEvent ue, String error) {
-		lowerBarMessage.setText(error);
+		lowerBarMessage.setText("Error"); //El String error es muy largo y la barra se vuelve ahora gigante
 		ErrorDialog err = new ErrorDialog(error);
 		err.open();
 	}

@@ -69,8 +69,13 @@ public class TrafficSimulator {
 				
 			}		
 		} catch (Exception e) {
-			fireUpdateEvent(EventType.ERROR, "Ha ocurrido un error al ejecutar la simulación: " + e.getMessage());
-		}		
+			fireUpdateEvent(EventType.ERROR, "<html>"
+					+ "Ha ocurrido un error al ejecutar la simulación.<br><br>" +
+					"Error: " + e.getMessage() + "<br>" +
+					"Clase: " + e.getStackTrace()[0].getClassName() + "<br>" +
+					"Método: " + e.getStackTrace()[0].getMethodName() + "<br>" +
+					"Línea: " + e.getStackTrace()[0].getLineNumber() + "</html>");
+		}
 	}
 	
 	public void generarInformes(OutputStream out) throws IOException {

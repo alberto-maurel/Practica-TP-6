@@ -72,7 +72,7 @@ public class SimulatorTable extends JPanel {
 		@Override // ineficiente: ¿puedes mejorarlo?
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			HashMap<String, String> out = new HashMap<>();
-			elements.get(rowIndex).describe(out);
+			elements.get(rowIndex).describe(out, Integer.toString(rowIndex));
 			return out.get(fieldNames[columnIndex]);
 		}	
 	}

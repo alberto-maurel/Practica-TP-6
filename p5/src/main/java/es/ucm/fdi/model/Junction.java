@@ -127,7 +127,7 @@ public class Junction extends SimulatedObject implements Describable {
 		return sb.toString();
 	}
 	
-	public void describe(Map<String,String> out) {
+	public void describe(Map<String,String> out, String rowIndex) {
 		out.put("ID", identificador);
 		
 		StringBuilder greenOutput = new StringBuilder();
