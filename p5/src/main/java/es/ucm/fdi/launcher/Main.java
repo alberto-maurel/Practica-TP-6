@@ -24,9 +24,15 @@ import es.ucm.fdi.layout.SimulatorLayout;
 
 
 //TODO: meter la descripción de los eventos de una vez
+//TODO: cargar los cambios que escribes antes de darle al reset
 //TODO: cambiar para que en los describables cojamos los inmutables
 //TODO: poner el tiempo bien
+//TODO: al coger los nombres de archivos saltan errores
+//TODO: los errores son muy cutres
 
+//TODO: revisar la entrega de la práctica 4
+//TODO: hacer leeme (cambios sobre la entrega 4, opcionales)
+//TODO: formato (revisar la longitud) y colocar las funciones
 
 public class Main {
 	private final static Integer _timeLimitDefaultValue = 10;

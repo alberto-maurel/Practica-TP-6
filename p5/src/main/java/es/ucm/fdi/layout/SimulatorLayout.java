@@ -3,8 +3,10 @@ package es.ucm.fdi.layout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.extra.dialog.DialogWindow;
 import es.ucm.fdi.model.Describable;
 import es.ucm.fdi.model.Junction;
 import es.ucm.fdi.model.Road;
@@ -12,6 +14,7 @@ import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
 import es.ucm.fdi.util.TextStream;
+
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -25,7 +28,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @SuppressWarnings("serial")
 public class SimulatorLayout extends JFrame implements Listener {
@@ -334,10 +339,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		generateReport = new SimulatorAction(
 					"Generar Reporte", "report.png", "Generar el reporte de la simulación", 
-				KeyEvent.VK_G, "control G", ()-> {
-					reports.setText("");
-					controlador.generarInformes(new TextStream(reports));
-					});
+				KeyEvent.VK_G, "control G", () -> generateSelectedReports(reports));
 		
 		deleteReport = new SimulatorAction(
 					"Borrar Reporte", "delete_report.png", "Borrar el reporte de la simulación",
@@ -455,7 +457,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	public void registered(UpdateEvent ue) {
 		actualizarLayout(ue);
 		grafo.registered(ue);
-		lowerBarMessage.setText("Nuevo listener registrado");
+		//lowerBarMessage.setText("Nuevo listener registrado");
 	}
 	
 	public void reset(UpdateEvent ue) {
@@ -495,6 +497,41 @@ public class SimulatorLayout extends JFrame implements Listener {
 		tiempoAct.setText("" + (controlador.getPasos() + 1));
 		habilitarBotones();
 		repaint();
+	}
+	
+	void generateSelectedReports(JTextArea reports){
+		reports.setText("");	
+		
+		ArrayList<String> vehicles  = new ArrayList<>();
+		ArrayList<String> roads = new ArrayList<>();
+		ArrayList<String> junctions = new ArrayList<>();
+		
+		
+		
+		ArrayList<Junction> unmodifiableJunction = (ArrayList<Junction>) controlador.getJunctions();
+	
+		for(Junction j: unmodifiableJunction){
+			junctions.add(j.getId());
+		}
+		
+		ArrayList<Road> unmodifiableRoads = (ArrayList<Road>) controlador.getRoads();
+	
+		for(Road j: unmodifiableRoads){
+			roads.add(j.getId());
+		}
+		
+		ArrayList<Vehicle> unmodifiableVehicles = (ArrayList<Vehicle>) controlador.getVehicles();
+	
+		for(Vehicle j: unmodifiableVehicles){
+			vehicles.add(j.getId());
+		}
+		
+		DialogWindow newDialog = new DialogWindow(this);
+		newDialog.setData(vehicles, roads, junctions); 
+		newDialog.open();
+		
+		controlador.generarInformes(new TextStream(reports), newDialog.getSelectedJunctions(),
+				newDialog.getSelectedRoads(), newDialog.getSelectedVehicles());	
 	}
 	
 	private void habilitarBotones() {

@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class DialogWindow extends JDialog {
+public class DialogWindow extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 

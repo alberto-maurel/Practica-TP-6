@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.model.*;
@@ -122,6 +125,15 @@ public class Controller {
 		}
 	}
 	
+	public void generarInformes(OutputStream out, Set<String> junctions, 
+			Set<String> roads, Set<String> vehicles) {
+		try {
+			simulador.generarInformes(out, junctions, roads, vehicles);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void reset() {
 		eventosIntroducidos = new ArrayList<>();
 		nPasos = 0;
@@ -142,5 +154,17 @@ public class Controller {
 	
 	public Boolean hayEventosCargados() {
 		return simulador.hayEventosCargados() ? true : false;
+	}
+	
+	public List<Junction> getJunctions() {
+		return simulador.getJunctions();
+	}
+	
+	public List<Road> getRoads() {
+		return simulador.getRoads();
+	}
+	
+	public List<Vehicle> getVehicles() {
+		return simulador.getVehicles();
 	}
 }

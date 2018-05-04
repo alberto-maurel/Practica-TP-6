@@ -297,6 +297,22 @@ public class TrafficSimulator {
 		}
 	}
 	
+	public List<Junction> getJunctions() {
+		return mapaTrafico.getJunctions();
+	}
+	
+	public List<Road> getRoads() {
+		return mapaTrafico.getRoads();
+	}
+	
+	public List<Vehicle> getVehicles() {
+		return mapaTrafico.getVehicles();
+	}
+	
+	
+	
+	
+	
 	public Boolean hayEventosCargados() {
 		return listaEventos.size() > 0 ? true : false;
 	}
