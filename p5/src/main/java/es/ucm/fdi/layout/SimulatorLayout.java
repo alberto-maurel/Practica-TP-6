@@ -13,24 +13,33 @@ import es.ucm.fdi.model.Road;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
 import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
+import es.ucm.fdi.model.Event;
 import es.ucm.fdi.util.TextStream;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("serial")
 public class SimulatorLayout extends JFrame implements Listener {
@@ -141,6 +150,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//
 		grafo = new GraphLayoutClass();
 		
+		//Añadimos PopUpMenu para plantillas de eventos
+		addPopUpMenu();
 		
 		//Montamos todo el layout junto
 		//
@@ -447,13 +458,12 @@ public class SimulatorLayout extends JFrame implements Listener {
 	     }
 	}
 	
-	private void cargarEventos() {
-		controlador.cargarEventos();
-		//Y a continuación los cargamos en el simulador
-		controlador.cargarEventosEnElSimulador();
+	private void cargarEventos() {		
 		//Reiniciamos el flujo para poder volver a coger los datos
 		controlador.modifyInputStream(new ByteArrayInputStream(fichero.getText().getBytes()));
-		
+		controlador.cargarEventos();
+		//Y a continuación los cargamos en el simulador
+		controlador.cargarEventosEnElSimulador();			
 	}
 	
 	//Implementación listeners
@@ -502,7 +512,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		repaint();
 	}
 	
-	void generateSelectedReports(JTextArea reports){
+	void generateSelectedReports(JTextArea reports) {
 		reports.setText("");	
 		
 		ArrayList<String> vehicles  = new ArrayList<>();
@@ -537,6 +547,161 @@ public class SimulatorLayout extends JFrame implements Listener {
 				newDialog.getSelectedRoads(), newDialog.getSelectedVehicles());	
 	}
 	
+	void addPopUpMenu() {
+		JPopupMenu editorPopupMenu = new JPopupMenu();
+		
+		JMenu subMenu = new JMenu("Add Template");
+
+		String[] templateNames = { "New RR Junction", "New MC Junction", "New Junction",
+				"New Dirt Road", "New Lanes Road", "New Road", 
+				"New Bike", "New Car", "New Vehicle",
+				"Make Vehicle Faulty" };
+		
+		Map<String, String> templates = generateTemplates();
+		
+		for (String s : templateNames) {
+			JMenuItem menuItem = new JMenuItem(s);
+			menuItem.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					fichero.append(templates.get(s) + '\n');
+				}
+			});
+			subMenu.add(menuItem);
+		}
+		
+		JMenuItem loadOption = new JMenuItem("Load");
+		loadOption.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadFile(fichero);
+			}
+		});
+		
+		JMenuItem saveOption = new JMenuItem("Save");
+		saveOption.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveFile(fichero, "Guardar eventos como...",
+						"Eventos guardados con éxito", "events.ini");
+			}
+		});
+
+		JMenuItem clearOption = new JMenuItem("Clear");
+		clearOption.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				fichero.setText("");
+			}
+		});
+		
+		editorPopupMenu.add(subMenu);
+		editorPopupMenu.addSeparator();
+		editorPopupMenu.add(loadOption);
+		editorPopupMenu.add(saveOption);
+		editorPopupMenu.add(clearOption);
+		
+		// connect the popup menu to the text area _editor
+		fichero.addMouseListener(new MouseListener() {
+			
+		@Override
+		public void mousePressed(MouseEvent e) {
+			showPopup(e);
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			showPopup(e);
+		}
+
+		private void showPopup(MouseEvent e) {
+			if (e.isPopupTrigger() && editorPopupMenu.isEnabled()) {
+				editorPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+			}
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+		}
+	});
+	}
+	
+	//Cutrérrimo
+	private Map<String, String> generateTemplates() {
+		Map<String, String> templates = new HashMap<>();
+		templates.put("New RR Junction", "[new_junction]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"max_time_slice = \n" + 
+				"min_time_slice = \n" + 
+				"type = rr\n");
+		templates.put("New MC Junction", "[new_junction]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"type = mc\n");
+		templates.put("New Junction", "[new_junction]\n" + 
+				"time = \n" + 
+				"id = \n");
+		templates.put("New Dirt Road", "[new_road]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"src = \n" + 
+				"dest = \n" + 
+				"max_speed = \n" + 
+				"length = \n" + 
+				"type = dirt\n");
+		templates.put("New Lanes Road", "[new_road]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"src = \n" + 
+				"dest = \n" + 
+				"max_speed = \n" + 
+				"length = \n" + 
+				"lanes = \n" + 
+				"type = lanes\n");
+		templates.put("New Road", "[new_road]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"src = \n" + 
+				"dest = \n" + 
+				"max_speed = \n" + 
+				"length = \n");
+		templates.put("New Bike", "[new_vehicle]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"itinerary = \n" + 
+				"max_speed = \n" + 
+				"type = bike\n");
+		templates.put("New Car", "[new_vehicle]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"itinerary = \n" + 
+				"max_speed = \n" + 
+				"type = car\n" + 
+				"resistance = \n" + 
+				"fault_probability = \n" + 
+				"max_fault_duration = \n" + 
+				"seed = \n");
+		templates.put("New Vehicle", "[new_vehicle]\n" + 
+				"time = \n" + 
+				"id = \n" + 
+				"itinerary = \n" + 
+				"max_speed = \n");
+		templates.put("Make Vehicle Faulty", "[make_vehicle_faulty]\n" + 
+				"time = \n" + 
+				"vehicles = \n" + 
+				"duration = \n");
+		return templates;
+	}
+
 	private void habilitarBotones() {
 		if(controlador.hayEventosCargados()) {
 			guardar.setEnabled(true);

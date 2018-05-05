@@ -65,6 +65,7 @@ public class Controller {
 	
 	public void cargarEventos() {
 		Ini eventosPorProcesar = input();
+		eventosIntroducidos.clear();
 		for(IniSection is: eventosPorProcesar.getSections()) {
 			this.parseEvent(is);
 		}
@@ -95,10 +96,22 @@ public class Controller {
 			e.printStackTrace();
 		}
 	}
+
 	
 	public Ini input() {
 		try{
 			Ini ini = new Ini(input);
+			return ini;
+		}
+		catch (IOException io){
+			System.out.println("Ha ocurrido un error durante la operación de lectura");
+			return null;
+		}
+	}
+	
+	public Ini input(InputStream in) {
+		try{
+			Ini ini = new Ini(in);
 			return ini;
 		}
 		catch (IOException io){
@@ -148,8 +161,8 @@ public class Controller {
 		return simulador.getTime();
 	}
 	
-	public void cargarEventosEnElSimulador(/*int nTicksASimular*/) {
-		simulador.cargarEventos(/*nTicksASimular,*/ eventosIntroducidos);
+	public void cargarEventosEnElSimulador() {
+		simulador.cargarEventos(eventosIntroducidos);
 	}
 	
 	public Boolean hayEventosCargados() {
