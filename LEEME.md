@@ -5,7 +5,7 @@ Correcciones respecto a la práctica 4:
 Claridad:
 
 + Todas las guías de estilo de java que conozco piden, en los bloques encadenados (if-else, try-catch, ... )
-- Hemos revisado la práctica y modificado los bloques encadenados para adaptarnos a este formato.
+  Hemos revisado la práctica y modificado los bloques encadenados para adaptarnos a este formato.
   Esperamos no habernos dejado ninguno.
 
 + No llames a super() sin argumentos. Es implícito e innecesario (todas las clases descienden de Object,
