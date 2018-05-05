@@ -1,8 +1,8 @@
 # Practica-TP-5
 
-Correcciones respecto a la práctica 4:
+## Correcciones respecto a la práctica 4:
 
-Claridad:
+### Claridad:
 
 + Todas las guías de estilo de java que conozco piden, en los bloques encadenados (if-else, try-catch, ... )
 
@@ -38,9 +38,9 @@ Claridad:
   mismo problema.
   
   
-Diseño:
+### Diseño:
  
- + El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(N2). Habría sido mejor usar una estructura              ordenada... como por ejemplo, un MultiTreeMap.
+El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(N2). Habría sido mejor usar una estructura              ordenada... como por ejemplo, un MultiTreeMap.
   
   
  + Deberíais haber usado Ini.store() para generar la salida, en lugar de reimplementarlo en TrafficSimulator.writeReport.
@@ -58,17 +58,30 @@ Diseño:
 
 • Evitad duplicación de código (= copia-pega). Por ejemplo, buscarCarreteraAtascada es muy similar a
 buscarCarreteraAtascadaIni – sacad factor común!
-3
+
 
 
 • Collections.unmodifiableX tiene un coste no-nulo. Es mejor cachear el resultado la primera vez que se
 llama y devolverlo en llamadas futuras a llamarlo cada vez.
 
 
-• No entiendo vuestro Junction. Usais Map<String, Queue...> y Map<String, Road>, pero lo que
-realmente os simplificaría la vida sería Map<Road, Queue...> y Map<Junction, Road>. ¡Usad lo que
-más sentido tenga! (y si os veis iterando un mapa para buscar algo... lo estais usando mal).
-
+ + No entiendo vuestro Junction. Usais Map<String, Queue...> y Map<String, Road>, pero lo que
+   realmente os simplificaría la vida sería Map<Road, Queue...> y Map<Junction, Road>. ¡Usad lo que
+   más sentido tenga! (y si os veis iterando un mapa para buscar algo... lo estais usando mal).
+   
+   Ciertamente, iterar un mapa buscando algo es un mal uso de la estructura. Sin embargo, después de estudiar
+   el problema consideramos que hay una solución que se adapta mejor a nuestro código que la que nos propones.
+   
+   Dicha solución consiste en mantener ambos mapas, el primero intacto y el segundo que siga siendo un 
+   Map<String, Road>, pero que el string en vez de ser el identificador de las carreteras que salen del cruce,
+   que sea el identificador de las junctions que están al final de las carreteras que salen del cruce actual.
+   
+   Por un lado, el antiguo Map<String, Road> simplemente se utilizaba para encontrar la carretera al final, con
+   lo que con esta mejora basada en lo que propones simplemente tenemos que buscar el elemento que tiene como
+   clave el cruce del final y no tenemos que iterar el mapa, reduciendo la complejidad a lo pedido. Por otro lado,
+   los cambios necesarios en el código son mínimos. Además, no necesitamos sustituir en el primer mapa el String
+   por Road y en el segundo String por Junction porque de estos elementos solamente necesitamos el identificador.
+   Esperamos que esta solución te resulte igual de conveniente.
 
  + Evitad concatenar cadenas dentro de un bucle. Usad en su lugar StringBuilder. Ver commit.
 
@@ -80,14 +93,14 @@ más sentido tenga! (y si os veis iterando un mapa para buscar algo... lo estais
 para arriba:
 
   
-Comentarios respecto a la práctica 5:
-
+## Comentarios respecto a la práctica 5:
+### Notas:
 - Cuando el output no está redirigido hacia la zona de reports, se muestra por consola. Lo hemos dejado así porque
   consideramos que es el funcionamiento lógico de la aplicación, para que si el usuario no lo tiene redirigido no 
   vea la salida, mientras que los desarrolladores podemos seguir viendo la salida para verificar el correcto funcionamiento.
   
 
-Opcionales incluidos en la práctica:
+### Opcionales incluidos en la práctica:
 - Redirección de outputs
 - Selección de los elementos de los cuales queremos generar el output en dicho paso en el botón 
   "generarOutput"
