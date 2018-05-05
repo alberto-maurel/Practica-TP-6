@@ -7,8 +7,8 @@ import java.util.Random;
 public class Car extends Vehicle {
 	
 	protected int resistance;
-	protected double fault_probability;
-	protected int max_fault_duration;
+	protected double faultProbability;
+	protected int maxFaultDuration;
 	protected long seed;
 	protected int kmSinceLastFailure;
 	private Random numAleatorio;
@@ -16,18 +16,18 @@ public class Car extends Vehicle {
 
 	//Constructor sin semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance, 
-			double fault_probability, int max_fault_duration) {
-		this(id, velMaxima, itinerario, resistance, fault_probability, 
-				max_fault_duration, System.currentTimeMillis());
+			double faultProbability, int maxFaultDuration) {
+		this(id, velMaxima, itinerario, resistance, faultProbability, 
+				maxFaultDuration, System.currentTimeMillis());
 	}
 	
 	//Constructor con semilla
 	public Car(String id, int velMaxima, ArrayList<Junction> itinerario, int resistance,
-			double fault_probability, int max_fault_duration, long seed) {
+			double faultProbability, int maxFaultDuration, long seed) {
 		super(id, velMaxima, itinerario);
 		this.resistance = resistance;
-		this.fault_probability = fault_probability;
-		this.max_fault_duration = max_fault_duration;
+		this.faultProbability = faultProbability;
+		this.maxFaultDuration = maxFaultDuration;
 		this.seed = seed;
 		this.kmSinceLastFailure = 0;
 		this.numAleatorio = new Random(seed);
@@ -39,8 +39,9 @@ public class Car extends Vehicle {
 		} else { //Vemos primero si se va a averiar en este paso antes de avanzar	
 			boolean isCarOk = true;
 			if (kmSinceLastFailure > resistance) {
-				if (numAleatorio.nextDouble() < fault_probability) { //En ese caso, hemos averiado el vehículo
-					this.setTiempoAveria(numAleatorio.nextInt(max_fault_duration) + 1); 
+				if (numAleatorio.nextDouble() < faultProbability) { 
+					//En ese caso, hemos averiado el vehículo
+					this.setTiempoAveria(numAleatorio.nextInt(maxFaultDuration) + 1); 
 					isCarOk = false;
 					kmSinceLastFailure = 0;
 					velActual = 0;

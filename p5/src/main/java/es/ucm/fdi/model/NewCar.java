@@ -13,7 +13,8 @@ public class NewCar extends NewVehicle {
 	long seed;
 	
 	
-	public NewCar(int time, String id, int max_speed, ArrayList<String> itinerario, int r, double f_p, int mfd, long s) {
+	public NewCar(int time, String id, int max_speed, ArrayList<String> itinerario, 
+			int r, double f_p, int mfd, long s) {
 		super(time, id, max_speed, itinerario);
 		resistance = r;
 		fault_prob = f_p;
@@ -59,7 +60,8 @@ public class NewCar extends NewVehicle {
 			ArrayList<Junction> itinerarioVehiculoJunctions = crearItinerario(roadMap);
 			
 			//Llamamos al constructor del vehículo
-			Vehicle nuevoVehiculo = new Car(id, max_speed, itinerarioVehiculoJunctions, resistance, fault_prob, max_fault_duration, seed);
+			Vehicle nuevoVehiculo = new Car(id, max_speed, itinerarioVehiculoJunctions, 
+					resistance, fault_prob, max_fault_duration, seed);
 			
 			//Y lo insertamos en el roadMap
 			roadMap.getVehicles().add(nuevoVehiculo);

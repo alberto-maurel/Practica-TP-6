@@ -23,12 +23,13 @@ public class MostCrowded extends Junction implements Describable{
  					colasCoches.get(carreteraAct).size() > maxActual && !id.equals(carreteraAct)) {
 				idAct = carreteraAct;
 				maxActual = colasCoches.get(carreteraAct).size();
-			}
-			else if(colasCoches.get(carreteraAct).isEmpty() &&
+			} else if (colasCoches.get(carreteraAct).isEmpty() &&
  					colasCoches.get(carreteraAct).size() > maxActual && !id.equals(carreteraAct)) {
 				idAct = carreteraAct;
 				maxActual = 0;
-			} else if (carreterasEntrantesOrdenadas.size() == 1) idAct = id;
+			} else if (carreterasEntrantesOrdenadas.size() == 1) {
+				idAct = id;
+			}
 		}
 		return idAct;
 	}
@@ -42,8 +43,7 @@ public class MostCrowded extends Junction implements Describable{
 					colasCoches.get(carreteraAct).size() > maxActual) {
 				idAct = carreteraAct;
 				maxActual = colasCoches.get(carreteraAct).size();
-			}
-			else if(colasCoches.get(carreteraAct).isEmpty() &&
+			} else if(colasCoches.get(carreteraAct).isEmpty() &&
 						colasCoches.get(carreteraAct).size() > maxActual) {
 				idAct = carreteraAct;
 				maxActual = 0;
@@ -86,12 +86,13 @@ public class MostCrowded extends Junction implements Describable{
 	public void avanza() {
 		//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
 		if (semaforoVerde != -1) {
-			if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
-					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
-						//En dicho caso sacamos el coche
-						Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
-						//Y lo movemos a su siguiente carretera
-						v.moverASiguienteCarretera();
+			if(colasCoches.size() > 0 && 
+					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
+				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+					//En dicho caso sacamos el coche
+					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
+					//Y lo movemos a su siguiente carretera
+					v.moverASiguienteCarretera();
 			}
 		}
 		actualizarSemaforo();

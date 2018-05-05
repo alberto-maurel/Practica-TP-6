@@ -40,10 +40,16 @@ public class Road extends SimulatedObject implements Describable{
 	 * @return true si el semáforo del final de la carretera está en verde y false si no
 	 */
 	public boolean estaEnVerde() {
-		if(cruceFin.carreterasEntrantesOrdenadas.get(cruceFin.semaforoVerde).equals(this.identificador)) return true;
-		else return false;
+		if(cruceFin.carreterasEntrantesOrdenadas.get(cruceFin.semaforoVerde).equals(this.identificador)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
+	
+	//Funcionalidad
+	//
 	/**
 	 * Introduce al vehículo en la carretera
 	 * @param Vehículo
@@ -81,15 +87,14 @@ public class Road extends SimulatedObject implements Describable{
 			if(v.isCocheAveriado()) {
 				++nVehiculosAveriadosHastaElMomento;
 				v.setVelocidadActual(0);
-			}
-			else {
+			} else {
 				factorReduccion = calcularFactorReduccion(nVehiculosAveriadosHastaElMomento);
 				v.setVelocidadActual(velocidadBase/factorReduccion);
 			}
 			//Y hacemos que el coche avance
 			v.avanza();
 		}	
-	}
+	}	
 	
 	protected int calcularVelocidadBase(int velocidadMaxima, int nVehiculosCarretera) {
 		int totalCochesEnCarretera = (int)situacionCarretera.sizeOfValues();
@@ -98,10 +103,15 @@ public class Road extends SimulatedObject implements Describable{
 	}
 
 	protected int calcularFactorReduccion(int nVehiculosAveriados) {
-		if(nVehiculosAveriados == 0) return 1;
-		else return 2;
+		if(nVehiculosAveriados == 0) {
+			return 1;
+		} else {
+			return 2;
+		}
 	}
 	
+	//Para imprimir Road
+	//
 	protected String getReportHeader() {
 		return "[road_report]";
 	}

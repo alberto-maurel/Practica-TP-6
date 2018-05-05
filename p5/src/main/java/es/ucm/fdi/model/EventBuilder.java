@@ -41,9 +41,9 @@ public interface EventBuilder {
 		return false;
 	}
 	
-	
-	//Este es un método que se necesita para los tres vehículos. Para evitar ponerlo en los 3, se pone aquí, aunque no sea útil para
-	//el buider del resto de los objetos. Quizá sería útil crear otra interfaz llamada evenBuilderVehicles, y que los builders de los 
+	//Este es un método que se necesita para los tres vehículos. Para evitar ponerlo en los 3,
+	//se pone aquí, aunque no sea útil para el buider del resto de los objetos. Quizá sería 
+	//útil crear otra interfaz llamada evenBuilderVehicles, y que los builders de los 
 	//vehículos implementasen ambas
 	public default ArrayList<String> parsearItinerario(IniSection sec) throws SimulationException{
 		//Creamos el itinerario

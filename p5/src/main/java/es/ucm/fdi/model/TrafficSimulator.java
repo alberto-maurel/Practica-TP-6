@@ -46,9 +46,10 @@ public class TrafficSimulator {
 		try {
 			while (tick < time) {
 				//En primer lugar carga los eventos correspondientes a dicho tick
-				while(indiceActualEventos < listaEventos.size() && listaEventos.get(indiceActualEventos).time == tickActual) {
+				while(indiceActualEventos < listaEventos.size() && 
+						listaEventos.get(indiceActualEventos).time == tickActual) {
 					listaEventos.get(indiceActualEventos).execute(mapaTrafico);
-					++indiceActualEventos;
+						++indiceActualEventos;
 				}
 				
 				//Ahora avanzo cada una de las carreteras (y ellas a su vez hacen avanzar a los coches)
@@ -159,8 +160,7 @@ public class TrafficSimulator {
 				++posInsertar;
 			}
 			listaEventos.add(posInsertar, evento);
-		}
-		else {
+		} else {
 			throw new SimulationException("Se ha añadido un evento en un momento posterior a su ejecución");
 		}
 	}
@@ -204,17 +204,13 @@ public class TrafficSimulator {
 		for(Listener l: listeners) {
 			if(type == EventType.REGISTERED) {
 				l.registered(ue);
-			}
-			else if (type == EventType.RESET) {
+			} else if (type == EventType.RESET) {
 				l.reset(ue);
-			}
-			else if (type == EventType.NEW_EVENT) {
+			} else if (type == EventType.NEW_EVENT) {
 				l.newEvent(ue);
-			}
-			else if (type == EventType.ADVANCED) {
+			} else if (type == EventType.ADVANCED) {
 				l.advanced(ue);
-			}
-			else if (type == EventType.ERROR) {
+			} else if (type == EventType.ERROR) {
 				l.error(ue, error);
 			}
 		}
@@ -313,10 +309,6 @@ public class TrafficSimulator {
 	public List<Vehicle> getVehicles() {
 		return mapaTrafico.getVehicles();
 	}
-	
-	
-	
-	
 	
 	public Boolean hayEventosCargados() {
 		return listaEventos.size() > 0 ? true : false;

@@ -30,6 +30,8 @@ public class Vehicle extends SimulatedObject implements Describable {
 		kilometrage = 0;
 	}
 	
+	//Getters y setters
+	//
 	public int getPosicionActual() {
 		return localizacionCarretera;
 	}
@@ -38,6 +40,37 @@ public class Vehicle extends SimulatedObject implements Describable {
 		return carreteraActual.identificador;
 	}
 	
+	/**
+	 * Incrementa el tiempo que queda para que el coche deje de estar averiado
+	 * @param averia Tiempo que tarda en repararse la avería que acaba de suceder
+	 */
+	public void setTiempoAveria(int averia) {
+		tiempoAveria += averia;
+	}
+	
+	/**
+	 * Modifica la velocidad actual del coche
+	 * @param av Velocidad actual del coche
+	 */
+	public void setVelocidadActual(int velocidad) {
+		if(velocidad < velMaxima) {
+			velActual = velocidad;
+		} else {
+			velActual = velMaxima;
+		}
+	}
+
+	/**
+	 * Indica si un coche está averiado o no
+	 * @return True si el coche está averiado, false si no
+	 */
+	public boolean isCocheAveriado() {
+		return tiempoAveria > 0;
+	}
+	
+	
+	//Funcionalidad del vehículo
+	//
 	/**
 	 * Avanza el estado actual del coche
 	 */
@@ -97,7 +130,6 @@ public class Vehicle extends SimulatedObject implements Describable {
 			
 		//Si no hemos llegado aún a la última intersección
 		} else { 
-			
 			//Buscamos que carretera va de un cruce al otro
 			Junction siguienteCruce = itinerario.get(indItinerario);
 			carreteraActual = cruceActual.buscarCarretera(siguienteCruce);
@@ -108,35 +140,9 @@ public class Vehicle extends SimulatedObject implements Describable {
 		}
 	}
 	
-	/**
-	 * Incrementa el tiempo que queda para que el coche deje de estar averiado
-	 * @param averia Tiempo que tarda en repararse la avería que acaba de suceder
-	 */
-	public void setTiempoAveria(int averia) {
-		tiempoAveria += averia;
-	}
 	
-	/**
-	 * Modifica la velocidad actual del coche
-	 * @param av Velocidad actual del coche
-	 */
-	public void setVelocidadActual(int velocidad) {
-		if(velocidad < velMaxima) {
-			velActual = velocidad;
-		}
-		else {
-			velActual = velMaxima;
-		}
-	}
-
-	/**
-	 * Indica si un coche está averiado o no
-	 * @return True si el coche está averiado, false si no
-	 */
-	public boolean isCocheAveriado() {
-		return tiempoAveria > 0;
-	}
-	
+	//Funciones para imprimir y mostrar los vehículos
+	//
 	protected String getReportHeader() {
 		return "[vehicle_report]";
 	}
@@ -152,17 +158,6 @@ public class Vehicle extends SimulatedObject implements Describable {
 		}
 	}	
 	
-	public void describe(Map<String,String> out, String rowIndex) {
-		out.put("ID", identificador);
-		out.put("Road", carreteraActual.identificador);
-		if(localizacionCarretera == arrived) out.put("Location", "Llegado");
-		else out.put("Location", "" + localizacionCarretera);
-		out.put("Speed", "" + velActual);
-		out.put("Km", "" + kilometrage);
-		out.put("Faulty units", "" + tiempoAveria);
-		out.put("Itinerary", toStringItinerary());
-	}	
-	
 	public String toStringItinerary() {
 		String s = "[";
 		for(int i = 0; i < itinerario.size(); ++i) {
@@ -173,5 +168,16 @@ public class Vehicle extends SimulatedObject implements Describable {
 			}
 		}
 		return s;
+	}
+	
+	public void describe(Map<String,String> out, String rowIndex) {
+		out.put("ID", identificador);
+		out.put("Road", carreteraActual.identificador);
+		if(localizacionCarretera == arrived) out.put("Location", "Llegado");
+		else out.put("Location", "" + localizacionCarretera);
+		out.put("Speed", "" + velActual);
+		out.put("Km", "" + kilometrage);
+		out.put("Faulty units", "" + tiempoAveria);
+		out.put("Itinerary", toStringItinerary());
 	}
 }

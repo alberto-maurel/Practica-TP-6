@@ -29,7 +29,10 @@ public class Junction extends SimulatedObject implements Describable {
 		this.carreterasSalientes = new HashMap<>(); 
 		this.carreterasEntrantesOrdenadas = new ArrayList<>();
 	}
-		
+	
+	
+	//Funcionalidad
+	//
 	/**
 	 * Entra un vehículo en el cruce
 	 * @param vehiculo
@@ -44,12 +47,13 @@ public class Junction extends SimulatedObject implements Describable {
 	public void avanza() {
 		if (semaforoVerde != -1) { 
 			//Vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar
-			if (colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null &&
-					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
-				//En dicho caso sacamos el coche
-				Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
-				//Y lo movemos a su siguiente carretera
-				v.moverASiguienteCarretera();	
+			if (colasCoches.size() > 0 &&
+					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null &&
+				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+					//En dicho caso sacamos el coche
+					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
+					//Y lo movemos a su siguiente carretera
+					v.moverASiguienteCarretera();	
 			}					
 		}
 		//Actualizamos los semáforos
@@ -57,8 +61,11 @@ public class Junction extends SimulatedObject implements Describable {
 	}
 	
 	public void actualizarSemaforo() {
-		if (semaforoVerde == -1) semaforoVerde = 0;
-		else if (colasCoches.size() > 0) semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
+		if (semaforoVerde == -1) {
+			semaforoVerde = 0;
+		} else if (colasCoches.size() > 0) {
+			semaforoVerde = (semaforoVerde + 1) % colasCoches.size();
+		}
 	}
 	
 	public Road buscarCarretera(Junction sigCruce) {
@@ -80,6 +87,9 @@ public class Junction extends SimulatedObject implements Describable {
 		carreterasEntrantesOrdenadas.add(road.identificador);
 	}
 	
+	
+	//Para imprimir la junction
+	//
 	protected String getReportHeader() {
 		return "[junction_report]";
 	}

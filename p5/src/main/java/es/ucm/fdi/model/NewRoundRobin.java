@@ -27,7 +27,8 @@ public class NewRoundRobin extends NewJunction {
 				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && isValidId(sec.getValue("id")) &&
 						parseInt(sec, "max_time_slice", 0) && parseInt(sec, "min_time_slice", 0)) {
 					return new NewRoundRobin(Integer.parseInt(sec.getValue("time")), sec.getValue("id"),
-							Integer.parseInt(sec.getValue("max_time_slice")), Integer.parseInt(sec.getValue("min_time_slice")));
+							Integer.parseInt(sec.getValue("max_time_slice")), 
+						Integer.parseInt(sec.getValue("min_time_slice")));
 				} else {
 					throw new SimulationException("Algún parámetro no existe o es inválido");
 				}

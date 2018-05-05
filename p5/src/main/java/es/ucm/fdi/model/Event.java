@@ -25,9 +25,5 @@ public abstract class Event implements Describable {
 	public void describe(Map<String,String> out) {
 		out.put("#", id);
 		out.put("Time", "" + time);
-		/* 
-		out.put("Type", "Not implemented yet");
-		out.put("Involves", "Not implemented yet");
-		*/
 	}
 }
