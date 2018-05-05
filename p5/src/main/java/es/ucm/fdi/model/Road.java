@@ -117,16 +117,16 @@ public class Road extends SimulatedObject implements Describable{
 	}
 	
 	protected void fillReportDetails(Map<String, String> out) {
-		String aux = "";
+		StringBuilder sb = new StringBuilder();
 		for (Vehicle v: situacionCarretera.innerValues()) {
 			//if(v.localizacionCarretera != v.carreteraActual.longitud) 
-			aux += "(" + v.identificador + "," + v.localizacionCarretera + "),";// + aux;
+			sb.append("(" + v.identificador + "," + v.localizacionCarretera + "),");
 		}
 		//Los metemos todos en un string y quitamos la ultima coma
-		if(aux.length() > 0) {
-			aux = aux.substring(0, aux.length() - 1); 
+		if(sb.length() > 0) {
+			sb.deleteCharAt(sb.length() - 1); 
 		}
-		out.put("state", aux);
+		out.put("state", sb.toString());
 	}
 	
 	public void describe(Map<String,String> out, String rowIndex) {
@@ -139,16 +139,17 @@ public class Road extends SimulatedObject implements Describable{
 	}	
 	
 	public String toStringVehicles() {
-		String s = "[";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
 		for(Vehicle v: situacionCarretera.innerValues()) {
-			s += v.identificador + ", ";
+			sb.append(v.identificador + ", ");
 		}
 		//En caso de que nuestra carretera tuviese algún vehículo, tenemos que quitar los últimos
 		//espacio en blanco y coma que añadimos
-		if(s.length() > 1) {
-			s = s.substring(0, s.length() - 2);
+		if(sb.length() > 1) {
+			sb.delete(sb.length() - 2, sb.length() - 1);
 		}
-		s += "]";
-		return s;
+		sb.append("]");
+		return sb.toString();
 	}
 }

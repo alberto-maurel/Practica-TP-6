@@ -22,13 +22,10 @@ import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.layout.SimulatorLayout;
 
-//TODO: cargar los cambios que escribes antes de darle al reset
 //TODO: cambiar para que en los describables cojamos los inmutables
-//TODO: poner el tiempo bien
 //TODO: revisar la entrega de la práctica 4
 //TODO: hacer leeme (cambios sobre la entrega 4, opcionales)
-//TODO: formato (revisar la longitud) y colocar las funciones
-//TODO: en el modo GUI se imprime cada paso por consola
+//TODO: colocar las funciones
 
 public class Main {
 	private final static Integer _timeLimitDefaultValue = 10;
@@ -160,7 +157,8 @@ public class Main {
 		return allTestsPassed;
 	}
 
-	private static boolean test(String inFile, String outFile, String expectedOutFile, int timeLimit) throws IOException {
+	private static boolean test(String inFile, String outFile, String expectedOutFile, int timeLimit)
+			throws IOException {
 		_outFile = outFile;
 		_inFile = inFile;
 		_timeLimit = timeLimit;

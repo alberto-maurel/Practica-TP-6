@@ -159,15 +159,16 @@ public class Vehicle extends SimulatedObject implements Describable {
 	}	
 	
 	public String toStringItinerary() {
-		String s = "[";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
 		for(int i = 0; i < itinerario.size(); ++i) {
 			if(i == itinerario.size() - 1) {
-				s += itinerario.get(i).identificador + "]";
+				sb.append(itinerario.get(i).identificador + "]");
 			} else {
-				s += itinerario.get(i).identificador + ", ";
+				sb.append(itinerario.get(i).identificador + ", ");
 			}
 		}
-		return s;
+		return sb.toString();
 	}
 	
 	public void describe(Map<String,String> out, String rowIndex) {
