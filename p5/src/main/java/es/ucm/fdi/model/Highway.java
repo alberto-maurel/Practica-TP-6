@@ -12,9 +12,9 @@ public class Highway extends Road {
 	}
 	
 	protected int calcularVelocidadBase(int velocidadMaxima) {
-		int aux1 = Math.max(1 , Math.toIntExact(situacionCarretera.sizeOfValues()));
-		int aux2 = (velocidadMaxima * lanes)/aux1;
-		return Math.min(velocidadMaxima, aux2 + 1);
+		int totalCochesEnCarretera = (int)situacionCarretera.sizeOfValues();
+		return Math.min(velocidadMaxima,
+			1 + (velocidadMaxima * lanes) / Math.max(1, totalCochesEnCarretera));
 	}
 	
 	protected int calcularFactorReduccion(int nVehiculosAveriados) {

@@ -25,8 +25,8 @@ public class NewPath extends NewRoad {
 					isValidId(sec.getValue("dest"))) {
 					
 					return new NewPath(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), 
-							Integer.parseInt(sec.getValue("max_speed")), Integer.parseInt(sec.getValue("length")), 
-						sec.getValue("src"), sec.getValue("dest"));
+							Integer.parseInt(sec.getValue("max_speed")), 
+						Integer.parseInt(sec.getValue("length")), sec.getValue("src"), sec.getValue("dest"));
 				} else {
 					throw new SimulationException("Algún parámetro no existe o es inválido");
 				} 	

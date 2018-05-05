@@ -86,7 +86,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JTextArea reports = new JTextArea();
 		reports.setEditable(false);
 		//Y por otro la tabla de eventos
-		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, (ArrayList<? extends Describable>) eventsArray);
+		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, 
+				(ArrayList<? extends Describable>) eventsArray);
 		
 		upperPanel.setLayout(new GridLayout(1, 3));
 		upperPanel.add(createTextAreaPanel("Fichero", fichero, new Dimension(200,200)));
@@ -159,7 +160,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	private JScrollPane createTextAreaPanel(String title, JTextArea tArea, Dimension d) {
 		Border b = BorderFactory.createLineBorder(Color.black, 2);
-		JScrollPane p = new JScrollPane(tArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane p = new JScrollPane(tArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		p.setPreferredSize(d);
 		p.setBorder(BorderFactory.createTitledBorder(b, title));
 		
@@ -294,7 +296,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 				VK_R, "control R", ()-> { controlador.reset(); reports.setText("");});
 		
 		getOutput = new SimulatorAction(
-				"Ejecutar y generar reporte", "report.png", "Corre la simulación generando el reporte automáticamente",
+				"Ejecutar y generar reporte", "report.png", 
+			"Corre la simulación generando el reporte automáticamente",
 				KeyEvent.VK_B, "control B", ()->{
 					TextStream ts = new TextStream(reports);
 					controlador.modifyOutputStream(ts);
@@ -346,8 +349,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 				KeyEvent.VK_B, "control B", ()->reports.setText(""));
 		
 	    saveReport = new SimulatorAction(
-					"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación", KeyEvent.
-				VK_G, "control shift G", ()->saveFile(reports, "Guardar reportes como...", "Informe guardado con éxito", "reports.out"));
+					"Guardar Reporte", "save_report.png", "Guardar el reporte de la simulación",
+				KeyEvent.VK_G, "control shift G", ()->saveFile(reports, "Guardar reportes como...",
+					"Informe guardado con éxito", "reports.out"));
 		
 		salir = new SimulatorAction(
 				"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));

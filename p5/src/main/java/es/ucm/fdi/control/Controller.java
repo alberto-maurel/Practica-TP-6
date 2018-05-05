@@ -17,13 +17,13 @@ public class Controller {
 	private TrafficSimulator simulador;
 	private InputStream input;
 	private OutputStream output;
-	private EventBuilder[] eventosDisponibles = { new NewJunction.Builder(), new NewVehicle.Builder(), 
-			new NewRoad.Builder(), new NewFaultyVehicle.Builder(), new NewCar.Builder(),
-		new NewBike.Builder(), new NewHighway.Builder(), new NewPath.Builder(), 
-			new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
+	private EventBuilder[] eventosDisponibles = { new NewJunction.Builder(),
+			new NewVehicle.Builder(), 	new NewRoad.Builder(), 
+		new NewFaultyVehicle.Builder(), new NewCar.Builder(), new NewBike.Builder(),
+			new NewHighway.Builder(), new NewPath.Builder(), 
+		new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
 	
 	private ArrayList<Event> eventosIntroducidos;
-	
 	
 	
 	public Controller(int nPasos, InputStream input, OutputStream output) {

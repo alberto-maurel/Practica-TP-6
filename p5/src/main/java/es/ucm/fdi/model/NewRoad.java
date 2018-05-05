@@ -29,7 +29,7 @@ public class NewRoad extends Event{
 				if (parseInt(sec, "time", 0) && parseIdList(sec, "id") && 
 						isValidId(sec.getValue("id")) && parseInt(sec, "max_speed", 0) && 
 					parseInt(sec, "length", 0) && parseIdList(sec, "src") &&
-					isValidId(sec.getValue("src")) && parseIdList(sec, "dest") &&
+						isValidId(sec.getValue("src")) && parseIdList(sec, "dest") &&
 					isValidId(sec.getValue("dest"))) {
 					
 					return new NewRoad(Integer.parseInt(sec.getValue("time")), sec.getValue("id"), 
@@ -46,7 +46,8 @@ public class NewRoad extends Event{
 	
 	public void execute(RoadMap roadMap) throws SimulationException {		
 		Junction J1, J2;
-		if(roadMap.getConstantSimObjects().get(id) == null) { //Comprobamos que no haya otra carretera con el mismo id
+		//Comprobamos que no haya otra carretera con el mismo id
+		if(roadMap.getConstantSimObjects().get(id) == null) { 
 			//Comprobamos que existan ambos cruces
 			
 			J1 = parsearCruce(roadMap, src);

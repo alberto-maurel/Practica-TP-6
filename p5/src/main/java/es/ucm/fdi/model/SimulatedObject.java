@@ -9,7 +9,7 @@ public abstract class SimulatedObject {
 	
 	
 	public SimulatedObject() {
-		identificador = "UnknownId";
+		this("UnknownId");
 	}
 	
 	public SimulatedObject(String id){

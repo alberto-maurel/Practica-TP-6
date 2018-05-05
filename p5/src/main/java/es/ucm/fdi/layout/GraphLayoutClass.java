@@ -19,7 +19,8 @@ public class GraphLayoutClass extends JPanel implements Listener {
 	private GraphComponent _graphComp;
     
     private Map<String, Edge> aristas;
-    private Map<String, Node> vertices; //Clave - identificador del nodo (el mismo que el del vértice), Valor - nodo al que corresponde
+    private Map<String, Node> vertices; //Clave - identificador del nodo (el mismo que el del vértice), 
+    									//Valor - nodo al que corresponde
    
 	public GraphLayoutClass() {
 		_graphComp = new GraphComponent();

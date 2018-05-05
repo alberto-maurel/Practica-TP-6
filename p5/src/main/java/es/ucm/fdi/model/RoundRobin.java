@@ -31,15 +31,16 @@ public class RoundRobin extends Junction {
 	public void avanza() {
 		if (semaforoVerde != -1) {
 			//En primer lugar vemos si la carretera con el semaforo en verde tiene algún coche esperando para pasar			
-			if(colasCoches.size() > 0 && colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
-					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
-						//En dicho caso sacamos el coche
-						Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
-						//Y lo movemos a su siguiente carretera
-						v.moverASiguienteCarretera();
-						//Añadimos uno al numero de coches que han pasado en el intervalo
-						//pasados.set(semaforoVerde, pasados.get(semaforoVerde) + 1);
-						++pasados;
+			if(colasCoches.size() > 0 && 
+					colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)) != null && 
+				colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).size() > 0) {
+					//En dicho caso sacamos el coche
+					Vehicle v = (Vehicle) colasCoches.get(carreterasEntrantesOrdenadas.get(semaforoVerde)).poll();
+					//Y lo movemos a su siguiente carretera
+					v.moverASiguienteCarretera();
+					//Añadimos uno al numero de coches que han pasado en el intervalo
+					//pasados.set(semaforoVerde, pasados.get(semaforoVerde) + 1);
+					++pasados;
 			}
 		}		
 		actualizarSemaforo();
@@ -71,39 +72,6 @@ public class RoundRobin extends Junction {
 		} 		
 			
 	}
-	
-	/*
-	protected void fillReportDetails(Map<String, String> out) {
-		String aux = "";
-		for (int i = 0; i < carreterasEntrantesOrdenadas.size(); ++i) {
-			aux += "(" + carreterasEntrantesOrdenadas.get(i) + ",";
-
-			if (semaforoVerde == i) {
-				aux += "green:" + Integer.toString(intervaloDeTiempo - unidadesDeTiempoUsadas) + ",";
-			}
-			else {
-				aux += "red,";
-			}
-			aux += '[';
-			//And now we add all the cars
-			for(Vehicle v: colasCoches.get(carreterasEntrantesOrdenadas.get(i))) {
-				aux += v.identificador + ',';
-			}
-			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() > 0) {			
-				aux = aux.substring(0, aux.length() - 1);
-			}
-			if(colasCoches.get(carreterasEntrantesOrdenadas.get(i)).size() != 0) {
-				carreterasEntrantesOrdenadas.get(i);
-			}
-			aux += ']';
-			aux += ')';
-			if(i != carreterasEntrantesOrdenadas.size() - 1) aux += ',';
-		}
-		out.put("queues", aux);
-		out.put("type", "rr");
-	}
-	*/
-	
 	
 	protected void fillReportDetails(Map<String, String> out) {
 		StringBuilder sb = new StringBuilder();
