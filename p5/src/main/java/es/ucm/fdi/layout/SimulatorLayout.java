@@ -108,7 +108,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//
 		//
 		spinner = new JSpinner();
-		spinner.setValue(controlador.getPasos());
 		addBars(fichero, reports);
 		
 		
@@ -212,7 +211,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//Creación de los 3 siguientes botones, spinner y textArea para mostrar el tick actual
 		//
 		JLabel label = new JLabel("Steps: ");
-		spinner.setValue(controlador.getPasos());
+		spinner.setValue(controlador.getPasosAEjecutar());
 		spinner.setMaximumSize(new Dimension(50,50));
 		
 		/* Tenemos en cuenta el argumento -t
@@ -296,7 +295,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private JToolBar createComponents2(JMenu simulator, JTextArea reports) {
 		events = new SimulatorAction(
 				"Eventos", "events.png", "Añadir eventos a la cola", KeyEvent.
-				VK_E, "control E", ()->cargarEventos());
+				VK_E, "control E", ()-> cargarEventos());
 		
 		play = new SimulatorAction(
 				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
@@ -470,7 +469,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 	public void registered(UpdateEvent ue) {
 		actualizarLayout(ue);
 		grafo.registered(ue);
-		//lowerBarMessage.setText("Nuevo listener registrado");
 	}
 	
 	public void reset(UpdateEvent ue) {

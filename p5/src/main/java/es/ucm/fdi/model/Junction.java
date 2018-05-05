@@ -69,8 +69,8 @@ public class Junction extends SimulatedObject implements Describable {
 	}
 	
 	public Road buscarCarretera(Junction sigCruce) {
-		for(Map.Entry<String, Road> r: carreterasSalientes.entrySet()) {
-			if(r.getValue().cruceFin == sigCruce) return r.getValue();
+		if(carreterasSalientes.containsKey(sigCruce.identificador)) {
+			return carreterasSalientes.get(sigCruce.identificador);
 		}
 		return null;
 	}
@@ -79,7 +79,7 @@ public class Junction extends SimulatedObject implements Describable {
 	 * Añade una nueva carretera saliente al cruce
 	 */
 	public void nuevaCarreteraSaliente(Road road) {
-		carreterasSalientes.put(road.identificador, road);
+		carreterasSalientes.put(road.cruceFin.identificador, road);
 	}
 
 	public void nuevaCarreteraEntrante(Road road) {
@@ -159,3 +159,11 @@ public class Junction extends SimulatedObject implements Describable {
 		out.put("Red", redOutput.toString());
 	}		
 }
+
+
+
+
+
+
+
+

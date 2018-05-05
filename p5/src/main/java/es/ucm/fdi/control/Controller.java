@@ -47,6 +47,10 @@ public class Controller {
 		simulador.modifyOutputStream(os);
 	}
 	
+	public int getPasosAEjecutar() {
+		return nPasos;
+	}
+	
 	public int getPasos() {
 		return simulador.getTime();
 	}
@@ -72,11 +76,7 @@ public class Controller {
 	}
 	
 	public void run(int nPaso) throws SimulationException {
-		try {
-			simulador.run(nPaso);
-		} catch (SimulationException e) {
-			throw e;
-		}
+		simulador.run(nPaso);
 	}
 	
 	public void parseEvent(IniSection ini) {

@@ -21,12 +21,15 @@ public class TrafficSimulator {
 	private int tickActual;
 	private RoadMap mapaTrafico;
 	private OutputStream out;
+	//Para distinguir entre antes de ejecutar el primer tick y después
+	private Boolean primerTick;
 	
 	public TrafficSimulator(OutputStream out) {
 		indiceActualEventos = 0;
 		this.listaEventos = new ArrayList<>();
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
+		primerTick = true;
 		this.out = out;
 		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la construcción del simulador");
 	}
@@ -65,7 +68,8 @@ public class TrafficSimulator {
 				//Y por último escribimos los informes en el orden indicado
 				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");
 				++tick;
-				++tickActual;				
+				++tickActual;
+				primerTick = false;
 				generarInformes(out);
 				
 			}		
@@ -128,21 +132,17 @@ public class TrafficSimulator {
 	}
 	
 	public void writeReport(Map<String, String> report, OutputStream out) throws IOException {
-		try {
-			for(Map.Entry<String,String> campo: report.entrySet()) {
-				if(campo.getKey().equals("")) {
-					String aux = campo.getValue()  + "\n";
-					out.write(aux.getBytes());
-					
-				} else {
-					String aux = campo.getKey() + " = " + campo.getValue() + "\n";
-					out.write(aux.getBytes());
-				}
+		for(Map.Entry<String,String> campo: report.entrySet()) {
+			if(campo.getKey().equals("")) {
+				String aux = campo.getValue()  + "\n";
+				out.write(aux.getBytes());
+				
+			} else {
+				String aux = campo.getKey() + " = " + campo.getValue() + "\n";
+				out.write(aux.getBytes());
 			}
 		}
-		catch(IOException io) {
-			throw io;
-		}
+			
 		out.write("\n".getBytes());
 		out.flush();
 	}
@@ -262,7 +262,11 @@ public class TrafficSimulator {
 	}
 	
 	public int getTime() {
-		return tickActual;
+		if(primerTick) {
+			return -1;
+		} else {
+			return tickActual;
+		}
 	}
 	
 	/**
