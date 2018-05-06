@@ -55,15 +55,18 @@ El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(
 
    Se ha modificado writeReport, además de otro lugar en el que hemos visto dicho manejo de excepciones.
 
+ + Evitad duplicación de código (= copia-pega). Por ejemplo, buscarCarreteraAtascada es muy similar a
+   buscarCarreteraAtascadaIni – sacad factor común!
+   
+   Corregido =D. De cara a esta práctica hemos intentado sacar factor común en la medida de lo posible (véase el Describable
+   de Junction y junctions avanzadas).
 
-• Evitad duplicación de código (= copia-pega). Por ejemplo, buscarCarreteraAtascada es muy similar a
-buscarCarreteraAtascadaIni – sacad factor común!
-
-
-
-• Collections.unmodifiableX tiene un coste no-nulo. Es mejor cachear el resultado la primera vez que se
-llama y devolverlo en llamadas futuras a llamarlo cada vez.
-
+ + Collections.unmodifiableX tiene un coste no-nulo. Es mejor cachear el resultado la primera vez que se
+   llama y devolverlo en llamadas futuras a llamarlo cada vez.
+   
+   Se han añadido como atributos unas unmodifiableList y el unmodifiableMap para poder cachear los resultados. Tras
+   actualizar los elementos en el TrafficSimulator mediante la función avanza de cada uno de ellos, se cachean los
+   resultados para posteriormente utilizarlos en las llamadas a writeReports.
 
  + No entiendo vuestro Junction. Usais Map<String, Queue...> y Map<String, Road>, pero lo que
    realmente os simplificaría la vida sería Map<Road, Queue...> y Map<Junction, Road>. ¡Usad lo que
@@ -99,6 +102,9 @@ para arriba:
   consideramos que es el funcionamiento lógico de la aplicación, para que si el usuario no lo tiene redirigido no 
   vea la salida, mientras que los desarrolladores podemos seguir viendo la salida para verificar el correcto funcionamiento.
   
+- En el describable de las junctions nos hemos visto obligados a utilizar un par de instanceof y casts para sacar refactoring
+  del código. Sin embargo, consideramos que su uso está más que justificado porque los casts son "seguros" y permite clarificar
+  y simplificar mucho el código.
 
 ### Opcionales incluidos en la práctica:
 - Redirección de outputs
