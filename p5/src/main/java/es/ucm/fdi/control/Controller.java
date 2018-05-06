@@ -6,13 +6,13 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.model.*;
 import es.ucm.fdi.model.TrafficSimulator.Listener;
+import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 
-public class Controller {
+public class Controller implements Listener {
 	private int nPasos;
 	private TrafficSimulator simulador;
 	private InputStream input;
@@ -22,9 +22,7 @@ public class Controller {
 		new NewFaultyVehicle.Builder(), new NewCar.Builder(), new NewBike.Builder(),
 			new NewHighway.Builder(), new NewPath.Builder(), 
 		new NewMostCrowded.Builder(), new NewRoundRobin.Builder()};
-	
 	private ArrayList<Event> eventosIntroducidos;
-	
 	
 	public Controller(int nPasos, InputStream input, OutputStream output) {
 		this.nPasos = nPasos;
@@ -32,6 +30,12 @@ public class Controller {
 		simulador = new TrafficSimulator(output);
 		eventosIntroducidos = new ArrayList<>();
 		this.output = output;
+		/* Añadimos controlador como un listener, necesario para
+		 * el control de errores del modo batch. En caso de no ser
+		 * necesario, ya que los errores se mostrarán en la interfaz gráfica
+		 * (modo GUI), se elimina posteriormente).
+		 */
+		addSimulatorListener(this);
 	}
 	
 	public void modifyInputStream(InputStream is) {
@@ -57,15 +61,13 @@ public class Controller {
 	
 	public void run() {
 		cargarEventos();
-		cargarEventosEnElSimulador(/*nPasos*/);
-		try {
-			simulador.run(nPasos);
-		} catch (SimulationException e) {
-			e.printMessage();
-			e.printStackTrace();
-		}
+		cargarEventosEnElSimulador();
+		simulador.run(nPasos);
 	}
 	
+	public void run(int nPaso) {
+		simulador.run(nPaso);
+	}
 	
 	public void cargarEventos() {
 		Ini eventosPorProcesar = input();
@@ -73,10 +75,10 @@ public class Controller {
 		for(IniSection is: eventosPorProcesar.getSections()) {
 			this.parseEvent(is);
 		}
-	}
+	}	
 	
-	public void run(int nPaso) throws SimulationException {
-		simulador.run(nPaso);
+	public void cargarEventosEnElSimulador() {
+		simulador.cargarEventos(eventosIntroducidos);
 	}
 	
 	public void parseEvent(IniSection ini) {
@@ -90,21 +92,26 @@ public class Controller {
 			}
 			eventosIntroducidos.add(eventoActual);
 		}
-		catch(SimulationException e){
-			System.out.println("Se ha producido un error durante la creación de los eventos");
-			e.printMessage();
-			e.printStackTrace();
+		catch(SimulationException e) {
+			error("Ha ocurrido un error durante la creación de eventos.\n" +
+					"Error: " + e.getMessage() + "\n" +
+					"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+					"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+					"Línea: " + e.getStackTrace()[0].getLineNumber());
 		}
 	}
 
-	
 	public Ini input() {
 		try{
 			Ini ini = new Ini(input);
 			return ini;
 		}
-		catch (IOException io){
-			System.out.println("Ha ocurrido un error durante la operación de lectura");
+		catch (IOException io) {
+			error("Ha ocurrido un error durante la operación de lectura.\n" +
+					"Error: " + io.getMessage() + "\n" +
+					"Clase: " + io.getStackTrace()[0].getClassName() + "\n" +
+					"Método: " + io.getStackTrace()[0].getMethodName() + "\n" +
+					"Línea: " + io.getStackTrace()[0].getLineNumber());
 			return null;
 		}
 	}
@@ -114,8 +121,12 @@ public class Controller {
 			Ini ini = new Ini(in);
 			return ini;
 		}
-		catch (IOException io){
-			System.out.println("Ha ocurrido un error durante la operación de lectura");
+		catch (IOException io) {
+			error("Ha ocurrido un error durante la operación de lectura.\n" +
+					"Error: " + io.getMessage() + "\n" +
+					"Clase: " + io.getStackTrace()[0].getClassName() + "\n" +
+					"Método: " + io.getStackTrace()[0].getMethodName() + "\n" +
+					"Línea: " + io.getStackTrace()[0].getLineNumber());
 			return null;
 		}
 	}
@@ -126,7 +137,11 @@ public class Controller {
 			ini.store(s);
 		}
 		catch (IOException io){
-			System.out.println("Ha ocurrido un error durante la operación de escritura");
+			error("Ha ocurrido un error durante la operación de escritura.\n" +
+					"Error: " + io.getMessage() + "\n" +
+					"Clase: " + io.getStackTrace()[0].getClassName() + "\n" +
+					"Método: " + io.getStackTrace()[0].getMethodName() + "\n" +
+					"Línea: " + io.getStackTrace()[0].getLineNumber());
 		}
 	}
 	
@@ -134,7 +149,11 @@ public class Controller {
 		try {
 			simulador.generarInformes(out);
 		} catch (IOException e) {
-			e.printStackTrace();
+			error("Ha ocurrido un error durante la generación de los informes.\n" +
+					"Error: " + e.getMessage() + "\n" +
+					"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+					"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+					"Línea: " + e.getStackTrace()[0].getLineNumber());
 		}
 	}
 	
@@ -143,7 +162,11 @@ public class Controller {
 		try {
 			simulador.generarInformes(out, junctions, roads, vehicles);
 		} catch (IOException e) {
-			e.printStackTrace();
+			error("Ha ocurrido un error durante la generación de los informes.\n" +
+					"Error: " + e.getMessage() + "\n" +
+					"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+					"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+					"Línea: " + e.getStackTrace()[0].getLineNumber());
 		}
 	}
 	
@@ -152,19 +175,11 @@ public class Controller {
 		nPasos = 0;
 		simulador.reset();
 	}
-	
-	public void addSimulatorListener(Listener l) {
-		simulador.addSimulatorListener(l);
-	}
   
 	public int tiempoActual() {
 		return simulador.getTime();
 	}
-	
-	public void cargarEventosEnElSimulador() {
-		simulador.cargarEventos(eventosIntroducidos);
-	}
-	
+		
 	public Boolean hayEventosCargados() {
 		return simulador.hayEventosCargados() ? true : false;
 	}
@@ -179,5 +194,37 @@ public class Controller {
 	
 	public List<Vehicle> getVehicles() {
 		return simulador.getVehicles();
+	}
+	
+	public void addSimulatorListener(Listener l) {
+		simulador.addSimulatorListener(l);
+	}
+	
+	public void removeFirstListener() {
+		simulador.removeFirstListener();
+	}
+	
+	public int getListenersSize() {
+		return simulador.getListenersSize();
+	}
+
+	public void registered(UpdateEvent ue) {
+	}
+	
+	public void reset(UpdateEvent ue) {
+	}
+
+	public void newEvent(UpdateEvent ue) {
+	}
+	
+	public void advanced(UpdateEvent ue) {		
+	}
+	
+	public void error(UpdateEvent ue, String error) {
+		System.out.println(error);		
+	}
+	
+	public void error(String error) {
+		System.out.println(error);		
 	}
 }

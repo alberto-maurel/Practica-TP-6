@@ -15,16 +15,15 @@ public class TextStream extends OutputStream {
 	}
 
 	@Override
-	public void write(int arg0) throws IOException {
-		
+	public void write(int arg0) throws IOException {		
 	}
 	
-	public void write(byte[] b) {		
+	public void write(byte[] b) throws UnsupportedEncodingException {		
 		try {
 			String str = new String(b, "UTF-8");
 			areaTexto.append(str);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			throw e;
 		}		
 	}
 

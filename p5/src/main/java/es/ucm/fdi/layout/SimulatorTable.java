@@ -38,14 +38,6 @@ public class SimulatorTable extends JPanel {
 		setBackground(Color.WHITE);
 	}
 	
-	/*public static void main(String ... args) {
-		JFrame jf = new JFrame();
-		jf.setSize(400, 400);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.add (new SimulatorTable("test"));
-		jf.setVisible(true);
-	}*/
-	
 	private class MyTableModel extends AbstractTableModel {
 		
 		String[] fieldNames;
