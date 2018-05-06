@@ -15,8 +15,8 @@ import javax.swing.SwingUtilities;
 public class TrafficSimulator {
 
 	private int indiceActualEventos;
-	//La lista de eventos solo contendrá los eventos que se hayan cargado y que estén dentro de los ticks de la simulación
-	//que se van a ejecutar
+	/*La lista de eventos solo contendrá los eventos que se hayan cargado y que estén dentro de los ticks de la simulación
+	/que se van a ejecutar*/
 	private ArrayList<Event> listaEventos; 
 	private int tickActual;
 	private RoadMap mapaTrafico;
@@ -40,12 +40,10 @@ public class TrafficSimulator {
 	    }
 	}
 		
-	//Métodos
-	public void run(int time) throws SimulationException {
+	public void run(int time) {
 		int tick = 0;
 		//Before running the simulation we ensure that all the events are sorted by it's starting time		
-		Collections.sort(listaEventos, new SortbyTime());
-		
+		Collections.sort(listaEventos, new SortbyTime());		
 		try {
 			while (tick < time) {
 				//En primer lugar carga los eventos correspondientes a dicho tick
@@ -80,13 +78,13 @@ public class TrafficSimulator {
 				generarInformes(out);
 				
 			}		
-		} catch (Exception e) {
-			fireUpdateEvent(EventType.ERROR, "<html>"
-					+ "Ha ocurrido un error al ejecutar la simulación.<br><br>" +
-					"Error: " + e.getMessage() + "<br>" +
-					"Clase: " + e.getStackTrace()[0].getClassName() + "<br>" +
-					"Método: " + e.getStackTrace()[0].getMethodName() + "<br>" +
-					"Línea: " + e.getStackTrace()[0].getLineNumber() + "</html>");
+		} catch (Exception e) {			
+			fireUpdateEvent(EventType.ERROR,
+					"Ha ocurrido un error al ejecutar la simulación.\n" +
+					"Error: " + e.getMessage() + "\n" +
+					"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+					"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+					"Línea: " + e.getStackTrace()[0].getLineNumber());
 		}
 	}
 	
@@ -148,8 +146,7 @@ public class TrafficSimulator {
 				String aux = campo.getKey() + " = " + campo.getValue() + "\n";
 				out.write(aux.getBytes());
 			}
-		}
-			
+		}			
 		out.write("\n".getBytes());
 		out.flush();
 	}
@@ -172,6 +169,28 @@ public class TrafficSimulator {
 		}
 	}
 	
+	/**
+	 * Función que carga los eventos en el simulador antes de ejecutarlos
+	 * @param nTicksAEjecutar - Número de ticks a partir del actual de los que se cargarán eventos
+	 * @param eventosCargados - Array con los eventos que había introducido el usuario
+	 */
+	public void cargarEventos(ArrayList<Event> eventosCargados) {
+		//En primer lugar limpiamos la lista de eventos
+		listaEventos = new ArrayList<>();
+		indiceActualEventos = 0;
+		/* Ahora añadimos los eventos del fichero que deberían ocurrir en los ticks que pensamos simular
+			(los ticks que marca el spinner en este momento)
+			Como no tenemos garantizado que los eventos estén ordenados, hacemos un sort del array de eventos,
+			puesto que posteriormente necesitaremos tenerlos ordenados para usarlos en el run */
+		
+		eventosCargados.sort((Event e1, Event e2) -> e1.time - e2.time);
+		
+		for(Event e: eventosCargados) {			
+			listaEventos.add(e);
+			fireUpdateEvent(EventType.NEW_EVENT, "Ha ocurrido un error al insertar un evento");
+		}
+	}
+	
 	public void modifyOutputStream(OutputStream os) {
 		out = os;
 	}
@@ -182,6 +201,30 @@ public class TrafficSimulator {
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
 		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la ejecución del reset");
+	}
+	
+	public int getTime() {
+		if(primerTick) {
+			return -1;
+		} else {
+			return tickActual;
+		}
+	}
+	
+	public List<Junction> getJunctions() {
+		return mapaTrafico.getJunctions();
+	}
+	
+	public List<Road> getRoads() {
+		return mapaTrafico.getRoads();
+	}
+	
+	public List<Vehicle> getVehicles() {
+		return mapaTrafico.getVehicles();
+	}
+	
+	public Boolean hayEventosCargados() {
+		return listaEventos.size() > 0 ? true : false;
 	}
 	
 	public interface Listener {
@@ -203,6 +246,14 @@ public class TrafficSimulator {
 	
 	public void removeListener(Listener l) {
 		listeners.remove(l);
+	}
+	
+	public void removeFirstListener() {
+		listeners.remove(listeners.get(0));
+	}
+	
+	public int getListenersSize() {
+		return listeners.size();
 	}
 	
 	//Uso interno, evita tener que escribir el mismo bucle muchas veces
@@ -242,15 +293,15 @@ public class TrafficSimulator {
 			return tipoEvento;
 		}
 		
-		public List<Vehicle> getVehicles(){
+		public List<Vehicle> getVehicles() {
 			return mapaTrafico.getVehicles();
 		}
 		
-		public List<Junction> getJunctions(){
+		public List<Junction> getJunctions() {
 			return mapaTrafico.getJunctions();
 		}
 		
-		public List<Road> getRoads(){
+		public List<Road> getRoads() {
 			return mapaTrafico.getRoads();
 		}
 		
@@ -267,62 +318,6 @@ public class TrafficSimulator {
 			return tickActual;
 		}
 	}
-	
-	public int getTime() {
-		if(primerTick) {
-			return -1;
-		} else {
-			return tickActual;
-		}
-	}
-	
-	/**
-	 * Función que carga los eventos en el simulador antes de ejecutarlos
-	 * @param nTicksAEjecutar - Número de ticks a partir del actual de los que se cargarán eventos
-	 * @param eventosCargados - Array con los eventos que había introducido el usuario
-	 */
-	public void cargarEventos(/*int nTicksAEjecutar, */ArrayList<Event> eventosCargados) {
-		//En primer lugar limpiamos la lista de eventos
-		listaEventos = new ArrayList<>();
-		indiceActualEventos = 0;
-		//Ahora añadimos los eventos del fichero que deberían ocurrir en los ticks que pensamos simular
-		//(los ticks que marca el spinner en este momento)
-		//Como no tenemos garantizado que los eventos estén ordenados, hacemos un sort del array de eventos,
-		//puesto que posteriormente necesitaremos tenerlos ordenados para usarlos en el run
-		
-		eventosCargados.sort((Event e1, Event e2) -> e1.time - e2.time);
-		
-		for(Event e: eventosCargados) {
-			
-			listaEventos.add(e);
-			
-			/*if(e.time >= tickActual && e.time < tickActual + nTicksAEjecutar) {
-				listaEventos.add(e);
-			} else if (e.time > tickActual + nTicksAEjecuta) {
-				//Como están ordenados, si el tick de dicho elemento es mayor a el último tick que vamos 
-				//a ejecutar nos podemos salir
-				break;
-			}*/
-			
-			//TODO: revisar si está bien usado aquí el listener
-			fireUpdateEvent(EventType.NEW_EVENT, "Ha ocurrido un error al insertar un evento");
-		}
-	}
-	
-	public List<Junction> getJunctions() {
-		return mapaTrafico.getJunctions();
-	}
-	
-	public List<Road> getRoads() {
-		return mapaTrafico.getRoads();
-	}
-	
-	public List<Vehicle> getVehicles() {
-		return mapaTrafico.getVehicles();
-	}
-	
-	public Boolean hayEventosCargados() {
-		return listaEventos.size() > 0 ? true : false;
-	}
+
 	
 }

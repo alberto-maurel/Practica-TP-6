@@ -3,7 +3,6 @@ package es.ucm.fdi.layout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.extra.dialog.DialogWindow;
@@ -15,7 +14,6 @@ import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
 import es.ucm.fdi.model.Event;
 import es.ucm.fdi.util.TextStream;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,15 +27,11 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,7 +69,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 * Creación del Layout principal
 	 * @param ctrl - Controlador de la aplicación
 	 */
-	@SuppressWarnings("unchecked")
 	public SimulatorLayout(Controller ctrl) {
 		super("Traffic Simulator");
 		controlador = ctrl;
@@ -83,8 +76,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Creación del panel superior
-		//
-		//
 		String[] columnNamesQueue = {"#", "Time", "Type"};
 		ArrayList<Event> eventsArray = new ArrayList<>();
 		
@@ -105,15 +96,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		
 		//Creación de la barra superior
-		//
-		//
 		spinner = new JSpinner();
 		addBars(fichero, reports);
 		
 		
 		//Creación de la barra inferior
-		//
-		//
 		JToolBar lowerBar = new JToolBar();
 		lowerBar.setFloatable(false);
 		lowerBarMessage = new JLabel(" ");
@@ -122,8 +109,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		
 		//Creación del panel inferior izquierdo
-		//
-		//
 		String[] columnNamesVehicle = {"ID", "Road", "Location", "Speed", "Km", "Faulty units", "Itinerary"};
 		String[] columnNamesRoad = {"ID", "Source", "Target", "Length", "Max Speed", "Vehicles"};
 		String[] columnNamesJunction = {"ID", "Green", "Red"};
@@ -141,20 +126,15 @@ public class SimulatorLayout extends JFrame implements Listener {
 		leftLowerPanel.add(junctionsTable);
 		
 		leftLowerPanel.setSize(100, 100);
-		leftLowerPanel.setBackground(Color.WHITE);
-		
+		leftLowerPanel.setBackground(Color.WHITE);		
 		
 		//Creación del grafo
-		//
-		//
 		grafo = new GraphLayoutClass();
 		
 		//Añadimos PopUpMenu para plantillas de eventos
 		addPopUpMenu();
 		
 		//Montamos todo el layout junto
-		//
-		//
 		JSplitPane lowerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftLowerPanel, grafo);
 		JSplitPane middleSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upperPanel, lowerSplit);		
 		add(middleSplit, BorderLayout.CENTER);
@@ -164,10 +144,23 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		middleSplit.setDividerLocation(.35);
 		lowerSplit.setDividerLocation(.5);
-		controlador.addSimulatorListener(this);
+		/* Para el modo batch se registra el controlador como listener,
+		 * por lo que para notificar los errores solo con diálogo, damos
+		 * de baja ese primer listener creado y añadimos este
+		 */
+		if (controlador.getListenersSize() > 0) {
+			controlador.removeFirstListener();
+			controlador.addSimulatorListener(this);
+		}
 		controlador.modifyInputStream(new ByteArrayInputStream(fichero.getText().getBytes()));
 	}
 	
+	/*
+	 * Creación de un panel de texto
+	 * @param title - Título del recuadro
+	 * @param tArea - JTextArea donde se muestran los eventos/reportes
+	 * @param d - Dimensión del JScrollPane creado
+	 */
 	private JScrollPane createTextAreaPanel(String title, JTextArea tArea, Dimension d) {
 		Border b = BorderFactory.createLineBorder(Color.black, 2);
 		JScrollPane p = new JScrollPane(tArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -184,7 +177,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 			try {
 				tArea.read(in, null);
 			} catch (IOException e) {
-				e.printStackTrace();
+				error("Ha ocurrido un error durante la lectura del fichero de eventos.\n" +
+						"Error: " + e.getMessage() + "\n" +
+						"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+						"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+						"Línea: " + e.getStackTrace()[0].getLineNumber());
 			}
 		}
 		return p;
@@ -203,13 +200,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JMenu generate = new JMenu("Generate");
 		
 		//Creación de los 3 primeros botones
-		//
 		JToolBar bar = new JToolBar();
 		bar.add(createComponents1(file, fichero));		
 		
 		
 		//Creación de los 3 siguientes botones, spinner y textArea para mostrar el tick actual
-		//
 		JLabel label = new JLabel("Steps: ");
 		spinner.setValue(controlador.getPasosAEjecutar());
 		spinner.setMaximumSize(new Dimension(50,50));
@@ -237,12 +232,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 		bar.add(bar2);
 		
 		//Creación de los últimos botones
-		//
 		bar.add(createComponents3(file, generate, reports));
 		
-		
 		//Creación de la barra completa
-		//
 		JMenuBar menu = new JMenuBar();
 		menu.add(file);
 		menu.add(simulator);
@@ -383,17 +375,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 	}
 	
 	/** 
-	 * Función que corre la simulación y controla las excepciones 
+	 * Función que corre la simulación
 	 */
 	private void runSimulation() {
 		controlador.run((int) spinner.getValue());
-		/*try {
-			
-		} catch (SimulationException e) { //Ya no serviría, ya tenemos el error de listener
-			ErrorDialog error = new ErrorDialog(e.getMessage());
-			error.open();
-			//System.out.println("Error en la simulación");
-		}*/
 	}
 	
 	/**
@@ -413,7 +398,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 				controlador.modifyInputStream(new FileInputStream(file));
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				error("Ha ocurrido un error durante la operación de carga.\n" +
+						"Error: " + e.getMessage() + "\n" +
+						"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+						"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+						"Línea: " + e.getStackTrace()[0].getLineNumber());
 			}
 		  controlador.cargarEventos();
 			try {
@@ -427,12 +416,15 @@ public class SimulatorLayout extends JFrame implements Listener {
 					  line = in.readLine();
 					}
 			} catch (IOException e) {
-				e.printStackTrace();
+				error("Ha ocurrido un error durante la operación de carga.\n" +
+						"Error: " + e.getMessage() + "\n" +
+						"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+						"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+						"Línea: " + e.getStackTrace()[0].getLineNumber());
 			}	
 		}		
 	}
-	
-	
+		
 	/**
 	 * Guarda JTextArea en un fichero
 	 * @param text - JTextArea en el que se muestran el archivo a guardar
@@ -452,12 +444,16 @@ public class SimulatorLayout extends JFrame implements Listener {
 	            		JOptionPane.INFORMATION_MESSAGE);
 	            lowerBarMessage.setText(lowerBarText);
 	         } catch (IOException e) {
-	            e.printStackTrace();
+	        	 error("Ha ocurrido un error durante la operación de guardado.\n" +
+							"Error: " + e.getMessage() + "\n" +
+							"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
+							"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
+							"Línea: " + e.getStackTrace()[0].getLineNumber());
 	         }
 	     }
 	}
 	
-	private void cargarEventos() {		
+	private void cargarEventos() {
 		//Reiniciamos el flujo para poder volver a coger los datos
 		controlador.modifyInputStream(new ByteArrayInputStream(fichero.getText().getBytes()));
 		controlador.cargarEventos();
@@ -489,9 +485,23 @@ public class SimulatorLayout extends JFrame implements Listener {
 		lowerBarMessage.setText("La simulación se ha ejecutado correctamente =D");
 	}
 	
-	//TODO: testear
+	/**
+	 * Genera el cuadro informativo del error
+	 * @param ue - UpdateEvent con la información del listener
+	 * @param error - String con la información del error concreto a mostrar
+	 */
 	public void error(UpdateEvent ue, String error) {
-		lowerBarMessage.setText("Error"); //El String error es muy largo y la barra se vuelve ahora gigante
+		lowerBarMessage.setText("Error");
+		ErrorDialog err = new ErrorDialog(error);
+		err.open();
+	}
+	
+	/**
+	 * Genera el cuadro informativo del error
+	 * @param error - String con la información del error concreto a mostrar
+	 */
+	public void error(String error) {
+		lowerBarMessage.setText("Error");
 		ErrorDialog err = new ErrorDialog(error);
 		err.open();
 	}
@@ -508,6 +518,31 @@ public class SimulatorLayout extends JFrame implements Listener {
 		tiempoAct.setText("" + (controlador.getPasos() + 1));
 		habilitarBotones();
 		repaint();
+	}
+	
+	private void habilitarBotones() {
+		if(controlador.hayEventosCargados()) {
+			guardar.setEnabled(true);
+			borrar.setEnabled(true);
+			play.setEnabled(true);
+			reset.setEnabled(true);
+			getOutput.setEnabled(true);
+			generateReport.setEnabled(true);
+			deleteReport.setEnabled(true);
+			saveReport.setEnabled(true);
+			redirectOutput.setEnabled(true);
+		}
+		else {
+			guardar.setEnabled(false);
+			borrar.setEnabled(false);
+			play.setEnabled(false);
+			reset.setEnabled(false);
+			getOutput.setEnabled(false);
+			generateReport.setEnabled(false);
+			deleteReport.setEnabled(false);
+			saveReport.setEnabled(false);
+			redirectOutput.setEnabled(false);
+		}
 	}
 	
 	void generateSelectedReports(JTextArea reports) {
@@ -545,6 +580,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 				newDialog.getSelectedRoads(), newDialog.getSelectedVehicles());	
 	}
 	
+	/**
+	 * Implementación del menú para poder añadir plantillas de eventos
+	 */
 	void addPopUpMenu() {
 		JPopupMenu editorPopupMenu = new JPopupMenu();
 		
@@ -632,7 +670,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 	});
 	}
 	
-	//Cutrérrimo
 	private Map<String, String> generateTemplates() {
 		Map<String, String> templates = new HashMap<>();
 		templates.put("New RR Junction", "[new_junction]\n" + 
@@ -700,29 +737,5 @@ public class SimulatorLayout extends JFrame implements Listener {
 		return templates;
 	}
 
-	private void habilitarBotones() {
-		if(controlador.hayEventosCargados()) {
-			guardar.setEnabled(true);
-			borrar.setEnabled(true);
-			play.setEnabled(true);
-			reset.setEnabled(true);
-			getOutput.setEnabled(true);
-			generateReport.setEnabled(true);
-			deleteReport.setEnabled(true);
-			saveReport.setEnabled(true);
-			redirectOutput.setEnabled(true);
-		}
-		else {
-			guardar.setEnabled(false);
-			borrar.setEnabled(false);
-			play.setEnabled(false);
-			reset.setEnabled(false);
-			getOutput.setEnabled(false);
-			generateReport.setEnabled(false);
-			deleteReport.setEnabled(false);
-			saveReport.setEnabled(false);
-			redirectOutput.setEnabled(false);
-		}
-	}
 }
  

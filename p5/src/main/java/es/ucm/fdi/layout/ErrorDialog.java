@@ -41,10 +41,12 @@ public class ErrorDialog extends JDialog {
 		mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
 
 		JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		JLabel texto = new JLabel();
-		texto.setVerticalAlignment(JLabel.CENTER);
-		infoPanel.add(texto);
-		texto.setText(error);
+		String[] lines = error.split("\n");
+		for (String line : lines) {
+		    JLabel label = new JLabel(line);
+		    label.setVerticalAlignment(JLabel.CENTER);
+		    infoPanel.add(label);
+		}
 		
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(infoPanel, BorderLayout.PAGE_START);
