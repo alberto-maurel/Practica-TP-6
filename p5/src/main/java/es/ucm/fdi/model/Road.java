@@ -147,7 +147,7 @@ public class Road extends SimulatedObject implements Describable{
 		//En caso de que nuestra carretera tuviese algún vehículo, tenemos que quitar los últimos
 		//espacio en blanco y coma que añadimos
 		if(sb.length() > 1) {
-			sb.delete(sb.length() - 2, sb.length() - 1);
+			sb.delete(sb.length() - 2, sb.length());
 		}
 		sb.append("]");
 		return sb.toString();

@@ -60,10 +60,17 @@ public class TrafficSimulator {
 					r.avanza();
 				}
 				
+				
 				//Avanzamos los cruces
 				for(Junction j: mapaTrafico.getJunctions()) {
 					j.avanza();
 				}
+				
+				//Ahora que necesitaremos las versiones inmutables las guardamos en cache
+				mapaTrafico.cacheRoads();
+				mapaTrafico.cacheJunctions();
+				mapaTrafico.cacheVehicles();
+				mapaTrafico.cacheSimObjects();
 				
 				//Y por último escribimos los informes en el orden indicado
 				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");

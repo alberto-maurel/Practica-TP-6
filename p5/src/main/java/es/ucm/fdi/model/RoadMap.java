@@ -9,36 +9,56 @@ import java.util.HashMap;
 public class RoadMap {
 	
 	//Map que contiene como claves los id del objeto y como valor el objeto
-	private HashMap<String, SimulatedObject> simObjects; //Permite buscar los elementos
+	private HashMap<String, SimulatedObject> simObjects = new HashMap<>(); //Permite buscar los elementos
 	
 	//Listados de cada una de las clases de elementos ordenados por orden de llegada
 	private List<Junction> junctions = new ArrayList<>();
 	private List<Road> roads = new ArrayList<>();
 	private List<Vehicle> vehicles = new ArrayList<>();
 	
+	
+	private Map<String, SimulatedObject> unmodifiableSimObjects = 
+			Collections.unmodifiableMap(simObjects);
+	private List<Junction> unmodifiableJunctions = Collections.unmodifiableList(junctions);
+	private List<Road> unmodifiableRoads = Collections.unmodifiableList(roads);
+	private List<Vehicle> unmodifiableVehicles = Collections.unmodifiableList(vehicles);
 
-	public RoadMap() {
-		simObjects = new HashMap<>();		
-		junctions = new ArrayList<>();
-		roads = new ArrayList<>();
-		vehicles = new ArrayList<>();
-	}
+	public RoadMap() {}
 	
 	
 	public List<Junction> getConstantJunctions() {
-		return Collections.unmodifiableList(junctions);
+		return unmodifiableJunctions;
 	}
 	
 	public List<Road> getConstantRoads() {
-		return Collections.unmodifiableList(roads);
+		return unmodifiableRoads;
 	}
 	
 	public List<Vehicle> getConstantVehicles() {
-		return Collections.unmodifiableList(vehicles);
+		return unmodifiableVehicles;
 	}
 	
 	public Map<String, SimulatedObject> getConstantSimObjects() {
-		return Collections.unmodifiableMap(simObjects);
+		return unmodifiableSimObjects;
+	}
+	
+	//Puesto que tenemos que actualizar las listas constantes tras modificar las listas,
+	//incluimos unas funciones a las que se llama tras realizar modificaciones
+	
+	public void cacheRoads() {
+		unmodifiableRoads = Collections.unmodifiableList(roads);
+	}
+	
+	public void cacheJunctions() {
+		unmodifiableJunctions = Collections.unmodifiableList(junctions);
+	}
+	
+	public void cacheVehicles() {
+		unmodifiableVehicles = Collections.unmodifiableList(vehicles);
+	}
+	
+	public void cacheSimObjects() {
+		unmodifiableSimObjects = Collections.unmodifiableMap(simObjects);
 	}
 	
 	public List<Junction> getJunctions() {
