@@ -42,25 +42,6 @@ public class RoadMap {
 		return unmodifiableSimObjects;
 	}
 	
-	//Puesto que tenemos que actualizar las listas constantes tras modificar las listas,
-	//incluimos unas funciones a las que se llama tras realizar modificaciones
-	
-	public void cacheRoads() {
-		unmodifiableRoads = Collections.unmodifiableList(roads);
-	}
-	
-	public void cacheJunctions() {
-		unmodifiableJunctions = Collections.unmodifiableList(junctions);
-	}
-	
-	public void cacheVehicles() {
-		unmodifiableVehicles = Collections.unmodifiableList(vehicles);
-	}
-	
-	public void cacheSimObjects() {
-		unmodifiableSimObjects = Collections.unmodifiableMap(simObjects);
-	}
-	
 	public List<Junction> getJunctions() {
 		return junctions;
 	}

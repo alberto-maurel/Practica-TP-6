@@ -62,6 +62,15 @@ public class SimulatorTable extends JPanel {
 			return fieldNames.length;
 		}
 		@Override // ineficiente: ¿puedes mejorarlo?
+		//No hemos mejorado la eficiencia de esta función. Tenemos dos ideas, pero no vemos ninguna
+		//de las dos lo suficientemente clara como para implementarla:
+		//1. Llamar al describe una única vez y cachear los resultados para no repetir llamadas.
+		//	 Sin embargo: ¿Cómo podemos saber la siguiente ocasión si han cambiado o no los elementos?
+		//   No vemos claro donde hacer ese cálculo (podríamos hacerlo cuando nos piden el primer 
+		//   elemento de la fila, pero no sabemos si llamarán a la función siempre en orden).
+		//2. Implementar un describe que devuelva solo un elemento de la tabla. Sin embargo, los 
+		//   elementos tendrían que tener una especie de clave que les indicase que elemento devolver,
+		//   con lo que el describe se volvería un gran switch.
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			HashMap<String, String> out = new HashMap<>();
 			elements.get(rowIndex).describe(out, Integer.toString(rowIndex));
