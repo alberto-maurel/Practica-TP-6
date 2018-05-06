@@ -22,7 +22,6 @@ import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.layout.SimulatorLayout;
 
-//TODO: cambiar para que en los describables cojamos los inmutables
 //TODO: revisar la entrega de la práctica 4
 //TODO: hacer leeme (cambios sobre la entrega 4, opcionales)
 //TODO: colocar las funciones

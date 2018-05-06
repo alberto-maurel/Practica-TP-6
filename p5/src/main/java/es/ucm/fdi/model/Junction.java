@@ -108,7 +108,15 @@ public class Junction extends SimulatedObject implements Describable {
 	 * @return String que contiene la descripción de la carretera con semáforo verde 
 	 * en ese cruce (en caso de haberla)
 	 */
-	private String toStringRoad(int index) {
+	/* Dado que la descripción entre todos los tipos de junctions cambia solo en una línea 
+	 * (el green va acompañado de dos puntos y el número de tick que quedan hasta que cambie)
+	 * comprobamos a que clase pertenece el elemento mediante el instanceOf para poder escribir
+	 * la salida que corresponda. 
+	 * Sabemos que el instanceOf no es muy recomendable, pero en este caso evita tener que 
+	 * duplicar bastante código y como lo que nos pasan es un array de junctions necesitamos
+	 * ver de que tipo es cada una
+	 */
+	protected String toStringRoad(int index) {
 		StringBuilder sb = new StringBuilder();
 		if(index < carreterasEntrantesOrdenadas.size()) {
 			sb.append('(');
@@ -117,7 +125,16 @@ public class Junction extends SimulatedObject implements Describable {
 			sb.append(',');
 			//Ahora chequeamos de qué color está el semáforo
 			if (index == semaforoVerde) {
-				sb.append("green");
+				if(this instanceof MostCrowded) {
+					MostCrowded auxJunction = (MostCrowded) this;
+					sb.append(auxJunction.toStringGreen());
+				} else if(this instanceof RoundRobin) {
+					RoundRobin auxJunction = (RoundRobin) this;
+					sb.append(auxJunction.toStringGreen());
+				} else {
+					sb.append(toStringGreen());
+				}
+				
 			} else {
 				sb.append("red");
 			}
@@ -157,13 +174,9 @@ public class Junction extends SimulatedObject implements Describable {
 		if (redOutput.length() > 1) redOutput.deleteCharAt(redOutput.length() - 1);
 		redOutput.append(']');
 		out.put("Red", redOutput.toString());
-	}		
+	}	
+	
+	protected String toStringGreen () {
+		return "green";
+	}
 }
-
-
-
-
-
-
-
-
