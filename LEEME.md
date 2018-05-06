@@ -92,8 +92,9 @@ El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(
    (como el fillReportDetails de Road) y en las nuevas funciones (por ejemplo el describable de las junctions) 
    se emplea StringBuilder.
 
-• Manejo de excepciones: si no sabes cómo manejar algo, no lo manejes (pero añade contexto), y pásalo
-para arriba:
+ + Manejo de excepciones: si no sabes cómo manejar algo, no lo manejes (pero añade contexto), y pásalo para arriba.
+    
+    Hemos realizado cambios en el tratamiento de las excepciones, tanto para el modo GUI como para el modo batch
 
   
 ## Comentarios respecto a la práctica 5:
@@ -111,5 +112,5 @@ para arriba:
 - Selección de los elementos de los cuales queremos generar el output en dicho paso en el botón 
   "generarOutput"
 - Poner en el grafo adecuadamente el color del semáforo (pensábamos que esto era algo que había
-  que hacer, pero el otro día en clase nos pareció entender que no era así
-- Menú de plantillas de eventos
+  que hacer, pero el otro día en clase nos pareció entender que no era así)
+- Menú de plantillas de eventos.
