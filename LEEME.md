@@ -1,5 +1,10 @@
 # Practica-TP-5
 
+## Laura Castilla y Alberto Maurel
+
+Esperamos que el leeme contenga los datos que necesitas. Por un lado incluimos tu corrección de la p4 junto con las medidas
+que hemos adoptado para cada error. Por otro, comentarios sobre la entrega de la p5.
+
 ## Correcciones respecto a la práctica 4:
 
 ### Claridad:
@@ -40,8 +45,9 @@
   
 ### Diseño:
  
-El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(N2). Habría sido mejor usar una estructura              ordenada... como por ejemplo, un MultiTreeMap.
-  
+ + El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(N2). Habría sido mejor usar una estructura              ordenada... como por ejemplo, un MultiTreeMap.
+   
+   Totalmente de acuerdo. Hemos sustituido el array de eventos por un MultiTreeMap en esta entrega para solucionar el problema.
   
  + Deberíais haber usado Ini.store() para generar la salida, en lugar de reimplementarlo en TrafficSimulator.writeReport.
 
@@ -59,14 +65,17 @@ El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(
    buscarCarreteraAtascadaIni – sacad factor común!
    
    Corregido =D. De cara a esta práctica hemos intentado sacar factor común en la medida de lo posible (véase el Describable
-   de Junction y junctions avanzadas).
+   de Junction y junctions avanzadas). 
+   
+   En la clase TrafficSimulator sin embargo hemos tenido dudas acerca de si era mejor hacer
+   refactor de una función a costa de hacer otra más ilegible (ahora hay dos WriteReports, uno al que se le indica que elementos
+   imprimir y otro que imprime directamente todos los elementos). Como esto es algo de la práctica p5 nos gustaría que nos 
+   dieses tu feedback sobre qué hacer en este caso concreto.
 
  + Collections.unmodifiableX tiene un coste no-nulo. Es mejor cachear el resultado la primera vez que se
    llama y devolverlo en llamadas futuras a llamarlo cada vez.
    
-   Se han añadido como atributos unas unmodifiableList y el unmodifiableMap para poder cachear los resultados. Tras
-   actualizar los elementos en el TrafficSimulator mediante la función avanza de cada uno de ellos, se cachean los
-   resultados para posteriormente utilizarlos en las llamadas a writeReports.
+   Se han añadido como atributos unas unmodifiableList y el unmodifiableMap para poder cachear los resultados.
 
  + No entiendo vuestro Junction. Usais Map<String, Queue...> y Map<String, Road>, pero lo que
    realmente os simplificaría la vida sería Map<Road, Queue...> y Map<Junction, Road>. ¡Usad lo que
@@ -94,8 +103,9 @@ El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(
 
  + Manejo de excepciones: si no sabes cómo manejar algo, no lo manejes (pero añade contexto), y pásalo para arriba.
     
-    Hemos realizado cambios en el tratamiento de las excepciones, tanto para el modo GUI como para el modo batch
-
+    Hemos realizado cambios en el tratamiento de las excepciones, tanto para el modo GUI como para el modo batch.
+    
+ Esperamos haber corregido todo lo que nos habías indicado de la práctica anterior.
   
 ## Comentarios respecto a la práctica 5:
 ### Notas:
@@ -111,6 +121,8 @@ El coste de llamar a vuestro insertaEvento para N eventos es, en el caso peor,O(
 - Redirección de outputs
 - Selección de los elementos de los cuales queremos generar el output en dicho paso en el botón 
   "generarOutput"
+- Menú de plantillas de eventos.
+- Se han implementado tanto la barra de herramientas como las barras de menú.
+- Mostrar el contenido actual de los informes a un fichero de texto.
 - Poner en el grafo adecuadamente el color del semáforo (pensábamos que esto era algo que había
   que hacer, pero el otro día en clase nos pareció entender que no era así)
-- Menú de plantillas de eventos.
