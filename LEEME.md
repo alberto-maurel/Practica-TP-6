@@ -111,4 +111,5 @@ para arriba:
 - Selección de los elementos de los cuales queremos generar el output en dicho paso en el botón 
   "generarOutput"
 - Poner en el grafo adecuadamente el color del semáforo (pensábamos que esto era algo que había
-  que hacer, pero el otro día en clase nos pareció entender que no era así)
+  que hacer, pero el otro día en clase nos pareció entender que no era así
+- Menú de plantillas de eventos
