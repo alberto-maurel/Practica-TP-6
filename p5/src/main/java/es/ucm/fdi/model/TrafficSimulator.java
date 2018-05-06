@@ -4,20 +4,19 @@ import java.util.List;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
+import es.ucm.fdi.util.MultiTreeMap;
+
 public class TrafficSimulator {
 
-	private int indiceActualEventos;
 	/*La lista de eventos solo contendrá los eventos que se hayan cargado y que estén dentro de los ticks de la simulación
 	/que se van a ejecutar*/
-	private ArrayList<Event> listaEventos; 
+	private MultiTreeMap<Integer, Event> listaEventos; 
 	private int tickActual;
 	private RoadMap mapaTrafico;
 	private OutputStream out;
@@ -25,32 +24,34 @@ public class TrafficSimulator {
 	private Boolean primerTick;
 	
 	public TrafficSimulator(OutputStream out) {
-		indiceActualEventos = 0;
-		this.listaEventos = new ArrayList<>();
+		this.listaEventos = new MultiTreeMap<>();
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
 		primerTick = true;
 		this.out = out;
 		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la construcción del simulador");
 	}
-	
-	public class SortbyTime implements Comparator<Event> {
-	    public int compare(Event a, Event b) {
-	        return a.time - b.time;
-	    }
-	}
-		
+
 	public void run(int time) {
 		int tick = 0;
-		//Before running the simulation we ensure that all the events are sorted by it's starting time		
-		Collections.sort(listaEventos, new SortbyTime());		
 		try {
 			while (tick < time) {
-				//En primer lugar carga los eventos correspondientes a dicho tick
-				while(indiceActualEventos < listaEventos.size() && 
-						listaEventos.get(indiceActualEventos).time == tickActual) {
-					listaEventos.get(indiceActualEventos).execute(mapaTrafico);
-						++indiceActualEventos;
+				ArrayList<Event> eventosAEliminar = new ArrayList<>();
+				for(Event ev: listaEventos.innerValues()) {
+					//Si el evento se debiera ejecutar en el tick actual lo añadimos a la lista de eventos
+					//y lo guardamos en el array para deletearlo despues
+					if(ev.time != tickActual) {
+						break;
+					} else {
+						eventosAEliminar.add(ev);
+						ev.execute(mapaTrafico);
+					}
+				}
+				
+				//Eliminamos los elementos que ya hemos ejecutado (no queremos eliminar elementos de una 
+				//estructura mientras la iteramos)
+				for(Event ev: eventosAEliminar) {
+					listaEventos.removeValue(ev.time, ev);
 				}
 				
 				//Ahora avanzo cada una de las carreteras (y ellas a su vez hacen avanzar a los coches)
@@ -64,17 +65,11 @@ public class TrafficSimulator {
 					j.avanza();
 				}
 				
-				//Ahora que necesitaremos las versiones inmutables las guardamos en cache
-				mapaTrafico.cacheRoads();
-				mapaTrafico.cacheJunctions();
-				mapaTrafico.cacheVehicles();
-				mapaTrafico.cacheSimObjects();
-				
+				primerTick = false;
 				//Y por último escribimos los informes en el orden indicado
 				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");
 				++tick;
 				++tickActual;
-				primerTick = false;
 				generarInformes(out);
 				
 			}		
@@ -109,6 +104,11 @@ public class TrafficSimulator {
 	}
 	
 	//Idéntico al generarInformes pero modificado para el nuevo output
+	//No se nos ha ocurrido una forma de hacer refactoring mejor que tener guardado de antemano
+	//un set con los elementos, pero creemos que esa solución hace el código más farragoso que de
+	//esta forma (puesto que tenemos que ir actualizando en cada paso el set por si se han añadido
+	//elementos nuevos).
+	//De todas formas, si prefieres la otra opción nos gustaría saberlo de cara a la siguiente práctica
 	public void generarInformes(OutputStream out, Set<String> junctions, 
 			Set<String> roads, Set<String> vehicles) throws IOException {
 		for(Junction j: mapaTrafico.getConstantJunctions()) {
@@ -152,41 +152,18 @@ public class TrafficSimulator {
 	}
 	
 	/**
-	 * Inserta el evento de forma ordenada según el momento en el que se produce
-	 * @param evento
-	 */
-	public void insertaEvento(Event evento) throws SimulationException {
-		//Comprobamos si el evento se ejecuta en un ciclo que no haya ocurrido ya
-		if(evento.time >= tickActual) {
-			//Recorremos el array buscando donde insertarlo y hacemos lo propio
-			int posInsertar = 0;
-			while(posInsertar < listaEventos.size() && listaEventos.get(posInsertar).time <= evento.time) {
-				++posInsertar;
-			}
-			listaEventos.add(posInsertar, evento);
-		} else {
-			throw new SimulationException("Se ha añadido un evento en un momento posterior a su ejecución");
-		}
-	}
-	
-	/**
 	 * Función que carga los eventos en el simulador antes de ejecutarlos
 	 * @param nTicksAEjecutar - Número de ticks a partir del actual de los que se cargarán eventos
 	 * @param eventosCargados - Array con los eventos que había introducido el usuario
 	 */
 	public void cargarEventos(ArrayList<Event> eventosCargados) {
 		//En primer lugar limpiamos la lista de eventos
-		listaEventos = new ArrayList<>();
-		indiceActualEventos = 0;
-		/* Ahora añadimos los eventos del fichero que deberían ocurrir en los ticks que pensamos simular
-			(los ticks que marca el spinner en este momento)
-			Como no tenemos garantizado que los eventos estén ordenados, hacemos un sort del array de eventos,
-			puesto que posteriormente necesitaremos tenerlos ordenados para usarlos en el run */
-		
-		eventosCargados.sort((Event e1, Event e2) -> e1.time - e2.time);
-		
-		for(Event e: eventosCargados) {			
-			listaEventos.add(e);
+		listaEventos = new MultiTreeMap<>();
+
+		for(Event e: eventosCargados) {	
+			if(e.time >= tickActual) {
+				listaEventos.putValue(e.time,e);
+			}
 			fireUpdateEvent(EventType.NEW_EVENT, "Ha ocurrido un error al insertar un evento");
 		}
 	}
@@ -196,8 +173,8 @@ public class TrafficSimulator {
 	}
 	
 	public void reset() {
-		indiceActualEventos = 0;
-		listaEventos = new ArrayList<>();
+		primerTick = true;
+		listaEventos = new MultiTreeMap<>();
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
 		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la ejecución del reset");
@@ -308,8 +285,8 @@ public class TrafficSimulator {
 		// Actualizamos la tabla eliminando los eventos ya procesados
 		public List<Event> getEventQueue() {
 			ArrayList<Event> listaEventosPorProcesar = new ArrayList<Event>();
-			for (int i = indiceActualEventos; i < listaEventos.size(); ++i) {
-				listaEventosPorProcesar.add(listaEventos.get(i));
+			for(Event ev: listaEventos.innerValues()) {
+				listaEventosPorProcesar.add(ev);
 			}
 			return listaEventosPorProcesar;
 		}
@@ -318,6 +295,4 @@ public class TrafficSimulator {
 			return tickActual;
 		}
 	}
-
-	
 }

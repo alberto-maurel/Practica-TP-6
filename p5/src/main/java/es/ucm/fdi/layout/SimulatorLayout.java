@@ -521,7 +521,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	}
 	
 	private void habilitarBotones() {
-		if(controlador.hayEventosCargados()) {
+		if(controlador.hayEventosCargados() || controlador.getPasos() + 1 > 0) {
 			guardar.setEnabled(true);
 			borrar.setEnabled(true);
 			play.setEnabled(true);

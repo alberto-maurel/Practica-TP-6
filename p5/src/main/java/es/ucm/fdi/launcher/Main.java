@@ -22,9 +22,6 @@ import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.layout.SimulatorLayout;
 
-//TODO: las cache-cosas sobran que se supone que se actualizan solas, dice Freire
-//TODO: el tiempo hace cosas raras (va distinto al resetear)
-
 public class Main {
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static Integer _timeLimit = null;
