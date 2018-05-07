@@ -147,7 +147,7 @@ public class Controller implements Listener {
 	
 	public void generarInformes(OutputStream out) {
 		try {
-			simulador.generarInformes(out);
+			simulador.generarInformes(out, null, null, null);
 		} catch (IOException e) {
 			error("Ha ocurrido un error durante la generación de los informes.\n" +
 					"Error: " + e.getMessage() + "\n" +

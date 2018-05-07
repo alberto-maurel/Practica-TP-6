@@ -44,6 +44,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	SimulatorTable junctionsTable;
 	SimulatorTable eventsTable;
 	JSpinner spinner;
+	JSpinner delaySpinner;
 	JTextField tiempoAct;
 	JTextArea fichero;
 	JLabel lowerBarMessage;
@@ -57,6 +58,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private SimulatorAction borrar;
 	private SimulatorAction events;
 	private SimulatorAction play;
+	private SimulatorAction stop;
 	private SimulatorAction reset;
 	private SimulatorAction getOutput;
 	private SimulatorAction generateReport;
@@ -96,6 +98,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		
 		//Creación de la barra superior
+		delaySpinner = new JSpinner(new SpinnerNumberModel(0, 0, 10000, 100));
 		spinner = new JSpinner();
 		addBars(fichero, reports);
 		
@@ -204,7 +207,13 @@ public class SimulatorLayout extends JFrame implements Listener {
 		bar.add(createComponents1(file, fichero));		
 		
 		
+				
+		
 		//Creación de los 3 siguientes botones, spinner y textArea para mostrar el tick actual
+		JLabel delayLabel = new JLabel("Delay: ");
+		delaySpinner.setValue(0);
+		delaySpinner.setMaximumSize(new Dimension(50,50));
+		
 		JLabel label = new JLabel("Steps: ");
 		spinner.setValue(controlador.getPasosAEjecutar());
 		spinner.setMaximumSize(new Dimension(50,50));
@@ -222,6 +231,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 		tiempoAct.setText("" + 0);
 		
 		JToolBar bar2 = new JToolBar();
+		bar2.add(delayLabel);
+		bar2.add(delaySpinner);
 		bar2.add(label);
 		bar2.add(spinner);
 		bar2.add(timeLabel);
@@ -293,6 +304,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
 				VK_P, "control P", ()-> runSimulation());
 		
+		stop = new SimulatorAction(
+				"Stop", "stop.png", "Parar la simulación", KeyEvent.
+				VK_S, "control S", ()-> System.err.println("Estamos en ello"));
+		
 		reset = new SimulatorAction(
 				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
 				VK_R, "control R", ()-> { controlador.reset(); reports.setText("");});
@@ -323,11 +338,13 @@ public class SimulatorLayout extends JFrame implements Listener {
 		JToolBar bar = new JToolBar();
 		bar.add(events);
 		bar.add(play);
+		bar.add(stop);
 		bar.add(reset);
 		bar.setFloatable(false);
 		
 		//Y al menú
 		simulator.add(play);
+		simulator.add(stop);
 		simulator.add(reset);
 		simulator.add(redirectOutput);
 		return bar;

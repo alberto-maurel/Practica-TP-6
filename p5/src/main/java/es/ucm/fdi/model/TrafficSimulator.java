@@ -70,7 +70,7 @@ public class TrafficSimulator {
 				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");
 				++tick;
 				++tickActual;
-				generarInformes(out);
+				generarInformes(out, null, null, null);
 				
 			}		
 		} catch (Exception e) {			
@@ -83,36 +83,10 @@ public class TrafficSimulator {
 		}
 	}
 	
-	public void generarInformes(OutputStream out) throws IOException {
-		for(Junction j: mapaTrafico.getConstantJunctions()) {
-			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-			j.generarInforme(tickActual, reporte);
-			writeReport(reporte, out);
-		}
-		
-		for(Road j:mapaTrafico.getConstantRoads()) {
-			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-			j.generarInforme(tickActual, reporte);
-			writeReport(reporte, out);
-		}
-		
-		for(Vehicle j:mapaTrafico.getConstantVehicles()) {
-			LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
-			j.generarInforme(tickActual, reporte);
-			writeReport(reporte, out);
-		}
-	}
-	
-	//Idéntico al generarInformes pero modificado para el nuevo output
-	//No se nos ha ocurrido una forma de hacer refactoring mejor que tener guardado de antemano
-	//un set con los elementos, pero creemos que esa solución hace el código más farragoso que de
-	//esta forma (puesto que tenemos que ir actualizando en cada paso el set por si se han añadido
-	//elementos nuevos).
-	//De todas formas, si prefieres la otra opción nos gustaría saberlo de cara a la siguiente práctica
 	public void generarInformes(OutputStream out, Set<String> junctions, 
 			Set<String> roads, Set<String> vehicles) throws IOException {
 		for(Junction j: mapaTrafico.getConstantJunctions()) {
-			if(junctions.contains(j.identificador)) {
+			if(junctions == null || junctions != null && junctions.contains(j.identificador)) {
 				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 				j.generarInforme(tickActual, reporte);
 				writeReport(reporte, out);
@@ -120,7 +94,7 @@ public class TrafficSimulator {
 		}
 		
 		for(Road j: mapaTrafico.getConstantRoads()) {
-			if(roads.contains(j.identificador)) {
+			if(roads == null || roads != null && roads.contains(j.identificador)) {
 				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 				j.generarInforme(tickActual, reporte);
 				writeReport(reporte, out);
@@ -128,7 +102,7 @@ public class TrafficSimulator {
 		}
 		
 		for(Vehicle j:mapaTrafico.getConstantVehicles()) {
-			if(vehicles.contains(j.identificador)) {		
+			if(vehicles == null || vehicles != null && vehicles.contains(j.identificador)) {		
 				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 				j.generarInforme(tickActual, reporte);
 				writeReport(reporte, out);
