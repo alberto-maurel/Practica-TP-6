@@ -3,8 +3,10 @@ package es.ucm.fdi.layout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.control.Stepper;
 import es.ucm.fdi.extra.dialog.DialogWindow;
 import es.ucm.fdi.model.Describable;
 import es.ucm.fdi.model.Junction;
@@ -14,6 +16,7 @@ import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
 import es.ucm.fdi.model.Event;
 import es.ucm.fdi.util.TextStream;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +54,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	GraphLayoutClass grafo;
 	Boolean eventosCargados;
+	Stepper stepper;
 	
 	//Botones
 	private SimulatorAction loadEventsFile;
@@ -288,6 +292,18 @@ public class SimulatorLayout extends JFrame implements Listener {
 		return bar;
 	}
 	
+	private void ejecutarSimulacionPorPasos(){
+		stepper = new Stepper(
+				() -> habilitarBotones(false), 
+				() -> controlador.run(1), 
+				() -> habilitarBotones(true)
+		);
+		stepper.start(
+				(int) spinner.getValue(), 
+				(int) delaySpinner.getValue()
+		);
+	}
+	
 	/**
 	 * Función que crea los tres segundos botones y los añade a las barras de tareas y menú
 	 * @param simulator - Menú simulator, en el que se insertarán los botones
@@ -302,15 +318,15 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		play = new SimulatorAction(
 				"Ejecutar", "play.png", "Ejecutar la simulación", KeyEvent.
-				VK_P, "control P", ()-> runSimulation());
+				VK_P, "control P", ()-> ejecutarSimulacionPorPasos());
 		
 		stop = new SimulatorAction(
 				"Stop", "stop.png", "Parar la simulación", KeyEvent.
-				VK_S, "control S", ()-> System.err.println("Estamos en ello"));
+				VK_S, "control S", () -> {stepper.stop();});
 		
 		reset = new SimulatorAction(
 				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
-				VK_R, "control R", ()-> { controlador.reset(); reports.setText("");});
+				VK_R, "control R", ()-> { stepper.stop(); controlador.reset(); reports.setText("");});
 		
 		getOutput = new SimulatorAction(
 				"Ejecutar y generar reporte", "report.png", 
@@ -480,26 +496,34 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	//Implementación listeners
 	public void registered(UpdateEvent ue) {
-		actualizarLayout(ue);
-		grafo.registered(ue);
+		SwingUtilities.invokeLater(() ->{
+			actualizarLayout(ue, true);
+			grafo.registered(ue);
+		});
 	}
 	
 	public void reset(UpdateEvent ue) {
-		actualizarLayout(ue);
-		grafo.reset(ue);
-		lowerBarMessage.setText("El simulador se ha reseteado correctamente =D");
+		SwingUtilities.invokeLater(() ->{
+			actualizarLayout(ue, true);
+			grafo.reset(ue);
+			lowerBarMessage.setText("El simulador se ha reseteado correctamente =D");
+		});
 	}
 	
 	public void newEvent(UpdateEvent ue) {
-		actualizarLayout(ue);
-		grafo.registered(ue);		
-		lowerBarMessage.setText("Los eventos se han añadido correctamente =D");
+		SwingUtilities.invokeLater(() ->{
+			actualizarLayout(ue, true);
+			grafo.registered(ue);		
+			lowerBarMessage.setText("Los eventos se han añadido correctamente =D");
+		});
 	}
 	
 	public void advanced(UpdateEvent ue) {
-		actualizarLayout(ue);
-		grafo.advanced(ue);
-		lowerBarMessage.setText("La simulación se ha ejecutado correctamente =D");
+		SwingUtilities.invokeLater(() ->{
+			actualizarLayout(ue, false);
+			grafo.advanced(ue);
+			lowerBarMessage.setText("La simulación se ha ejecutado correctamente =D");
+		});
 	}
 	
 	/**
@@ -508,9 +532,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 * @param error - String con la información del error concreto a mostrar
 	 */
 	public void error(UpdateEvent ue, String error) {
-		lowerBarMessage.setText("Error");
-		ErrorDialog err = new ErrorDialog(error);
-		err.open();
+		error(error);
 	}
 	
 	/**
@@ -519,46 +541,34 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 */
 	public void error(String error) {
 		lowerBarMessage.setText("Error");
-		ErrorDialog err = new ErrorDialog(error);
-		err.open();
+		new ErrorDialog(error).open();
 	}
 	
 	/**
 	 * Función que agrupa la funcionalidad de refrescar el layout
 	 * @param ue - UpdateEvent con la información del listener
 	 */
-	private void actualizarLayout(UpdateEvent ue) {
-		vehiclesTable.actualizar((ArrayList<? extends Describable>) ue.getVehicles());	
-		junctionsTable.actualizar((ArrayList<? extends Describable>) ue.getJunctions());
-		roadsTable.actualizar((ArrayList<? extends Describable>) ue.getRoads());	
-		eventsTable.actualizar((ArrayList<? extends Describable>) ue.getEventQueue());	
+	private void actualizarLayout(UpdateEvent ue, boolean conBotonesInclusive) {
+		vehiclesTable.actualizar(ue.getVehicles());	
+		junctionsTable.actualizar(ue.getJunctions());
+		roadsTable.actualizar(ue.getRoads());	
+		eventsTable.actualizar(ue.getEventQueue());	
 		tiempoAct.setText("" + (controlador.getPasos() + 1));
-		habilitarBotones();
-		repaint();
+		if (conBotonesInclusive) {
+			habilitarBotones(true);
+		}
 	}
 	
-	private void habilitarBotones() {
-		if(controlador.hayEventosCargados() || controlador.getPasos() + 1 > 0) {
-			guardar.setEnabled(true);
-			borrar.setEnabled(true);
-			play.setEnabled(true);
-			reset.setEnabled(true);
-			getOutput.setEnabled(true);
-			generateReport.setEnabled(true);
-			deleteReport.setEnabled(true);
-			saveReport.setEnabled(true);
-			redirectOutput.setEnabled(true);
-		}
-		else {
-			guardar.setEnabled(false);
-			borrar.setEnabled(false);
-			play.setEnabled(false);
-			reset.setEnabled(false);
-			getOutput.setEnabled(false);
-			generateReport.setEnabled(false);
-			deleteReport.setEnabled(false);
-			saveReport.setEnabled(false);
-			redirectOutput.setEnabled(false);
+	private void habilitarBotones(boolean activar) {
+
+		redirectOutput.setEnabled(activar);
+
+		for (Action a : new Action[] {
+				guardar, borrar, play, reset, 
+				getOutput, generateReport, deleteReport,
+				deleteReport, saveReport
+		} ) {
+			a.setEnabled(activar);
 		}
 	}
 	

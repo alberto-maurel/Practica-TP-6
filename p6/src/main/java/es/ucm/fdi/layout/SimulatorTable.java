@@ -17,6 +17,7 @@ import es.ucm.fdi.model.Describable;
 public class SimulatorTable extends JPanel {
 	
 	private JTable table;
+	private MyTableModel model;
 	private String title;
 	private String[] fieldNames;
 	
@@ -43,7 +44,7 @@ public class SimulatorTable extends JPanel {
 		String[] fieldNames;
 		List <? extends Describable> elements;	
 		
-		public MyTableModel(String[] fn, ArrayList<? extends Describable> e) {
+		public MyTableModel(String[] fn, List<? extends Describable> e) {
 			fieldNames = fn;
 			elements = e;
 			setBackground(Color.WHITE);
@@ -78,9 +79,11 @@ public class SimulatorTable extends JPanel {
 		}	
 	}
 
-	public void actualizar(ArrayList<? extends Describable> e) {
-		MyTableModel innerTable = new MyTableModel(fieldNames,  e);
-		table.setModel(innerTable);
-		innerTable.fireTableDataChanged();
+	public void actualizar(List<? extends Describable> e) {
+		if (model == null) {
+			model = new MyTableModel(fieldNames,  e);
+			table.setModel(model);
+		}
+		model.fireTableDataChanged();
 	}
 }
