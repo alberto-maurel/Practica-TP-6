@@ -279,6 +279,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 					"Borrar", "clear.png", "Borra la lista de eventos", KeyEvent.
 				VK_C, "control C", ()->fichero.setText(""));
 		
+		
+		guardar.setEnabled(false);
+		borrar.setEnabled(false);
+		
 		//Agregamos las acciones a la barra
 		JToolBar bar = new JToolBar();
 		bar.add(loadEventsFile);
@@ -293,15 +297,24 @@ public class SimulatorLayout extends JFrame implements Listener {
 	}
 	
 	private void ejecutarSimulacionPorPasos(){
+		;
 		stepper = new Stepper(
-				() -> habilitarBotones(false), 
+				() -> SwingUtilities.invokeLater(() -> {
+						habilitarBotones(false);
+						stop.setEnabled(true);
+					})		
+				, 
 				() -> controlador.run(1), 
-				() -> habilitarBotones(true)
+				() -> SwingUtilities.invokeLater(() -> {
+					habilitarBotones(true);
+					stop.setEnabled(false);
+				})
 		);
 		stepper.start(
 				(int) spinner.getValue(), 
 				(int) delaySpinner.getValue()
 		);
+		
 	}
 	
 	/**
@@ -326,7 +339,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		reset = new SimulatorAction(
 				"Resetear", "reset.png", "Resetear la simulación", KeyEvent.
-				VK_R, "control R", ()-> { stepper.stop(); controlador.reset(); reports.setText("");});
+				VK_R, "control R", ()-> { controlador.reset(); reports.setText("");});
 		
 		getOutput = new SimulatorAction(
 				"Ejecutar y generar reporte", "report.png", 
@@ -349,6 +362,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 		    }
 		});
 		
+		play.setEnabled(false);
+		stop.setEnabled(false);
+		getOutput.setEnabled(false);
+		redirectOutput.setEnabled(false);
 		
 		//Añadimos las funcionalidades a las barras
 		JToolBar bar = new JToolBar();
@@ -390,6 +407,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 		
 		salir = new SimulatorAction(
 				"Salir", "exit.png", "Salir de la aplicacion", KeyEvent.VK_S, "control shift S", ()->System.exit(0));
+		
+		generateReport.setEnabled(false);
+		deleteReport.setEnabled(false);
+		saveReport.setEnabled(false);
 		
 		JToolBar bar = new JToolBar();
 		bar.add(generateReport);
@@ -497,14 +518,14 @@ public class SimulatorLayout extends JFrame implements Listener {
 	//Implementación listeners
 	public void registered(UpdateEvent ue) {
 		SwingUtilities.invokeLater(() ->{
-			actualizarLayout(ue, true);
+			actualizarLayout(ue, false);
 			grafo.registered(ue);
 		});
 	}
 	
 	public void reset(UpdateEvent ue) {
 		SwingUtilities.invokeLater(() ->{
-			actualizarLayout(ue, true);
+			actualizarLayout(ue, false);
 			grafo.reset(ue);
 			lowerBarMessage.setText("El simulador se ha reseteado correctamente =D");
 		});
@@ -553,10 +574,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 		junctionsTable.actualizar(ue.getJunctions());
 		roadsTable.actualizar(ue.getRoads());	
 		eventsTable.actualizar(ue.getEventQueue());	
-		tiempoAct.setText("" + (controlador.getPasos() + 1));
-		if (conBotonesInclusive) {
-			habilitarBotones(true);
-		}
+		tiempoAct.setText("" + (controlador.getPasos()));
+		habilitarBotones(conBotonesInclusive);
+	
+
 	}
 	
 	private void habilitarBotones(boolean activar) {

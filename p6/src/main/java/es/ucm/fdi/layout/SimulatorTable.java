@@ -22,7 +22,6 @@ public class SimulatorTable extends JPanel {
 	private String[] fieldNames;
 	
 	public SimulatorTable(String t, String[] fn, ArrayList<? extends Describable> e) {
-		
 		super(new BorderLayout());
 		
 		title = t;
@@ -80,10 +79,10 @@ public class SimulatorTable extends JPanel {
 	}
 
 	public void actualizar(List<? extends Describable> e) {
-		if (model == null) {
+		//if (model == null) {
 			model = new MyTableModel(fieldNames,  e);
 			table.setModel(model);
-		}
+		//}
 		model.fireTableDataChanged();
 	}
 }

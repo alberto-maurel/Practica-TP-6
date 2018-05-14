@@ -21,13 +21,13 @@ public class TrafficSimulator {
 	private RoadMap mapaTrafico;
 	private OutputStream out;
 	//Para distinguir entre antes de ejecutar el primer tick y después
-	private Boolean primerTick;
+	//private Boolean primerTick;
 	
 	public TrafficSimulator(OutputStream out) {
 		this.listaEventos = new MultiTreeMap<>();
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
-		primerTick = true;
+		//primerTick = true;
 		this.out = out;
 		fireUpdateEvent(EventType.RESET, "Ha ocurrido un error durante la construcción del simulador");
 	}
@@ -65,7 +65,7 @@ public class TrafficSimulator {
 					j.avanza();
 				}
 				
-				primerTick = false;
+				//primerTick = false;
 				//Y por último escribimos los informes en el orden indicado
 				fireUpdateEvent(EventType.ADVANCED, "Ha ocurrido un error al ejecutar la simulación");
 				++tick;
@@ -147,7 +147,7 @@ public class TrafficSimulator {
 	}
 	
 	public void reset() {
-		primerTick = true;
+		//primerTick = true;
 		listaEventos = new MultiTreeMap<>();
 		tickActual = 0;
 		mapaTrafico = new RoadMap();
@@ -155,11 +155,7 @@ public class TrafficSimulator {
 	}
 	
 	public int getTime() {
-		if(primerTick) {
-			return -1;
-		} else {
-			return tickActual;
-		}
+		return tickActual;
 	}
 	
 	public List<Junction> getJunctions() {
