@@ -101,7 +101,7 @@ public class TrafficSimulator {
 			}
 		}
 		
-		for(Vehicle j:mapaTrafico.getConstantVehicles()) {
+		for(Vehicle j: mapaTrafico.getConstantVehicles()) {
 			if(vehicles == null || vehicles != null && vehicles.contains(j.identificador)) {		
 				LinkedHashMap<String, String> reporte = new LinkedHashMap<>();
 				j.generarInforme(tickActual, reporte);

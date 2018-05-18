@@ -576,8 +576,6 @@ public class SimulatorLayout extends JFrame implements Listener {
 		eventsTable.actualizar(ue.getEventQueue());	
 		tiempoAct.setText("" + (controlador.getPasos()));
 		habilitarBotones(conBotonesInclusive);
-	
-
 	}
 	
 	private void habilitarBotones(boolean activar) {
@@ -599,24 +597,16 @@ public class SimulatorLayout extends JFrame implements Listener {
 		ArrayList<String> vehicles  = new ArrayList<>();
 		ArrayList<String> roads = new ArrayList<>();
 		ArrayList<String> junctions = new ArrayList<>();
-		
-		
-		
-		ArrayList<Junction> unmodifiableJunction = (ArrayList<Junction>) controlador.getJunctions();
 	
-		for(Junction j: unmodifiableJunction){
+		for(Junction j: controlador.getJunctions()){
 			junctions.add(j.getId());
 		}
 		
-		ArrayList<Road> unmodifiableRoads = (ArrayList<Road>) controlador.getRoads();
-	
-		for(Road j: unmodifiableRoads){
+		for(Road j: controlador.getRoads()){
 			roads.add(j.getId());
 		}
-		
-		ArrayList<Vehicle> unmodifiableVehicles = (ArrayList<Vehicle>) controlador.getVehicles();
 	
-		for(Vehicle j: unmodifiableVehicles){
+		for(Vehicle j: controlador.getVehicles()){
 			vehicles.add(j.getId());
 		}
 		
@@ -631,7 +621,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	/**
 	 * Implementación del menú para poder añadir plantillas de eventos
 	 */
-	void addPopUpMenu() {
+	public void addPopUpMenu() {
 		JPopupMenu editorPopupMenu = new JPopupMenu();
 		
 		JMenu subMenu = new JMenu("Add Template");

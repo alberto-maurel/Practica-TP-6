@@ -125,15 +125,7 @@ public class Junction extends SimulatedObject implements Describable {
 			sb.append(',');
 			//Ahora chequeamos de qué color está el semáforo
 			if (index == semaforoVerde) {
-				if(this instanceof MostCrowded) {
-					MostCrowded auxJunction = (MostCrowded) this;
-					sb.append(auxJunction.toStringGreen());
-				} else if(this instanceof RoundRobin) {
-					RoundRobin auxJunction = (RoundRobin) this;
-					sb.append(auxJunction.toStringGreen());
-				} else {
-					sb.append(toStringGreen());
-				}
+				sb.append(toStringGreen());
 				
 			} else {
 				sb.append("red");
