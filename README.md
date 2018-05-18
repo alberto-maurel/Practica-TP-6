@@ -97,4 +97,4 @@ cargarse a sí mismas
 ## Práctica 6
 Lo único seguro en esta vida es la muerte, pero estamos bastante seguros de que funciona todo
 ### Extras práctica 6
-Este y <a href="https://github.com/lauracastilla/Practica-TP-5/blob/master/LEEME.md" target=_blank>este</a> leeme tan bonitos no suman puntos
+Este y <a target="_blank" href="https://github.com/lauracastilla/Practica-TP-5/blob/master/LEEME.md">este</a> leeme tan bonitos no suman puntos
