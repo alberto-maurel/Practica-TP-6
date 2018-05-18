@@ -196,3 +196,4 @@ public class TextEditorExample extends JFrame implements ActionListener {
 	}
 
 }
+
