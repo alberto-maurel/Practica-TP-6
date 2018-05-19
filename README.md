@@ -6,7 +6,7 @@
 <a href="#diseno">3. Diseño</a>
 
 <a name="funcionalidad" id="funcionalidad"></a>
-### Funcionalidad
+### 1. Funcionalidad
 
 • Todo parece funcionar, aunque me sorprende la forma en que mostrais los mensajes de error. En particular,
   esperaba que usaseis un ShowMessage con icono de error, en lugar de vuestro
@@ -14,7 +14,7 @@
   <i>Arreglado, utilizamos JOptionPane.showMessageDialog</i>
 
 <a name="claridad" id="claridad"></a>
-### Claridad
+### 2. Claridad
 • Usa las cosas de la forma más abstracta posible. Así:
 
                 ArrayList<Junction> unmodifiableJunction = (ArrayList<Junction>) controlador.getJunctions();
@@ -32,7 +32,7 @@ vale con Iterable
                     }
 
    
-   Corregido en SimulatorLayout =D</i>         
+   <i>Corregido en SimulatorLayout =D</i>         
 
 • A los usuarios no les interesa la línea y el fichero de una excepción. Son más importantes otros datos:
 ¿porqué ha fallado? ¿qué estaba haciendo cuando falló? ...y luego, como última cosa, puedes incluir
@@ -41,13 +41,14 @@ información de depuración.
 <i> Utilizamos el bucle de getCause que explicaste en el laboratorio. La verdad es que esa información nos venía mejor a nosotros depurando que a los usuarios. </i>
   
 <a name="diseno" id="diseno"></a>
-### Diseño
+### 3. Diseño
 
 • Separad por responsabilidades. Los templates, y los menús de popup, no deberían formar parte de las
 responsabilidades de vuestro SimulatorLayout - deberían estar en una clase dedicada con el componente
 de edición de textos.
 
-<i>Corregido, creamos una nueva clase en la que pasamos las acciones necesarias para crear el PopupMenu. En la clase SimulatorLayout añadimos el menú al editor de texto.</i>
+<i>Corregido, creamos una nueva clase (<b>TemplateMenu</b>) en la que pasamos las acciones necesarias para crear el PopupMenu.
+  En la clase SimulatorLayout añadimos el menú al editor de texto.</i>
 
 • Vuestro método error lo llamais siempre con una cadena formada mediante campos presentes en una
 excepción. ¿Porqué no le pasais la excepción directamente, en lugar de copiar y pegar siempre el mismo
@@ -103,8 +104,14 @@ en su lugar
 ... que funciona aunque no haya código disponible, ya que usa el mismo mecanismo usado por las clases para
 cargarse a sí mismas  
 
-<i> No hemos conseguido encontrar ningún sitio programado por nosotros en el que utilicemos código del estilo new File("src/main/resources/algo.png") </i>
+<i>Hemos revisado clase por clase de la práctica entera con el buscador de palabras de Eclipse y no hemos encontrado 
+ningún fragmento de código que dijese new File("src/main/resources/algo.png"). Lo más cercano que hemos encontrado es en TextEditorExample loadImage("src/main/resources/icons/open.png"), pero como aquí lo que tenemos que pasar es un String, no
+un InputStream, entendemos que no te refieres a esto ya que habría que usar getCanonicalPath() o algo similar. Además, al 
+ser una clase prueba que ni hemos programado ni usado en la práctica no creemos que ese fuese el problema. Si puedes decirnos
+donde lo has visto te lo agradeceríamos.
+</i>
+
 ## Práctica 6
-Lo único seguro en esta vida es la muerte, pero estamos bastante seguros de que funciona todo
+Lo único seguro en esta vida es la muerte, pero estamos bastante seguros de que funciona todo.
 ### Extras práctica 6
-Este y <a target="_blank" href="https://github.com/lauracastilla/Practica-TP-5/blob/master/LEEME.md">este</a> leeme tan bonitos no suman puntos
+¿Este y <a target="_blank" href="https://github.com/lauracastilla/Practica-TP-5/blob/master/LEEME.md">este</a> leeme tan bonitos no se cuentan como extras?
