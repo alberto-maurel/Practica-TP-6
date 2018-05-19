@@ -291,13 +291,19 @@ public class SimulatorLayout extends JFrame implements Listener {
 		stepper = new Stepper(
 				() -> SwingUtilities.invokeLater(() -> {
 						habilitarBotones(false);
+						//Como el comportamiento de estos botones es distinto al del resto
+						//los activamos/desactivamos por separado
 						stop.setEnabled(true);
+						loadEventsFile.setEnabled(false);
+						events.setEnabled(false);
 					})		
 				, 
 				() -> controlador.run(1), 
 				() -> SwingUtilities.invokeLater(() -> {
 					habilitarBotones(true);
 					stop.setEnabled(false);
+					loadEventsFile.setEnabled(true);
+					events.setEnabled(true);
 				})
 		);
 		stepper.start(
