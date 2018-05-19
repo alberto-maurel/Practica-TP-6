@@ -74,12 +74,7 @@ public class TrafficSimulator {
 				
 			}		
 		} catch (Exception e) {			
-			fireUpdateEvent(EventType.ERROR,
-					"Ha ocurrido un error al ejecutar la simulación.\n" +
-					"Error: " + e.getMessage() + "\n" +
-					"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
-					"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
-					"Línea: " + e.getStackTrace()[0].getLineNumber());
+			fireUpdateEvent(EventType.ERROR, getExceptionCause(e));
 		}
 	}
 	
@@ -172,6 +167,17 @@ public class TrafficSimulator {
 	
 	public Boolean hayEventosCargados() {
 		return listaEventos.size() > 0 ? true : false;
+	}
+	
+	private String getExceptionCause(Exception e) {
+		String s = "";
+		Throwable t = e;
+		do {
+			s += t.getMessage();
+			t = t.getCause();
+		}
+		while (t != null);
+		return s;
 	}
 	
 	public interface Listener {

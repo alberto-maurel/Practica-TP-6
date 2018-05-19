@@ -3,7 +3,6 @@ package es.ucm.fdi.layout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.control.Stepper;
@@ -16,15 +15,10 @@ import es.ucm.fdi.model.TrafficSimulator.UpdateEvent;
 import es.ucm.fdi.model.Vehicle;
 import es.ucm.fdi.model.Event;
 import es.ucm.fdi.util.TextStream;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -35,8 +29,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @SuppressWarnings("serial")
 public class SimulatorLayout extends JFrame implements Listener {
@@ -50,8 +42,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	JSpinner delaySpinner;
 	JTextField tiempoAct;
 	JTextArea fichero;
-	JLabel lowerBarMessage;
-	
+	JLabel lowerBarMessage;	
 	GraphLayoutClass grafo;
 	Boolean eventosCargados;
 	Stepper stepper;
@@ -138,8 +129,10 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//Creación del grafo
 		grafo = new GraphLayoutClass();
 		
-		//Añadimos PopUpMenu para plantillas de eventos
-		addPopUpMenu();
+		// Añadimos PopUpMenu para plantillas de eventos
+		TemplateMenu tMenu = new TemplateMenu(fichero, loadEventsFile, guardar, borrar);
+		// Conectamos el menú popup al editor de texto
+		fichero.setComponentPopupMenu(tMenu);				
 		
 		//Montamos todo el layout junto
 		JSplitPane lowerSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftLowerPanel, grafo);
@@ -184,11 +177,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 			try {
 				tArea.read(in, null);
 			} catch (IOException e) {
-				error("Ha ocurrido un error durante la lectura del fichero de eventos.\n" +
-						"Error: " + e.getMessage() + "\n" +
-						"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
-						"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
-						"Línea: " + e.getStackTrace()[0].getLineNumber());
+				JOptionPane.showMessageDialog(this,	getExceptionCause(e), 
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		return p;
@@ -452,14 +442,11 @@ public class SimulatorLayout extends JFrame implements Listener {
 				controlador.modifyInputStream(new FileInputStream(file));
 			}
 			catch (Exception e) {
-				error("Ha ocurrido un error durante la operación de carga.\n" +
-						"Error: " + e.getMessage() + "\n" +
-						"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
-						"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
-						"Línea: " + e.getStackTrace()[0].getLineNumber());
-			}
-		  controlador.cargarEventos();
+				JOptionPane.showMessageDialog(this,	getExceptionCause(e), 
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}		 
 			try {
+				controlador.cargarEventos();
 				@SuppressWarnings("resource")
 				BufferedReader in = new BufferedReader(new FileReader(file));
 				String line;
@@ -469,12 +456,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 					  fichero.append(line + "\n");
 					  line = in.readLine();
 					}
-			} catch (IOException e) {
-				error("Ha ocurrido un error durante la operación de carga.\n" +
-						"Error: " + e.getMessage() + "\n" +
-						"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
-						"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
-						"Línea: " + e.getStackTrace()[0].getLineNumber());
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this,	getExceptionCause(e), 
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}	
 		}		
 	}
@@ -498,11 +482,8 @@ public class SimulatorLayout extends JFrame implements Listener {
 	            		JOptionPane.INFORMATION_MESSAGE);
 	            lowerBarMessage.setText(lowerBarText);
 	         } catch (IOException e) {
-	        	 error("Ha ocurrido un error durante la operación de guardado.\n" +
-							"Error: " + e.getMessage() + "\n" +
-							"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
-							"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
-							"Línea: " + e.getStackTrace()[0].getLineNumber());
+	        	 JOptionPane.showMessageDialog(this, getExceptionCause(e), 
+							"Error", JOptionPane.ERROR_MESSAGE);
 	         }
 	     }
 	}
@@ -510,7 +491,12 @@ public class SimulatorLayout extends JFrame implements Listener {
 	private void cargarEventos() {
 		//Reiniciamos el flujo para poder volver a coger los datos
 		controlador.modifyInputStream(new ByteArrayInputStream(fichero.getText().getBytes()));
-		controlador.cargarEventos();
+		try {
+			controlador.cargarEventos();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this,	getExceptionCause(e), 
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
 		//Y a continuación los cargamos en el simulador
 		controlador.cargarEventosEnElSimulador();			
 	}
@@ -552,17 +538,17 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 * @param ue - UpdateEvent con la información del listener
 	 * @param error - String con la información del error concreto a mostrar
 	 */
-	public void error(UpdateEvent ue, String error) {
-		error(error);
+	public void error(UpdateEvent ue, String errorMessage) {
+		error(errorMessage);
 	}
-	
 	/**
 	 * Genera el cuadro informativo del error
 	 * @param error - String con la información del error concreto a mostrar
 	 */
-	public void error(String error) {
+	public void error(String errorMessage) {
 		lowerBarMessage.setText("Error");
-		new ErrorDialog(error).open();
+		JOptionPane.showMessageDialog(this,	errorMessage, 
+				"Error", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	/**
@@ -618,162 +604,16 @@ public class SimulatorLayout extends JFrame implements Listener {
 				newDialog.getSelectedRoads(), newDialog.getSelectedVehicles());	
 	}
 	
-	/**
-	 * Implementación del menú para poder añadir plantillas de eventos
-	 */
-	public void addPopUpMenu() {
-		JPopupMenu editorPopupMenu = new JPopupMenu();
-		
-		JMenu subMenu = new JMenu("Add Template");
-
-		String[] templateNames = { "New RR Junction", "New MC Junction", "New Junction",
-				"New Dirt Road", "New Lanes Road", "New Road", 
-				"New Bike", "New Car", "New Vehicle",
-				"Make Vehicle Faulty" };
-		
-		Map<String, String> templates = generateTemplates();
-		
-		for (String s : templateNames) {
-			JMenuItem menuItem = new JMenuItem(s);
-			menuItem.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					fichero.append(templates.get(s) + '\n');
-				}
-			});
-			subMenu.add(menuItem);
+	private String getExceptionCause(Exception e) {
+		String s = "";
+		Throwable t = e;
+		do {
+			s += t.getMessage();
+			t = t.getCause();
 		}
-		
-		JMenuItem loadOption = new JMenuItem("Load");
-		loadOption.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadFile(fichero);
-			}
-		});
-		
-		JMenuItem saveOption = new JMenuItem("Save");
-		saveOption.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveFile(fichero, "Guardar eventos como...",
-						"Eventos guardados con éxito", "events.ini");
-			}
-		});
-
-		JMenuItem clearOption = new JMenuItem("Clear");
-		clearOption.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fichero.setText("");
-			}
-		});
-		
-		editorPopupMenu.add(subMenu);
-		editorPopupMenu.addSeparator();
-		editorPopupMenu.add(loadOption);
-		editorPopupMenu.add(saveOption);
-		editorPopupMenu.add(clearOption);
-		
-		// connect the popup menu to the text area _editor
-		fichero.addMouseListener(new MouseListener() {
-			
-		@Override
-		public void mousePressed(MouseEvent e) {
-			showPopup(e);
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			showPopup(e);
-		}
-
-		private void showPopup(MouseEvent e) {
-			if (e.isPopupTrigger() && editorPopupMenu.isEnabled()) {
-				editorPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-			}
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-		}
-	});
+		while (t != null);
+		return s;
 	}
 	
-	private Map<String, String> generateTemplates() {
-		Map<String, String> templates = new HashMap<>();
-		templates.put("New RR Junction", "[new_junction]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"max_time_slice = \n" + 
-				"min_time_slice = \n" + 
-				"type = rr\n");
-		templates.put("New MC Junction", "[new_junction]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"type = mc\n");
-		templates.put("New Junction", "[new_junction]\n" + 
-				"time = \n" + 
-				"id = \n");
-		templates.put("New Dirt Road", "[new_road]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"src = \n" + 
-				"dest = \n" + 
-				"max_speed = \n" + 
-				"length = \n" + 
-				"type = dirt\n");
-		templates.put("New Lanes Road", "[new_road]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"src = \n" + 
-				"dest = \n" + 
-				"max_speed = \n" + 
-				"length = \n" + 
-				"lanes = \n" + 
-				"type = lanes\n");
-		templates.put("New Road", "[new_road]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"src = \n" + 
-				"dest = \n" + 
-				"max_speed = \n" + 
-				"length = \n");
-		templates.put("New Bike", "[new_vehicle]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"itinerary = \n" + 
-				"max_speed = \n" + 
-				"type = bike\n");
-		templates.put("New Car", "[new_vehicle]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"itinerary = \n" + 
-				"max_speed = \n" + 
-				"type = car\n" + 
-				"resistance = \n" + 
-				"fault_probability = \n" + 
-				"max_fault_duration = \n" + 
-				"seed = \n");
-		templates.put("New Vehicle", "[new_vehicle]\n" + 
-				"time = \n" + 
-				"id = \n" + 
-				"itinerary = \n" + 
-				"max_speed = \n");
-		templates.put("Make Vehicle Faulty", "[make_vehicle_faulty]\n" + 
-				"time = \n" + 
-				"vehicles = \n" + 
-				"duration = \n");
-		return templates;
-	}
-
 }
  

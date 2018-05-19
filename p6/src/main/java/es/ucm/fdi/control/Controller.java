@@ -59,7 +59,7 @@ public class Controller implements Listener {
 		return simulador.getTime();
 	}
 	
-	public void run() {
+	public void run() throws Exception {
 		cargarEventos();
 		cargarEventosEnElSimulador();
 		simulador.run(nPasos);
@@ -69,7 +69,7 @@ public class Controller implements Listener {
 		simulador.run(nPaso);
 	}
 	
-	public void cargarEventos() {
+	public void cargarEventos() throws Exception {
 		Ini eventosPorProcesar = input();
 		eventosIntroducidos.clear();
 		for(IniSection is: eventosPorProcesar.getSections()) {
@@ -92,27 +92,21 @@ public class Controller implements Listener {
 			}
 			eventosIntroducidos.add(eventoActual);
 		}
-		catch(SimulationException e) {
-			error("Ha ocurrido un error durante la creación de eventos.\n" +
-					"Error: " + e.getMessage() + "\n" +
-					"Clase: " + e.getStackTrace()[0].getClassName() + "\n" +
-					"Método: " + e.getStackTrace()[0].getMethodName() + "\n" +
-					"Línea: " + e.getStackTrace()[0].getLineNumber());
-		}
+		catch(Exception e) {throw e;}
 	}
 
-	public Ini input() {
+	public Ini input() throws Exception {
 		try{
 			Ini ini = new Ini(input);
 			return ini;
 		}
-		catch (IOException io) {
-			error("Ha ocurrido un error durante la operación de lectura.\n" +
+		catch (Exception io) { throw io;
+			/*error("Ha ocurrido un error durante la operación de lectura.\n" +
 					"Error: " + io.getMessage() + "\n" +
 					"Clase: " + io.getStackTrace()[0].getClassName() + "\n" +
 					"Método: " + io.getStackTrace()[0].getMethodName() + "\n" +
-					"Línea: " + io.getStackTrace()[0].getLineNumber());
-			return null;
+					"Línea: " + io.getStackTrace()[0].getLineNumber());*/
+			//return null;
 		}
 	}
 	

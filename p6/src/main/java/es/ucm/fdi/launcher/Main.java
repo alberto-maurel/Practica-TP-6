@@ -178,7 +178,11 @@ public class Main {
 			out = System.out;
 		}
 		Controller controlador = new Controller(_timeLimit, in, out);
-		controlador.run();
+		try {
+			controlador.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

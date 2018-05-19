@@ -8,24 +8,23 @@ public class Stepper {
 	private int steps;
 	private boolean stopRequested;
 	
-	public Stepper(Runnable before, Runnable during, Runnable after){
+	public Stepper(Runnable before, Runnable during, Runnable after) {
 		this.before = before;
 		this.during = during;
 		this.after = after;
 		stopRequested = false;
 	}
 	
-	public void stop(){
+	public void stop() {
 		stopRequested = true;
 	}
 	
-	public Thread start (int steps, int delay){
-		this.steps = steps;
-		
-		Thread t = new Thread(()->{
-			try{
+	public Thread start (int steps, int delay) {
+		this.steps = steps;		
+		Thread t = new Thread(()-> {
+			try {
 				before.run();
-				while(!stopRequested && Stepper.this.steps > 0){
+				while(!stopRequested && Stepper.this.steps > 0) {
 					during.run();
 					try{
 						Thread.sleep(delay);
@@ -36,8 +35,7 @@ public class Stepper {
 				}
 			} catch (Exception e) {
 				
-			} finally {
-				
+			} finally {				
 				after.run();
 			}	
 			
