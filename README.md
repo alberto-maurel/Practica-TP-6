@@ -10,6 +10,8 @@
 
 • Todo parece funcionar, aunque me sorprende la forma en que mostrais los mensajes de error. En particular,
   esperaba que usaseis un ShowMessage con icono de error, en lugar de vuestro
+  
+  <i>Arreglado, utilizamos JOptionPane.showMessageDialog<\i>
 
 <a name="claridad" id="claridad"></a>
 ### Claridad
@@ -35,6 +37,8 @@ vale con Iterable
 ¿porqué ha fallado? ¿qué estaba haciendo cuando falló? ...y luego, como última cosa, puedes incluir
 información de depuración.
 
+<i> Utilizamos el bucle de getCause que explicaste en el laboratorio. La verdad es que esa información nos venía mejor a nosotros depurando que a los usuarios. <\i>
+  
 <a name="diseno" id="diseno"></a>
 ### Diseño
 
@@ -42,9 +46,13 @@ información de depuración.
 responsabilidades de vuestro SimulatorLayout - deberían estar en una clase dedicada con el componente
 de edición de textos.
 
+<i>Corregido, creamos una nueva clase en la que pasamos las acciones necesarias para crear el PopupMenu. En la clase SimulatorLayout añadimos el menú al editor de texto.</i>
+
 • Vuestro método error lo llamais siempre con una cadena formada mediante campos presentes en una
 excepción. ¿Porqué no le pasais la excepción directamente, en lugar de copiar y pegar siempre el mismo
 código?.
+
+<i> Cambiamos la manera de controlar excepciones, así que ya no tenemos tantas líneas de código para ello <\i>
 
 • No entiendo porqué no simplificais vuestro habilitarBotones. En particular, podríais poner
 
@@ -94,6 +102,7 @@ en su lugar
 ... que funciona aunque no haya código disponible, ya que usa el mismo mecanismo usado por las clases para
 cargarse a sí mismas  
 
+<i> No hemos conseguido encontrar ningún sitio programado por nosotros en el que utilicemos código del estilo new File("src/main/resources/algo.png") <\i>
 ## Práctica 6
 Lo único seguro en esta vida es la muerte, pero estamos bastante seguros de que funciona todo
 ### Extras práctica 6
