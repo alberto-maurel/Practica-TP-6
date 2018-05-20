@@ -75,6 +75,7 @@ public class TrafficSimulator {
 			}		
 		} catch (Exception e) {			
 			fireUpdateEvent(EventType.ERROR, getExceptionCause(e));
+			return; //Error, paramos la ejecución
 		}
 	}
 	

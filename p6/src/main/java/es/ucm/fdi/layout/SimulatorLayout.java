@@ -42,6 +42,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	JSpinner delaySpinner;
 	JTextField tiempoAct;
 	JTextArea fichero;
+	JTextArea reports;
 	JLabel lowerBarMessage;	
 	GraphLayoutClass grafo;
 	Boolean eventosCargados;
@@ -80,7 +81,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		//Por un lado los JTextArea
 		fichero = new JTextArea();
 		fichero.setEditable(true);
-		JTextArea reports = new JTextArea();
+		reports = new JTextArea();
 		reports.setEditable(false);
 		//Y por otro la tabla de eventos
 		eventsTable = new SimulatorTable("Events Queue", columnNamesQueue, 
@@ -286,8 +287,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 		return bar;
 	}
 	
-	private void ejecutarSimulacionPorPasos(){
-		;
+	private void ejecutarSimulacionPorPasos() {
 		stepper = new Stepper(
 				() -> SwingUtilities.invokeLater(() -> {
 						habilitarBotones(false);
@@ -509,14 +509,14 @@ public class SimulatorLayout extends JFrame implements Listener {
 	
 	//Implementación listeners
 	public void registered(UpdateEvent ue) {
-		SwingUtilities.invokeLater(() ->{
+		SwingUtilities.invokeLater(() -> {
 			actualizarLayout(ue, false);
 			grafo.registered(ue);
 		});
 	}
 	
 	public void reset(UpdateEvent ue) {
-		SwingUtilities.invokeLater(() ->{
+		SwingUtilities.invokeLater(() -> {
 			actualizarLayout(ue, false);
 			grafo.reset(ue);
 			lowerBarMessage.setText("El simulador se ha reseteado correctamente =D");
@@ -524,7 +524,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	}
 	
 	public void newEvent(UpdateEvent ue) {
-		SwingUtilities.invokeLater(() ->{
+		SwingUtilities.invokeLater(() -> {
 			actualizarLayout(ue, true);
 			grafo.registered(ue);		
 			lowerBarMessage.setText("Los eventos se han añadido correctamente =D");
@@ -532,7 +532,7 @@ public class SimulatorLayout extends JFrame implements Listener {
 	}
 	
 	public void advanced(UpdateEvent ue) {
-		SwingUtilities.invokeLater(() ->{
+		SwingUtilities.invokeLater(() -> {
 			actualizarLayout(ue, false);
 			grafo.advanced(ue);
 			lowerBarMessage.setText("La simulación se ha ejecutado correctamente =D");
@@ -546,6 +546,9 @@ public class SimulatorLayout extends JFrame implements Listener {
 	 */
 	public void error(UpdateEvent ue, String errorMessage) {
 		error(errorMessage);
+		stepper.stop();
+		controlador.reset();
+		reports.setText("");
 	}
 	/**
 	 * Genera el cuadro informativo del error

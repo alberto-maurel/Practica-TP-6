@@ -215,7 +215,7 @@ public class Controller implements Listener {
 	}
 	
 	public void error(UpdateEvent ue, String error) {
-		System.out.println(error);		
+		System.out.println(error);
 	}
 	
 	public void error(String error) {
